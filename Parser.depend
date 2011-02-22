@@ -1,0 +1,462 @@
+# depslib dependency file v1.0
+1275843459 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\memorycontroller.cpp
+	"../../include/Internal/Table.hpp"
+	"../include/MemoryController.hpp"
+	"../include/Reference.hpp"
+	"../include/Exceptions.hpp"
+	<iostream>
+
+1282415812 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
+	<map>
+	<string>
+	<memory>
+	"Tokens.hpp"
+
+1298328062 c:\users\marius\desktop\quellcodes\parser\include\internal\tokens.hpp
+	<boost/variant.hpp>
+	<boost/shared_ptr.hpp>
+	"../../MemoryManagment/include/MemoryController.hpp"
+	"../../MemoryManagment/include/Reference.hpp"
+	"../Parsable.hpp"
+
+1298328062 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
+	<map>
+	<list>
+	<boost/circular_buffer.hpp>
+
+1298328062 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
+
+1260305036 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
+	<stdexcept>
+
+1275767614 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\reference.cpp
+	"../include/MemoryController.hpp"
+	"../include/Reference.hpp"
+	"../include/Exceptions.hpp"
+	"../../include/Internal/Table.hpp"
+
+1294095619 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
+	<iostream>
+	"version.h"
+	"include/MariusParser.hpp"
+
+1298325248 c:\users\marius\desktop\quellcodes\parser\version.h
+
+1294095619 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
+	"Internal/Parser.hpp"
+	"Internal/Tokenizer.hpp"
+	"Internal/Utilities.hpp"
+	"Object.hpp"
+	"Function.hpp"
+	"Internal/BindFunc.hpp"
+	"Exceptions.hpp"
+
+1294095619 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
+	<stack>
+	<queue>
+	<string>
+	<boost/shared_ptr.hpp>
+	"Tokens.hpp"
+	"IOperator.hpp"
+	"IFunction.hpp"
+	"StateSaver.hpp"
+
+1298325244 c:\users\marius\desktop\quellcodes\parser\include\internal\ioperator.hpp
+	"Types.hpp"
+	"IEvaluable.hpp"
+
+1282415812 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
+	<deque>
+	<stack>
+	"../../MemoryManagment/include/MemoryController.hpp"
+	"../../MemoryManagment/include/Reference.hpp"
+
+1298328062 c:\users\marius\desktop\quellcodes\parser\include\internal\ievaluable.hpp
+	<string>
+	"Tokens.hpp"
+
+1282415812 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
+	"IEvaluable.hpp"
+	"Table.hpp"
+
+1274042533 c:\users\marius\desktop\quellcodes\parser\include\internal\statesaver.hpp
+	<stack>
+	<cassert>
+
+1294095619 c:\users\marius\desktop\quellcodes\parser\include\internal\tokenizer.hpp
+	<boost/ptr_container/ptr_set.hpp>
+	"../IToken.hpp"
+
+1298328062 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
+	<boost/lexical_cast.hpp>
+	"../../MemoryManagment/include/Exceptions.hpp"
+	"Table.hpp"
+	"Object.hpp"
+	"Typenames.hpp"
+	"Is.hpp"
+
+1282415812 c:\users\marius\desktop\quellcodes\parser\include\internal\object.hpp
+	"Tokens.hpp"
+	"Types.hpp"
+
+1276363908 c:\users\marius\desktop\quellcodes\parser\include\internal\typenames.hpp
+
+1276540314 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
+	"../MemoryManagment/include/Reference.hpp"
+	"Internal/Marshal.hpp"
+
+1282415812 c:\users\marius\desktop\quellcodes\parser\include\internal\marshal.hpp
+	<type_traits>
+
+1282417014 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
+	"Internal/Marshal.hpp"
+
+1297983109 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
+	"Utilities.hpp"
+	"Marshal.hpp"
+	<array>
+	<boost/function_types/result_type.hpp>
+
+1277144234 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
+	<exception>
+
+1260139694 source:c:\users\marius\desktop\quellcodes\parser\src\functions.cpp
+
+1282415815 source:c:\users\marius\desktop\quellcodes\parser\src\ievaluable.cpp
+	<boost/shared_ptr.hpp>
+	"../MemoryManagment/include/Exceptions.hpp"
+	"../include/Internal/IEvaluable.hpp"
+	"../include/Internal/IFunction.hpp"
+	"../include/Internal/Table.hpp"
+	"../include/Internal/Object.hpp"
+
+1282415815 source:c:\users\marius\desktop\quellcodes\parser\src\ifunction.cpp
+	<boost/lexical_cast.hpp>
+	<iostream>
+	"../include/Internal/Types.hpp"
+	"../include/Internal/IFunction.hpp"
+	"../include/Internal/Utilities.hpp"
+
+1298317918 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
+	<iostream>
+	<windows.h>
+	<boost/lexical_cast.hpp>
+	<boost/foreach.hpp>
+	"../include/MariusParser.hpp"
+	"../include/Internal/Operators.hpp"
+	"../include/Internal/Functions.hpp"
+	"../include/Internal/Is.hpp"
+	"../include/Internal/KeywordFunction.hpp"
+	"../include/Internal/KeywordEnd.hpp"
+
+1298314923 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
+	<cmath>
+	"../IToken.hpp"
+	"../Parsable.hpp"
+	"Utilities.hpp"
+	"Is.hpp"
+
+1274126657 c:\users\marius\desktop\quellcodes\parser\include\internal\is.hpp
+
+1294095619 c:\users\marius\desktop\quellcodes\parser\include\internal\functions.hpp
+	<iostream>
+
+1294095620 source:c:\users\marius\desktop\quellcodes\parser\src\operators.cpp
+	<boost/shared_ptr.hpp>
+	<iostream>
+	"../MemoryManagment/include/MemoryController.hpp"
+	"../MemoryManagment/include/Reference.hpp"
+	"../MemoryManagment/include/Exceptions.hpp"
+	"../include/Internal/Table.hpp"
+	"../include/Internal/Object.hpp"
+	"../include/Internal/Get.hpp"
+	"../include/Internal/IFunction.hpp"
+	"../include/Internal/IOperator.hpp"
+	"../include/Internal/Parser.hpp"
+	"../include/Internal/Operators.hpp"
+
+1274126507 c:\users\marius\desktop\quellcodes\parser\include\internal\get.hpp
+
+1294095620 source:c:\users\marius\desktop\quellcodes\parser\src\parser.cpp
+	<algorithm>
+	<iostream>
+	"../MemoryManagment/include/MemoryController.hpp"
+	"../MemoryManagment/include/Reference.hpp"
+	"../include/Internal/Parser.hpp"
+	<boost/foreach.hpp>
+	<boost/lexical_cast.hpp>
+	"../include/Internal/FuncCaller.hpp"
+	"../include/Internal/Get.hpp"
+	"../include/Internal/Is.hpp"
+	"../include/Internal/Operators.hpp"
+	"../include/Exceptions.hpp"
+
+1282415812 c:\users\marius\desktop\quellcodes\parser\include\internal\funccaller.hpp
+	"Utilities.hpp"
+	"Table.hpp"
+	"Get.hpp"
+
+1298324894 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordfunction.hpp
+
+1294095619 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordend.hpp
+
+1294095620 source:c:\users\marius\desktop\quellcodes\parser\src\tokenizer.cpp
+	<queue>
+	<iostream>
+	<boost/variant.hpp>
+	<boost/shared_ptr.hpp>
+	<boost/tokenizer.hpp>
+	<boost/lexical_cast.hpp>
+	<boost/foreach.hpp>
+	"../include/Internal/IOperator.hpp"
+	"../include/Internal/Tokenizer.hpp"
+	"../include/Internal/Types.hpp"
+
+1282415815 source:c:\users\marius\desktop\quellcodes\parser\src\table.cpp
+	"../MemoryManagment/include/MemoryController.hpp"
+	"../MemoryManagment/include/Reference.hpp"
+	"../include/Internal/Table.hpp"
+	<vector>
+	<map>
+
+1282168937 source:c:\users\marius\parser\memorymanagment\src\memorycontroller.cpp
+	"../../include/Internal/Table.hpp"
+	"../include/MemoryController.hpp"
+	"../include/Reference.hpp"
+	"../include/Exceptions.hpp"
+	<iostream>
+
+1282168943 c:\users\marius\parser\include\internal\table.hpp
+	<map>
+	<string>
+	<memory>
+	"Tokens.hpp"
+
+1292868696 c:\users\marius\parser\include\internal\tokens.hpp
+	<boost/variant.hpp>
+	<boost/shared_ptr.hpp>
+	"../../MemoryManagment/include/MemoryController.hpp"
+	"../../MemoryManagment/include/Reference.hpp"
+	"../Parsable.hpp"
+
+1292868695 c:\users\marius\parser\memorymanagment\include\memorycontroller.hpp
+	<map>
+	<list>
+	<boost/circular_buffer.hpp>
+
+1294003698 c:\users\marius\parser\memorymanagment\include\reference.hpp
+
+1282168937 c:\users\marius\parser\memorymanagment\include\exceptions.hpp
+	<stdexcept>
+
+1282168937 source:c:\users\marius\parser\memorymanagment\src\reference.cpp
+	"../include/MemoryController.hpp"
+	"../include/Reference.hpp"
+	"../include/Exceptions.hpp"
+	"../../include/Internal/Table.hpp"
+
+1292868696 source:c:\users\marius\parser\main.cpp
+	<iostream>
+	"version.h"
+	"include/MariusParser.hpp"
+
+1294003698 c:\users\marius\parser\version.h
+
+1292868696 c:\users\marius\parser\include\mariusparser.hpp
+	"Internal/Parser.hpp"
+	"Internal/Tokenizer.hpp"
+	"Internal/Utilities.hpp"
+	"Object.hpp"
+	"Function.hpp"
+	"Internal/BindFunc.hpp"
+	"Exceptions.hpp"
+
+1293904314 c:\users\marius\parser\include\internal\parser.hpp
+	<stack>
+	<queue>
+	<string>
+	<boost/shared_ptr.hpp>
+	"Tokens.hpp"
+	"IOperator.hpp"
+	"IFunction.hpp"
+	"StateSaver.hpp"
+
+1293900980 c:\users\marius\parser\include\internal\ioperator.hpp
+	"Types.hpp"
+	"IEvaluable.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\types.hpp
+	<deque>
+	<stack>
+	"../../MemoryManagment/include/MemoryController.hpp"
+	"../../MemoryManagment/include/Reference.hpp"
+
+1293901404 c:\users\marius\parser\include\internal\ievaluable.hpp
+	<stack>
+	<string>
+	"Tokens.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\ifunction.hpp
+	"IEvaluable.hpp"
+	"Table.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\statesaver.hpp
+	<stack>
+	<cassert>
+
+1292868696 c:\users\marius\parser\include\internal\tokenizer.hpp
+	<boost/ptr_container/ptr_set.hpp>
+	"../IToken.hpp"
+
+1292868696 c:\users\marius\parser\include\internal\utilities.hpp
+	<boost/lexical_cast.hpp>
+	"../../MemoryManagment/include/Exceptions.hpp"
+	"Table.hpp"
+	"Object.hpp"
+	"Typenames.hpp"
+	"Is.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\object.hpp
+	"Tokens.hpp"
+	"Types.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\typenames.hpp
+
+1282168943 c:\users\marius\parser\include\object.hpp
+	"../MemoryManagment/include/Reference.hpp"
+	"Internal/Marshal.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\marshal.hpp
+	<type_traits>
+
+1292867756 c:\users\marius\parser\include\function.hpp
+	"Internal/Marshal.hpp"
+
+1293668121 c:\users\marius\parser\include\internal\bindfunc.hpp
+	"Utilities.hpp"
+	"Marshal.hpp"
+	<array>
+	<boost/function_types/result_type.hpp>
+
+1282168943 c:\users\marius\parser\include\exceptions.hpp
+	<exception>
+
+1282168945 source:c:\users\marius\parser\src\functions.cpp
+
+1282168946 source:c:\users\marius\parser\src\ievaluable.cpp
+	<boost/shared_ptr.hpp>
+	"../MemoryManagment/include/Exceptions.hpp"
+	"../include/Internal/IEvaluable.hpp"
+	"../include/Internal/IFunction.hpp"
+	"../include/Internal/Table.hpp"
+	"../include/Internal/Object.hpp"
+
+1282168946 source:c:\users\marius\parser\src\ifunction.cpp
+	<boost/lexical_cast.hpp>
+	<iostream>
+	"../include/Internal/Types.hpp"
+	"../include/Internal/IFunction.hpp"
+	"../include/Internal/Utilities.hpp"
+
+1293983006 source:c:\users\marius\parser\src\mariusparser.cpp
+	<iostream>
+	<windows.h>
+	<boost/lexical_cast.hpp>
+	<boost/foreach.hpp>
+	"../include/MariusParser.hpp"
+	"../include/Internal/Operators.hpp"
+	"../include/Internal/Functions.hpp"
+	"../include/Internal/Is.hpp"
+	"../include/Internal/KeywordFunction.hpp"
+	"../include/Internal/KeywordEnd.hpp"
+
+1293918502 c:\users\marius\parser\include\internal\operators.hpp
+	<cmath>
+	"../IToken.hpp"
+	"../Parsable.hpp"
+	"Utilities.hpp"
+	"Is.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\is.hpp
+
+1294003686 c:\users\marius\parser\include\internal\functions.hpp
+	<iostream>
+
+1293914377 source:c:\users\marius\parser\src\operators.cpp
+	<boost/shared_ptr.hpp>
+	<iostream>
+	"../MemoryManagment/include/MemoryController.hpp"
+	"../MemoryManagment/include/Reference.hpp"
+	"../MemoryManagment/include/Exceptions.hpp"
+	"../include/Internal/Table.hpp"
+	"../include/Internal/Object.hpp"
+	"../include/Internal/Get.hpp"
+	"../include/Internal/IFunction.hpp"
+	"../include/Internal/IOperator.hpp"
+	"../include/Internal/Parser.hpp"
+	"../include/Internal/Operators.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\get.hpp
+
+1293917596 source:c:\users\marius\parser\src\parser.cpp
+	<algorithm>
+	<iostream>
+	"../MemoryManagment/include/MemoryController.hpp"
+	"../MemoryManagment/include/Reference.hpp"
+	"../include/Internal/Parser.hpp"
+	<boost/foreach.hpp>
+	<boost/lexical_cast.hpp>
+	"../include/Internal/FuncCaller.hpp"
+	"../include/Internal/Get.hpp"
+	"../include/Internal/Is.hpp"
+	"../include/Internal/Operators.hpp"
+	"../include/Exceptions.hpp"
+
+1282168943 c:\users\marius\parser\include\internal\funccaller.hpp
+	"Utilities.hpp"
+	"Table.hpp"
+	"Get.hpp"
+
+1293983454 c:\users\marius\parser\include\internal\keywordfunction.hpp
+
+1292868696 c:\users\marius\parser\include\internal\keywordend.hpp
+
+1293745374 source:c:\users\marius\parser\src\tokenizer.cpp
+	<queue>
+	<iostream>
+	<boost/variant.hpp>
+	<boost/shared_ptr.hpp>
+	<boost/tokenizer.hpp>
+	<boost/lexical_cast.hpp>
+	<boost/foreach.hpp>
+	"../include/Internal/IOperator.hpp"
+	"../include/Internal/Tokenizer.hpp"
+	"../include/Internal/Types.hpp"
+
+1282168946 source:c:\users\marius\parser\src\table.cpp
+	"../MemoryManagment/include/MemoryController.hpp"
+	"../MemoryManagment/include/Reference.hpp"
+	"../include/Internal/Table.hpp"
+	<vector>
+	<map>
+
+1285441625 c:\users\marius\desktop\quellcodes\parser\include\internal\itoken.hpp
+	"TokenizeContext.hpp"
+
+1285448997 c:\users\marius\desktop\quellcodes\parser\include\internal\tokenizecontext.hpp
+	<array>
+
+1298315024 c:\users\marius\desktop\quellcodes\parser\include\itoken.hpp
+	"TokenizeContext.hpp"
+
+1294095619 c:\users\marius\desktop\quellcodes\parser\include\tokenizecontext.hpp
+
+1298328062 c:\users\marius\desktop\quellcodes\parser\include\parsable.hpp
+
+1292868696 c:\users\marius\parser\include\parsable.hpp
+
+1293903038 c:\users\marius\parser\include\itoken.hpp
+	"TokenizeContext.hpp"
+
+1292868696 c:\users\marius\parser\include\tokenizecontext.hpp
+

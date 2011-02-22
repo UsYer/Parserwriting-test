@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="UnitTest" />
+		<Option pch_mode="2" />
+		<Option compiler="gnu_gcc_compiler_tdragon_64" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin\Release\UnitTest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-std=c++0x" />
+					<Add directory="$(#unittest.include)" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libUnitTest++.a" />
+					<Add library="..\bin\Release Lib\libParser.a" />
+					<Add directory="$(#unittest.lib)" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="$exe_output" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Release 4.5 32bit">
+				<Option output="bin\Release\UnitTest32" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release32\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-m32" />
+					<Add option="-flto" />
+					<Add directory="$(#unittest.include)" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m32" />
+					<Add library="libUnitTest++.a" />
+					<Add library="..\bin\ReleaseLib_4_5\libParser32.a" />
+					<Add directory="$(#unittest.lib)" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="$exe_output" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Release 4.5 64bit">
+				<Option output="bin\Release\UnitTest64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release64\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-flto" />
+					<Add directory="$(#unittest.include)" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libUnitTest++64.a" />
+					<Add library="..\bin\ReleaseLib_4_5\libParser64.a" />
+					<Add directory="$(#unittest.lib)" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="$exe_output" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Debug 4.5 64bit">
+				<Option output="bin\Debug\UnitTest64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release64\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-g" />
+					<Add directory="$(#unittest.include)" />
+				</Compiler>
+				<Linker>
+					<Add library="libUnitTest++64.a" />
+					<Add library="..\bin\ReleaseLib_4_5\libParser64.a" />
+					<Add directory="$(#unittest.lib)" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="$exe_output" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="FunctionDefTests.hpp" />
+		<Unit filename="TableTests.hpp" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="2" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

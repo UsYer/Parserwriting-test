@@ -1,0 +1,4 @@
+#ifndef GET_HPP_INCLUDED
+#define GET_HPP_INCLUDED
+
+#endif // GET_HPP_INCLUDED

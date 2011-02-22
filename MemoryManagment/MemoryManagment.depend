@@ -1,0 +1,55 @@
+# depslib dependency file v1.0
+1252681833 source:c:\dokumente und einstellungen\marius\desktop\quellcodes\parser\memorymanagment\src\memorycontroller.cpp
+	"../include/MemoryController.hpp"
+	"../include/Reference.hpp"
+	<iostream>
+
+1252685054 c:\dokumente und einstellungen\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
+	<map>
+	<list>
+	<boost/variant.hpp>
+	<boost/circular_buffer.hpp>
+
+1252684490 c:\dokumente und einstellungen\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
+
+1252684679 source:c:\dokumente und einstellungen\marius\desktop\quellcodes\parser\memorymanagment\src\reference.cpp
+	"../include/MemoryController.hpp"
+	"../include/Reference.hpp"
+
+1252683999 source:c:\dokumente und einstellungen\marius\desktop\quellcodes\parser\memorymanagment\main.cpp
+	<iostream>
+	"include/MemoryController.hpp"
+	"include/Reference.hpp"
+	<vector>
+
+1260222001 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\main.cpp
+	<iostream>
+	"include/MemoryController.hpp"
+	"include/Reference.hpp"
+	<vector>
+
+1253628903 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
+	<map>
+	<list>
+	<boost/variant.hpp>
+	<boost/circular_buffer.hpp>
+
+1260140106 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
+
+1260223060 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\memorycontroller.cpp
+	"../include/MemoryController.hpp"
+	"../include/Reference.hpp"
+	"../include/Exceptions.hpp"
+	<iostream>
+
+1253627482 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
+	<stdexcept>
+
+1260223198 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\reference.cpp
+	"../include/MemoryController.hpp"
+	"../include/Reference.hpp"
+	"../include/Exceptions.hpp"
+	"../../include/Table.hpp"
+
+1253037660 c:\users\marius\desktop\quellcodes\parser\include\table.hpp
+

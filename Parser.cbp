@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Parser" />
+		<Option pch_mode="2" />
+		<Option compiler="gnu_gcc_compiler_tdragon" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\Parser" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\Parser" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-flto" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-flto" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Release Lib">
+				<Option output="bin\Release Lib\libParser" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj\Release Lib\" />
+				<Option type="2" />
+				<Option compiler="gnu_gcc_compiler_tdragon" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-flto" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-flto" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Debug 4.5 32bit">
+				<Option output="bin\Debug_4_5\Parser32" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug_4_5_32\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-m32" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add option="-m32" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Debug 4.5 64bit">
+				<Option output="bin\Debug_4_5\Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug_4_5_64\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Release 4.5 32bit">
+				<Option output="bin\Release_4_5\Parser32" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release_4_5_32\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-m32" />
+					<Add option="-flto" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m32" />
+					<Add option="-flto" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Release 4.5 64bit">
+				<Option output="bin\Release_4_5\Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release_4_5_64\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-flto" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-flto" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Release Lib 4.5 32bit">
+				<Option output="bin\ReleaseLib_4_5\libParser32" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj\Release Lib_4_5_32\" />
+				<Option type="2" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-m32" />
+					<Add option="-flto" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m32" />
+					<Add option="-flto" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Release Lib 4.5 64bit">
+				<Option output="bin\ReleaseLib_4_5\libParser64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj\Release Lib_4_5_64\" />
+				<Option type="2" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-flto" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-flto" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="MemoryManagment\include\Exceptions.hpp" />
+		<Unit filename="MemoryManagment\include\MemoryController.hpp" />
+		<Unit filename="MemoryManagment\include\Reference.hpp" />
+		<Unit filename="MemoryManagment\src\MemoryController.cpp" />
+		<Unit filename="MemoryManagment\src\Reference.cpp" />
+		<Unit filename="include\Exceptions.hpp" />
+		<Unit filename="include\Function.hpp" />
+		<Unit filename="include\IParsable.hpp" />
+		<Unit filename="include\IToken.hpp" />
+		<Unit filename="include\Internal\BindFunc.hpp" />
+		<Unit filename="include\Internal\FuncCaller.hpp" />
+		<Unit filename="include\Internal\Functions.hpp" />
+		<Unit filename="include\Internal\IEvaluable.hpp" />
+		<Unit filename="include\Internal\IFunction.hpp" />
+		<Unit filename="include\Internal\IOperator.hpp" />
+		<Unit filename="include\Internal\Is.hpp" />
+		<Unit filename="include\Internal\KeywordEnd.hpp" />
+		<Unit filename="include\Internal\KeywordFunc.hpp" />
+		<Unit filename="include\Internal\Marshal.hpp" />
+		<Unit filename="include\Internal\Object.hpp" />
+		<Unit filename="include\Internal\Operators.hpp" />
+		<Unit filename="include\Internal\Parser.hpp" />
+		<Unit filename="include\Internal\Stack.hpp" />
+		<Unit filename="include\Internal\StateSaver.hpp" />
+		<Unit filename="include\Internal\Table.hpp" />
+		<Unit filename="include\Internal\Tokenizer.hpp" />
+		<Unit filename="include\Internal\Tokens.hpp" />
+		<Unit filename="include\Internal\Typenames.hpp" />
+		<Unit filename="include\Internal\Types.hpp" />
+		<Unit filename="include\Internal\Utilities.hpp" />
+		<Unit filename="include\MariusParser.hpp" />
+		<Unit filename="include\Object.hpp" />
+		<Unit filename="include\Parsable.hpp" />
+		<Unit filename="include\TokenizeContext.hpp" />
+		<Unit filename="main.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Debug 4.5 32bit" />
+			<Option target="Release 4.5 32bit" />
+			<Option target="Debug 4.5 64bit" />
+			<Option target="Release 4.5 64bit" />
+		</Unit>
+		<Unit filename="src\Functions.cpp" />
+		<Unit filename="src\IEvaluable.cpp" />
+		<Unit filename="src\IFunction.cpp" />
+		<Unit filename="src\MariusParser.cpp" />
+		<Unit filename="src\Operators.cpp" />
+		<Unit filename="src\Parser.cpp" />
+		<Unit filename="src\Table.cpp">
+			<Option weight="100" />
+		</Unit>
+		<Unit filename="src\Tokenizer.cpp" />
+		<Unit filename="version.h" />
+		<Extensions>
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="5" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" do_auto_increment="1" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
