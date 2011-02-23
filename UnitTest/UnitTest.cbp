@@ -98,6 +98,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="FunctionCallTests.hpp" />
 		<Unit filename="FunctionDefTests.hpp" />
 		<Unit filename="TableTests.hpp" />
 		<Unit filename="main.cpp" />

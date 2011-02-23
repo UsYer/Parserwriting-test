@@ -334,7 +334,7 @@ private:
         #endif
         while( !m_ParserContext.OperatorStack().empty() ) //While there are items on the stack
         {
-            auto StackTop(m_ParserContext.OperatorStack().top());
+            auto StackTop = m_ParserContext.OperatorStack().top();
             if( boost::apply_visitor(Is<FuncCallerTag>(), StackTop) ) //and the item on top is an operator
                 break;
             auto StackOperator = boost::get<const boost::shared_ptr<IOperator>&>(StackTop);

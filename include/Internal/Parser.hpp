@@ -197,7 +197,6 @@ public:
     {
         m_BracketOperators.push_back(std::make_pair(OpeningBracket, ClosingBracket));
     }
-public:
 
 protected:
 private:
@@ -235,6 +234,8 @@ private:
         while(m_State.size() > 1)
             m_State.pop();
         m_State.top().Reset();
+        while( !m_ExpectedBracket.empty() )
+            m_ExpectedBracket.pop();
     }
 };
 inline ParserContext::ParserContext(Parser& P, std::deque<UnparsedToken>* InputQueue):

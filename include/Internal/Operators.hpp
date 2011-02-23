@@ -1,6 +1,7 @@
 #ifndef OPERATORS_H_INCLUDED
 #define OPERATORS_H_INCLUDED
 #include <cmath>
+#include <boost/make_shared.hpp>
 #include "../IToken.hpp" //For MinusToken, otherwise compilererror in Parser.cpp
 #include "../Parsable.hpp"
 #include "Utilities.hpp"
@@ -454,6 +455,14 @@ public:
         EC.EvalStack.push_back(Types::Object(Table));
     }
 };
+
+inline void ParseTableOp(ParserContext& PC)
+{
+    PC.Parse(boost::make_shared<TableOp>(TableOp()));
+    PC.LastToken() = TokenType::ArgSeperator;
+    //PC.Parse(boost::shared_ptr<IFunction>(new TableOp));
+}
+
 class OpeningBracket : public IOperator
 {
 protected:
@@ -568,7 +577,7 @@ public:
 };
 
 inline void ParseOpeningBracket(ParserContext& PC)
-{// TODO (Marius#9#): Implement and verify parsing of a funccall: func(); bracket after assignment: t = (1,2,3) or t = (5+2)*2
+{
  // Compare with openingbracket parsing in the parser
     boost::shared_ptr<IOperator> OB;
     if( PC.LastToken() == TokenType::Identifier )

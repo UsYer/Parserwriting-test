@@ -209,6 +209,7 @@ TEST(ReturnMarshal)
 }
 #include "TableTests.hpp"
 #include "FunctionDefTests.hpp"
+#include "FunctionCallTests.hpp"
 int main()
 {
     return UnitTest::RunAllTests();

@@ -24,7 +24,7 @@ MariusParser::MariusParser()
 {
     //Set up builtin operators and functions
     m_Tokenizer.RegisterToken(new ParsedOperatorToken(Internal::AssignmentOp(),&ParseAssignment)); //Needs to set LastToken and ParserState while parsing
-    m_Tokenizer.RegisterToken(new OperatorToken<TableOp>);
+    m_Tokenizer.RegisterToken(new ParsedOperatorToken(TableOp(),&ParseTableOp));
     m_Tokenizer.RegisterToken(new OperatorToken<PlusOp>);
     m_Tokenizer.RegisterToken(new MinusToken); //Minus needs some extra work while tokenizing
     m_Tokenizer.RegisterToken(new OperatorToken<MultiOp>);
