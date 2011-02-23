@@ -132,14 +132,6 @@ void IFunction::SuppliedArguments(const Member& Args, unsigned ArgCount)
             #endif
             (*ArgTable).ClearKeyValues(); //remove __ARGCOUNT__ from the arg table, because it would count as a named parameter in the next call
             m_LocalScope[0] = ArgTable;
-            /*auto it = (*ArgTable).IndexBegin();
-            for(unsigned i = 0; i < ArgCount; i++, std::advance(it,1) )
-            {
-                #ifdef DEBUG
-                std::cout << "LS[" << i << "] = " << boost::apply_visitor(Utilities::PrintValueNoResolve(),it->second) << "\n";
-                #endif
-                m_LocalScope[i] = it->second;
-            }*/
         }
         else
         {

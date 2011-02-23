@@ -1,5 +1,6 @@
 #ifndef ITOKEN_HPP_INCLUDED
 #define ITOKEN_HPP_INCLUDED
+#include <boost/make_shared.hpp>
 #include "TokenizeContext.hpp"
 class IToken
 {
@@ -122,7 +123,7 @@ class GenericOpeningBracketToken : public OperatorToken<T>
 {
     public:
     GenericOpeningBracketToken():
-        OperatorToken<T>(boost::shared_ptr<Internal::IOperator>(new T))
+        OperatorToken<T>(boost::make_shared<T>())
     {}
     virtual LastCharType Tokenize(TokenizeContext& TC) const
     {
@@ -135,7 +136,7 @@ class GenericClosingBracketToken : public OperatorToken<T>
 {
     public:
     GenericClosingBracketToken():
-        OperatorToken<T>(boost::shared_ptr<Internal::IOperator>(new T))
+        OperatorToken<T>(boost::make_shared<T>())
     {}
     virtual LastCharType Tokenize(TokenizeContext& TC) const
     {

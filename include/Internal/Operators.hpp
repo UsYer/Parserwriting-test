@@ -8,7 +8,6 @@
 #include "Is.hpp"
 namespace Internal
 {
-// TODO (Marius#9#): Add AssignmentToken which sets the TokenType::Assignment on parse
 class AssignmentOp : public IOperator
 {
 public:
@@ -18,7 +17,7 @@ public:
 };
 inline void ParseAssignment(ParserContext& PC)
 {// TODO (Marius#6#): Add recognition of funccall to support named parameter
-    PC.Parse(boost::shared_ptr<IOperator>(new AssignmentOp));
+    PC.Parse(boost::make_shared<AssignmentOp>());
     PC.LastToken() = TokenType::Assignment;
     PC.State() = ParserState::Assignment;
 };
@@ -111,12 +110,12 @@ public:
     {
         if( QualifiesForUnary(TC.LastChar()) || (TC.LastChar() == LastCharType::None && QualifiesForUnary(TC.LastChar().Before())) )
         {
-            TC.OutputQueue().push_back(boost::shared_ptr<IOperator>(new UnaryMinusOp));
+            TC.OutputQueue().push_back(boost::make_shared<UnaryMinusOp>());
             return LastCharType::UnaryPrefixOp;
         }
         else
         {
-            TC.OutputQueue().push_back(boost::shared_ptr<IOperator>(new BinaryMinusOp));
+            TC.OutputQueue().push_back(boost::make_shared<BinaryMinusOp>());
             return LastCharType::BinaryOp;
         }
     }
@@ -458,7 +457,7 @@ public:
 
 inline void ParseTableOp(ParserContext& PC)
 {
-    PC.Parse(boost::make_shared<TableOp>(TableOp()));
+    PC.Parse(boost::make_shared<TableOp>());
     PC.LastToken() = TokenType::ArgSeperator;
     //PC.Parse(boost::shared_ptr<IFunction>(new TableOp));
 }
@@ -557,7 +556,7 @@ public:
         ResolvedToken Tok(Utilities::Resolve(EC,EC.EvalStack.back()));
         boost::apply_visitor(ThrowIfNoFunc(),Tok);
         EC.SetSignal(SignalType::FuncCall);
-        EC.EvalStack.push_back(Types::Object(boost::shared_ptr<IFunction>(new ArgListStartMarker)));
+        EC.EvalStack.push_back(Types::Object(boost::make_shared<ArgListStartMarker>()));
     }
 };
 class OpeningBracketNoFuncCall : public OpeningBracket
@@ -579,10 +578,9 @@ public:
 inline void ParseOpeningBracket(ParserContext& PC)
 {
  // Compare with openingbracket parsing in the parser
-    boost::shared_ptr<IOperator> OB;
     if( PC.LastToken() == TokenType::Identifier )
     {   //the generic bracket parsing algorithm will take care of the Bracket, nothing more to do for us here
-        OB = boost::shared_ptr<IOperator>(new OpeningBracketFuncCall);
+        auto OB = boost::make_shared<OpeningBracketFuncCall>();
         PC.Parse(OB);
         PC.OutputQueue().push_back(OB);
         #ifdef DEBUG
@@ -592,8 +590,7 @@ inline void ParseOpeningBracket(ParserContext& PC)
     }
     else if( PC.LastToken() == TokenType::Assignment || PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double)
     {
-        OB = boost::shared_ptr<IOperator>(new OpeningBracketNoFuncCall);
-        PC.Parse(OB);
+        PC.Parse(boost::make_shared<OpeningBracketNoFuncCall>());
         //PC.OutputQueue().push_back(OB);
         #ifdef DEBUG
         std::cout << "OpeningBracketNoFuncCall\n";
@@ -601,7 +598,7 @@ inline void ParseOpeningBracket(ParserContext& PC)
     }
     else
     {
-        OB = boost::shared_ptr<IOperator>(new OpeningBracket);
+        auto OB = boost::make_shared<OpeningBracket>();
         PC.Parse(OB);
         PC.OutputQueue().push_back(OB);
         #ifdef DEBUG

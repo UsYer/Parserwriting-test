@@ -13,42 +13,7 @@
 #include "../include/Internal/Parser.hpp"
 #include "../include/Internal/Operators.hpp"
 using namespace Internal;
-/*
-struct SaveRHS : public boost::static_visitor<Member>
-{
-    Member operator()(long long L) const
-    {
-#ifdef DEBUG
-        std::cout << "RHS is value\n";
-#endif
-        return L;
-    }
-    Member operator()(double D) const
-    {
-#ifdef DEBUG
-        std::cout << "RHS is value\n";
-#endif
-        return D;
-    }
-    Member operator()(const boost::shared_ptr<IFunction>& Func) const
-    {
-        return Func;
-    }
-    Member operator()(const CountedReference& R) const
-    {
-        //The RHS is already a reference we don't need to save it anymore. Typical place of occurence: multiple assignment like "test=testTwo=5"
-        //were "testTwo=5" already produces a reference which gets passed to test=
-#ifdef DEBUG
-        std::cout << "RHS is Reference\n";
-#endif
-        return R;
-    }
-    Member operator()(const NullReference&)const
-    {
-        return NullReference();
-    }
-};
-*/
+
 struct DoAssignment : public boost::static_visitor<Member>
 {
     EvaluationContext& m_EC;
@@ -62,11 +27,8 @@ struct DoAssignment : public boost::static_visitor<Member>
     {
         if( !m_EC.This.IsNull() )
         { //we have an assignment to a table element. E.g.: table[0] = value
-            //Member Val(boost::apply_visitor(SaveRHS(),m_RHS));
-            //(*m_EC.This)[val] = Val;
             (*m_EC.This)[val] = m_RHS;
             m_EC.This = NullReference();
-//            return Val;
             return m_RHS;
         }
         throw std::logic_error("Lhs has to be an Identifier; Is long");
@@ -85,11 +47,7 @@ struct DoAssignment : public boost::static_visitor<Member>
             Scope = m_EC.This;
             m_EC.This = NullReference();
         }
-//        SaveRHS Save;
-//        Member Val(boost::apply_visitor(Save,m_RHS));
-//        (*Scope)[s] = Val;
         (*Scope)[s] = m_RHS;
-//        return Val;
         return m_RHS;
     }
     CountedReference operator()(const boost::shared_ptr<IFunction>& op)const

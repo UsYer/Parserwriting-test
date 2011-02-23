@@ -83,8 +83,7 @@ public:
     }
     void RegisterFunction(const std::string& Name, const std::string& Representation, int ArgCount, unsigned ReturnCount,const Internal::CallbackFunction& Func)
     {
-        boost::shared_ptr<Internal::IFunction> P(new Internal::BindFunction(Name, Representation, ArgCount, ReturnCount,Func));
-        (*m_Evaluator.m_GlobalScope)[Representation] = P;
+        (*m_Evaluator.m_GlobalScope)[Representation] = boost::make_shared<Internal::BindFunction>(Name, Representation, ArgCount, ReturnCount,Func);;
     }
     template<typename T>
     void RegisterFunction(const std::string& Name, const std::string& Representation, T Func)

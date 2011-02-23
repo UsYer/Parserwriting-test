@@ -42,7 +42,7 @@ MariusParser::MariusParser()
 
     m_Tokenizer.RegisterToken(new OpeningBracketToken);
     m_Tokenizer.RegisterToken(new GenericClosingBracketToken<ClosingBracket>);
-    m_Parser.RegisterBracketOperator(boost::shared_ptr<IOperator>(new OpeningBracket), boost::shared_ptr<IOperator>(new ClosingBracket));
+    m_Parser.RegisterBracketOperator(boost::make_shared<OpeningBracket>(), boost::make_shared<ClosingBracket>());
 
     auto IOB = new GenericOpeningBracketToken<IndexOpeningBracket>;
     auto ICB = new GenericClosingBracketToken<IndexClosingBracket>;
@@ -50,20 +50,20 @@ MariusParser::MariusParser()
     m_Tokenizer.RegisterToken(ICB);
     m_Parser.RegisterBracketOperator(IOB->GetOp(), ICB->GetOp());
 
-    RegisterFunction(boost::shared_ptr<IFunction>(new TypeFunc));
+    RegisterFunction(boost::make_shared<TypeFunc>());
 
     Internal::Types::Table MCScope;
-    MCScope.Add("GetRefCount",boost::shared_ptr<IFunction>(new GetRefCountFunc));
+    MCScope.Add("GetRefCount",boost::make_shared<GetRefCountFunc>());
     (*m_Evaluator.m_GlobalScope)["MC"] = m_Evaluator.m_MC.Save(MCScope);
 
     Internal::Types::Table T;
-    T.Add("Max",boost::shared_ptr<IFunction>(new MaxFunc));
-    T.Add("Sqrt",boost::shared_ptr<IFunction>(new SqrtFunc));
+    T.Add("Max",boost::make_shared<MaxFunc>());
+    T.Add("Sqrt",boost::make_shared<SqrtFunc>());
     T.Add("Pi",3.141592653589793238462643);
     CountedReference Ref(m_Evaluator.m_MC.Save(T));
     (*m_Evaluator.m_GlobalScope)["Math"] = Ref;
-    RegisterFunction(boost::shared_ptr<IFunction>(new CreateNullFunc));
-    RegisterFunction(boost::shared_ptr<IFunction>(new CreateTableFunc));
+    RegisterFunction(boost::make_shared<CreateNullFunc>());
+    RegisterFunction(boost::make_shared<CreateTableFunc>());
 }
 
 MariusParser::~MariusParser()
@@ -92,7 +92,7 @@ MariusParser::~MariusParser()
     QueryPerformanceCounter(&ende_ticks);
 
     tick_diff = ende_ticks.QuadPart - start_ticks.QuadPart;
-    std::string Took("Tokenizing took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) +
+    std::string Took("\nInput: " + Input + "\nTokenizing took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) +
                      " ticks and " + boost::lexical_cast<std::string>((double)tick_diff / frequenz.QuadPart) + " ms\n");
 #ifdef DEBUG
     foreach(UnparsedToken& Tok, UTs)
@@ -133,14 +133,6 @@ MariusParser::~MariusParser()
         boost::apply_visitor(m_Evaluator,t);
         Q.pop();
     }
-    //Causing a lot of troubles with function as return values like in TRM(Type), therefore disabled
-    /*
-    while( !m_Evaluator.Stack.empty() && m_Evaluator.Stack.back().Visit(Is<boost::shared_ptr<IFunction>>()) )
-    {
-        Internal::Types::Object Val(m_Evaluator.Stack.back());
-        m_Evaluator.Stack.pop_back();
-        Val.Visit(m_Evaluator);
-    }*/
     QueryPerformanceCounter(&ende_ticks);
 
     Took += "Evaluation took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
