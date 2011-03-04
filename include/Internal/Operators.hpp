@@ -17,6 +17,10 @@ public:
 };
 inline void ParseAssignment(ParserContext& PC)
 {// TODO (Marius#6#): Add recognition of funccall to support named parameter
+    //The parser would let some tokens through, which don't make sense in an assignment. Other Tokens like faulty placed operators will be correctly handled
+    //by the Parser
+    if( PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double || PC.LastToken() == TokenType::KeywordWithValue )
+        throw std::logic_error("Can't assign to a number literal");
     PC.Parse(boost::make_shared<AssignmentOp>());
     PC.LastToken() = TokenType::Assignment;
     PC.State() = ParserState::Assignment;
@@ -454,7 +458,8 @@ public:
         EC.EvalStack.push_back(Types::Object(Table));
     }
 };
-
+// TODO (Marius#9#): Implement an m_Unexpected field in which Parsables can state which kind of token is not allowed to directly follow after it
+//Important: Make sure that m_Unexpected gets reset after more than the immediatly following token is read
 inline void ParseTableOp(ParserContext& PC)
 {
     PC.Parse(boost::make_shared<TableOp>());

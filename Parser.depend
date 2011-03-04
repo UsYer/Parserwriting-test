@@ -40,9 +40,9 @@
 	"version.h"
 	"include/MariusParser.hpp"
 
-1298503159 c:\users\marius\desktop\quellcodes\parser\version.h
+1299256511 c:\users\marius\desktop\quellcodes\parser\version.h
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
+1298503326 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Internal/Parser.hpp"
 	"Internal/Tokenizer.hpp"
 	"Internal/Utilities.hpp"
@@ -51,7 +51,7 @@
 	"Internal/BindFunc.hpp"
 	"Exceptions.hpp"
 
-1298476490 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
+1299256511 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
 	<stack>
 	<queue>
 	<string>
@@ -111,7 +111,7 @@
 1298329039 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
 	"Internal/Marshal.hpp"
 
-1298503158 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
+1298503351 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
 	"Utilities.hpp"
 	"Marshal.hpp"
 	<array>
@@ -138,7 +138,7 @@
 	"../include/Internal/IFunction.hpp"
 	"../include/Internal/Utilities.hpp"
 
-1298395121 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
+1298503338 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
 	<iostream>
 	<windows.h>
 	<boost/lexical_cast.hpp>
@@ -150,7 +150,7 @@
 	"../include/Internal/KeywordFunc.hpp"
 	"../include/Internal/KeywordEnd.hpp"
 
-1298503655 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
+1299256580 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
 	<cmath>
 	<boost/make_shared.hpp>
 	"../IToken.hpp"
@@ -179,7 +179,7 @@
 
 1274126507 c:\users\marius\desktop\quellcodes\parser\include\internal\get.hpp
 
-1298475691 source:c:\users\marius\desktop\quellcodes\parser\src\parser.cpp
+1299015621 source:c:\users\marius\desktop\quellcodes\parser\src\parser.cpp
 	<algorithm>
 	<iostream>
 	"../MemoryManagment/include/MemoryController.hpp"

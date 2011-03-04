@@ -36,6 +36,11 @@ TEST(PlainAssignment3)
     Types::Object result = MP.GlobalScope()["test_3"];
     CHECK_EQUAL(3,(long long)result);
 }
+TEST(AssignmentToLiteral)
+{
+    std::cout << "AssignmentToLiteral\n";
+    CHECK_THROW(MP.Evaluate("5=1"),Exceptions::ParseError);
+}
 //Checks for distinction of unary and binary minus
 TEST(UnaryMinusFirstToken)
 {
