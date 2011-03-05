@@ -210,6 +210,10 @@ TEST(ReturnMarshal)
     MP.Evaluate("PassedFunc = TRM(Math.Max)");
     MP.Evaluate("PassedFunc(1,2)");
 }
+TEST(WeirdSyntax1)
+{
+    CHECK_THROW(MP.Evaluate("MC,[0]55"),Exceptions::ParseError);
+}
 #include "TableTests.hpp"
 #include "FunctionDefTests.hpp"
 #include "FunctionCallTests.hpp"
