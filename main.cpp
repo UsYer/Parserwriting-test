@@ -1,8 +1,6 @@
 #include <iostream>
 #include "version.h"
 #include "include/MariusParser.hpp"
-
-/* FIXME (Marius#7#): Function calls are still very buggy. Related: AnonFuncDefInFuncCall fails because of this */
 /* TODO (Marius#9#): Implement marshaling of userside types to internal types.
 Like extracting the actual value of a userside Object.
 When marshaling values in make sure to dereference pointers in order to copy the argument.

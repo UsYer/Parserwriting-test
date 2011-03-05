@@ -20,126 +20,23 @@ enum struct ParserState
 
 enum struct TokenType
 {
-    Long,
-    Double,
-    OpUnaryPrefix,
-    OpUnaryPostfix,
-    OpBinary,
-    Bracket,
-    Identifier,
-    Assignment,
-    ArgSeperator,
-    KeywordWithValue, //Keyword that produces a new value, like function, null ...
-    Keyword,
-    None
+    Long            = (1u << 0),
+    Double          = (1u << 1),
+    OpUnaryPrefix   = (1u << 2),
+    OpUnaryPostfix  = (1u << 3),
+    OpBinary        = (1u << 4),
+    OpeningBracket  = (1u << 5),
+    ClosingBracket  = (1u << 6),
+    Identifier      = (1u << 7),
+    Assignment      = (1u << 8),
+    ArgSeperator    = (1u << 9),
+    KeywordWithValue = (1u << 10), //Keyword that produces a new value, like function, null ...
+    Keyword         = (1u << 11),
+    None            = (1u << 12),
+    //Composed Tokentypes for convenience:
+    Value = Long | Double | KeywordWithValue | Identifier
 };
 class Parser;
-/*struct ParserContext
-{
-    ParserContext(Parser& P, std::deque<UnparsedToken>* InputQueue = 0):
-        m_Parser(P),
-        m_InputQueue(InputQueue)
-    {
-        m_OutputQueues.push(&m_Parser.m_OutputQueue);
-        m_PopOutputQueue.push(false);
-    }
-    //Provide a pointer to a new Outputqueue if you want to redirect the parsed tokens to somewhere else as the standard outputqueue
-    void SetUpNewScope(std::deque<Token>* NewOutputQueue = 0)
-    {
-        if( NewOutputQueue )
-        {
-            m_OutputQueues.push(NewOutputQueue);
-            m_PopOutputQueue.push(true);
-        }
-        else
-            m_PopOutputQueue.push(false);
-        m_Parser.m_OperatorStack.push(std::stack<OperatorOrFuncCaller>());
-        m_Parser.m_LastToken.push(TokenType::None);
-        m_Parser.m_State.push(ParserState::None);
-
-        std::stack<unsigned> InitialArgCounter;
-        InitialArgCounter.push(0);
-        m_Parser.m_ArgCounterStack.push(InitialArgCounter);
-
-        std::stack<bool> InitialArgExist;
-        InitialArgExist.push(false);
-        m_Parser.m_ArgExistsStack.push(InitialArgExist);
-    }
-    void EndScope()
-    {
-        if( m_PopOutputQueue.top() )
-        {
-            assert(m_OutputQueues.size() > 1);
-            m_OutputQueues.pop();
-        }
-        m_PopOutputQueue.pop();
-        m_Parser.m_OperatorStack.pop();
-        m_Parser.m_LastToken.pop();
-        m_Parser.m_State.pop();
-        m_Parser.m_ArgCounterStack.pop();
-        m_Parser.m_ArgExistsStack.pop();
-    }
-    const std::map<std::string,std::function<bool(ParserContext&)>>& Keywords() const
-    {
-        return m_Parser.m_Keywords;
-    }
-    const boost::shared_ptr<IOperator>& OpeningBracket() const
-    {
-        return m_Parser.m_OpeningBracket;
-    }
-    const boost::shared_ptr<IOperator>& ClosingBracket() const
-    {
-        return m_Parser.m_ClosingBracket;
-    }
-    const boost::shared_ptr<IOperator>& ArgumentSeperator() const
-    {
-        return m_Parser.m_ArgumentSeperator;
-    }
-    const std::vector<std::pair<boost::shared_ptr<IOperator>,boost::shared_ptr<IOperator>>>& BracketOperators() const
-    {
-        return m_Parser.m_BracketOperators;
-    }
-    std::stack<OperatorOrFuncCaller>& OperatorStack() const
-    {
-        return m_Parser.m_OperatorStack.top();
-    }
-    std::deque<UnparsedToken>& InputQueue() const
-    {
-        assert(m_InputQueue);
-        return *m_InputQueue;
-    }
-    void InputQueue(std::deque<UnparsedToken>* NewInputQueue)
-    {
-        assert(NewInputQueue);
-        m_InputQueue = NewInputQueue;
-    }
-    std::deque<Token>& OutputQueue() const
-    {
-        assert(!m_OutputQueues.empty());
-        return *m_OutputQueues.top();
-    }
-    StateSaver<ParserState>& State() const
-    {
-        return m_Parser.m_State.top();
-    }
-    TokenType& LastToken() const
-    {
-        return m_Parser.m_LastToken.top();
-    }
-    std::stack<bool>& ArgExistsStack() const
-    {
-        return m_Parser.m_ArgExistsStack.top();
-    }
-    std::stack<unsigned>& ArgCounterStack() const
-    {
-        return m_Parser.m_ArgCounterStack.top();
-    }
-    private:
-    Parser& m_Parser;
-    std::deque<UnparsedToken>* m_InputQueue;
-    std::stack<std::deque<Token>*> m_OutputQueues;
-    std::stack<bool> m_PopOutputQueue;
-};*/
 struct ParserContext
 {
     inline ParserContext(Parser& P, std::deque<UnparsedToken>* InputQueue = 0);
@@ -147,7 +44,7 @@ struct ParserContext
     inline void SetUpNewScope(std::deque<Token>* NewOutputQueue = 0);
     inline bool EndScope();
     void Parse(const UnparsedToken&) const; //defined in the cpp-file
-    inline const std::map<std::string,std::function<bool(ParserContext&)>>& Keywords() const;
+//    inline const std::map<std::string,std::function<bool(ParserContext&)>>& Keywords() const;
     inline const boost::shared_ptr<IOperator>& OpeningBracket() const;
     inline const boost::shared_ptr<IOperator>& ClosingBracket() const;
     inline std::stack<boost::shared_ptr<IOperator>>& ExpectedBracket() const;
@@ -159,6 +56,7 @@ struct ParserContext
     inline std::deque<Token>& OutputQueue() const;
     inline StateSaver<ParserState>& State() const;
     inline TokenType& LastToken() const;
+    inline TokenType& UnexpectedToken() const;
     inline std::stack<bool>& ArgExistsStack() const;
     inline std::stack<unsigned>& ArgCounterStack() const;
     private:
@@ -203,7 +101,7 @@ private:
     //Fields for parsed Tokens:
     std::stack<std::stack<OperatorOrFuncCaller>> m_OperatorStack;
     std::deque<Token> m_OutputQueue;
-    std::map<std::string,std::function<bool(ParserContext&)>> m_Keywords;
+//    std::map<std::string,std::function<bool(ParserContext&)>> m_Keywords;
     boost::shared_ptr<IOperator> m_OpeningBracket;
     boost::shared_ptr<IOperator> m_ClosingBracket;
     boost::shared_ptr<IOperator> m_ArgumentSeperator;
@@ -213,6 +111,7 @@ private:
     struct Visitor;
 
     std::stack<TokenType> m_LastToken;
+    std::stack<TokenType> m_UnexpectedToken;
     std::stack<StateSaver<ParserState>> m_State;
     std::stack<std::stack<bool>> m_ArgExistsStack;
     std::stack<std::stack<unsigned>> m_ArgCounterStack;
@@ -221,19 +120,8 @@ private:
     ParserContext m_Context;
     void ResetStates()
     {
-        while( !m_ArgCounterStack.empty() )
-            m_ArgCounterStack.pop();
-        std::stack<unsigned>ClearArgCounter;
-        ClearArgCounter.push(0);
-        m_ArgCounterStack.push(ClearArgCounter);
-        while( !m_ArgExistsStack.empty() )
-            m_ArgExistsStack.pop();
-        std::stack<bool> ClearArgExist;
-        ClearArgExist.push(false);
-        m_ArgExistsStack.push(ClearArgExist);
-        while(m_State.size() > 1)
-            m_State.pop();
-        m_State.top().Reset();
+        while( m_Context.EndScope() );
+            //No-Op
         while( !m_ExpectedBracket.empty() )
             m_ExpectedBracket.pop();
     }
@@ -256,6 +144,7 @@ inline void ParserContext::SetUpNewScope(std::deque<Token>* NewOutputQueue)
         m_PopOutputQueue.push(false);
     m_Parser.m_OperatorStack.push(std::stack<OperatorOrFuncCaller>());
     m_Parser.m_LastToken.push(TokenType::None);
+    m_Parser.m_UnexpectedToken.push(TokenType::None);
     m_Parser.m_State.push(ParserState::None);
 
     std::stack<unsigned> InitialArgCounter;
@@ -270,7 +159,8 @@ inline bool ParserContext::EndScope()
 {
     //Before doing anything, we first check that we aren't in the global scope, which means, that there hasn't been set up a new scope so far
     if( m_OutputQueues.size() <= 1 || m_Parser.m_OperatorStack.size() <= 1 || m_Parser.m_LastToken.size() <= 1 ||
-        m_Parser.m_State.size() <= 1 || m_Parser.m_ArgCounterStack.size() <= 1 || m_Parser.m_ArgExistsStack.size() <= 1 )
+        m_Parser.m_UnexpectedToken.size() <= 1 || m_Parser.m_State.size() <= 1 || m_Parser.m_ArgCounterStack.size() <= 1 ||
+        m_Parser.m_ArgExistsStack.size() <= 1 )
         return false;
     if( m_PopOutputQueue.top() )
     {
@@ -279,15 +169,16 @@ inline bool ParserContext::EndScope()
     m_PopOutputQueue.pop();
     m_Parser.m_OperatorStack.pop();
     m_Parser.m_LastToken.pop();
+    m_Parser.m_UnexpectedToken.pop();
     m_Parser.m_State.pop();
     m_Parser.m_ArgCounterStack.pop();
     m_Parser.m_ArgExistsStack.pop();
     return true;
 }
-inline const std::map<std::string,std::function<bool(ParserContext&)>>& ParserContext::Keywords() const
-{
-    return m_Parser.m_Keywords;
-}
+//inline const std::map<std::string,std::function<bool(ParserContext&)>>& ParserContext::Keywords() const
+//{
+//    return m_Parser.m_Keywords;
+//}
 inline const boost::shared_ptr<IOperator>& ParserContext::OpeningBracket() const
 {
     return m_Parser.m_OpeningBracket;
@@ -334,6 +225,10 @@ inline StateSaver<ParserState>& ParserContext::State() const
 inline TokenType& ParserContext::LastToken() const
 {
     return m_Parser.m_LastToken.top();
+}
+inline TokenType& ParserContext::UnexpectedToken() const
+{
+    return m_Parser.m_UnexpectedToken.top();
 }
 inline std::stack<bool>& ParserContext::ArgExistsStack() const
 {

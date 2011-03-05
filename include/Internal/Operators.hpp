@@ -464,7 +464,6 @@ inline void ParseTableOp(ParserContext& PC)
 {
     PC.Parse(boost::make_shared<TableOp>());
     PC.LastToken() = TokenType::ArgSeperator;
-    //PC.Parse(boost::shared_ptr<IFunction>(new TableOp));
 }
 
 class OpeningBracket : public IOperator
@@ -742,5 +741,6 @@ public:
             EC.DropSignal();
     }
 };
+// TODO (Marius#6#): Create Closingbracket-parsable which correctly resets the parserstate funccall
 }//ns Internal
 #endif // OPERATORS_H_INCLUDED

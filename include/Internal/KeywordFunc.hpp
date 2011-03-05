@@ -89,9 +89,7 @@ struct ParseFuncBeginning : public boost::static_visitor<std::string>
         throw std::logic_error("Expected identifier or opening bracket after keyword \"func\"");
     }
     std::string operator()(const Parsable& P) const
-    {// TODO (Marius#9#): Implement handling of parsables correctly
-        //Problem: We need to know which operator will be produced by the Parsable
-        //Would the representation be sufficient? Somethin like Parsable::Representation()
+    {
         if( P.Representation == *m_Context.OpeningBracket() )
         {
             return "";

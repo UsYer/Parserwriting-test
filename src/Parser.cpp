@@ -11,8 +11,6 @@
 #include "../include/Internal/FuncCaller.hpp"
 #include "../include/Internal/Get.hpp"
 #include "../include/Internal/Is.hpp"
-//#include "../include/Internal/KeywordFunction.hpp"
-//#include "../include/Internal/KeywordEnd.hpp"
 #include "../include/Internal/Operators.hpp"
 #include "../include/Exceptions.hpp"
 using namespace Internal;
@@ -58,50 +56,22 @@ struct Parser::Visitor : public boost::static_visitor<>
     }
     void operator()(long long val)
     {
-        /*
-        if( m_ParserContext.State() == ParserState::FunctionCall && !m_ParserContext.ArgExistsStack().top())
-        {
-            //If we're in a function call and there has not yet been an argument recognized
-            m_ParserContext.ArgCounterStack().top()++;
-            m_ParserContext.ArgExistsStack().top() = true;
-        }
-        */
+        ThrowIfUnexpected(TokenType::Long, "Unexpected number literal");
         m_ParserContext.OutputQueue().push_back(val);
         m_ParserContext.LastToken() = TokenType::Long;
     }
     void operator()(double val)
     {
-        /*
-        if( m_ParserContext.State() == ParserState::FunctionCall && !m_ParserContext.ArgExistsStack().top())
-        {
-            m_ParserContext.ArgCounterStack().top()++;
-            m_ParserContext.ArgExistsStack().top() = true;
-        }*/
+        ThrowIfUnexpected(TokenType::Double, "Unexpected number literal");
         m_ParserContext.OutputQueue().push_back(val);
         m_ParserContext.LastToken() = TokenType::Double;
     }
     void operator()(const boost::shared_ptr<IOperator>& op)
     {
-        //Special treatment of the Bracket-Operators:
-        /*if( *op == *m_ParserContext.OpeningBracket() )
-        {
-            //there has to be either an operator, an identifier, which identifies it as a function call, or nothing before an openingbracket
-            //Check for a function call
-            //check if there is an operator missing. Somthing like that: 5(5+5), which should read 5*(5+5) for example
-            if( m_ParserContext.LastToken() == TokenType::Long || m_ParserContext.LastToken() == TokenType::Double )
-            {
-                throw std::logic_error("An operator is missing before '" + op->Representation() + "'\n");
-            }
-            m_ParserContext.ExpectedBracket().push(m_ParserContext.ClosingBracket());
-            PopHigherPrecedenceOperators(op);
-            m_ParserContext.OperatorStack().push(op);
-            m_ParserContext.LastToken() = TokenType::Bracket;
-            m_ParserContext.OutputQueue().push_back(op);
-            return;
-        }//*/
         auto it = std::find_if(m_ParserContext.BracketOperators().begin(), m_ParserContext.BracketOperators().end(), FindOpeningBracket(*op));
         if( it != m_ParserContext.BracketOperators().end() )
         {
+            ThrowIfUnexpected(TokenType::OpeningBracket, "Unexpected opening bracket");
             //check if there is an operator missing. Something like that: 5(5+5), which should read 5*(5+5) for example
             if( m_ParserContext.LastToken() == TokenType::Long || m_ParserContext.LastToken() == TokenType::Double )
             {
@@ -110,13 +80,15 @@ struct Parser::Visitor : public boost::static_visitor<>
             m_ParserContext.ExpectedBracket().push(it->second);
             PopHigherPrecedenceOperators(op);
             m_ParserContext.OperatorStack().push(op);
-            m_ParserContext.LastToken() = TokenType::Bracket;
+            m_ParserContext.LastToken() = TokenType::OpeningBracket;
             return;
         }
+        // TODO (Marius#6#): Extract the closingbracket treatment in a Closingbracket parsable
         else if( *op == *m_ParserContext.ClosingBracket() )
         {
+            ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
             if( m_ParserContext.LastToken() == TokenType::ArgSeperator )
-                throw std::logic_error("Expected an expression between ',' and " + op->Representation());
+                throw std::logic_error("Expected an expression between ',' and '" + op->Representation() + "'");
             if( m_ParserContext.ExpectedBracket().empty() ) //Closingbracket but no bracket expected? Definitely a bracket mismatch
                 throw std::logic_error("No closing bracket expected");
             else if( *m_ParserContext.ExpectedBracket().top() == *op )
@@ -154,7 +126,7 @@ struct Parser::Visitor : public boost::static_visitor<>
                         { //The openingbracket doesn't belong to a funccall, but we still have to restore the former state, because it could have been altered when the openingbracket was parsed
                             m_ParserContext.State().Restore();
                         }
-                        m_ParserContext.LastToken() = TokenType::Bracket;
+                        m_ParserContext.LastToken() = TokenType::ClosingBracket;
 //#ifdef DEBUG
 //                        std::cout << "ArgCounter: " << m_ParserContext.ArgCounterStack().top() << std::endl;
 //#endif
@@ -180,6 +152,7 @@ struct Parser::Visitor : public boost::static_visitor<>
         it = std::find_if(m_ParserContext.BracketOperators().begin(), m_ParserContext.BracketOperators().end(), FindClosingBracket(*op));
         if( it != m_ParserContext.BracketOperators().end() )
         {
+            ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
             if( m_ParserContext.ExpectedBracket().empty() ) //Closingbracket but no bracket expected? Definitely a bracket mismatch
                 throw std::logic_error("No closing bracket expected");
             else if( *m_ParserContext.ExpectedBracket().top() == *it->second )
@@ -195,7 +168,7 @@ struct Parser::Visitor : public boost::static_visitor<>
                 {
                     m_ParserContext.OutputQueue().push_back(it->second); //push the closing bracket on the outqueue
                     m_ParserContext.OperatorStack().pop();
-                    m_ParserContext.LastToken() = TokenType::Bracket;
+                    m_ParserContext.LastToken() = TokenType::ClosingBracket;
                     return;
                 }
                 m_ParserContext.OperatorStack().pop();
@@ -245,8 +218,9 @@ struct Parser::Visitor : public boost::static_visitor<>
 #ifdef DEBUG
             std::cout << "UnaryPostfix" << std::endl;
 #endif
+            ThrowIfUnexpected(TokenType::OpUnaryPostfix, "Unexpected operator '" + op->Representation() + "'");
             if( m_ParserContext.LastToken() == TokenType::None )
-                throw std::logic_error("missing input before operator " + op->Representation());
+                throw std::logic_error("missing input before operator '" + op->Representation() + "'");
 
             m_ParserContext.OutputQueue().push_back(op);
             m_ParserContext.LastToken() = TokenType::OpUnaryPostfix;
@@ -256,6 +230,7 @@ struct Parser::Visitor : public boost::static_visitor<>
 #ifdef DEBUG
             std::cout << "UnaryPrefix" << std::endl;
 #endif
+            ThrowIfUnexpected(TokenType::OpUnaryPrefix, "Unexpected operator '" + op->Representation() + "'");
             m_ParserContext.OperatorStack().push(op);
             m_ParserContext.LastToken() = TokenType::OpUnaryPrefix;
         }
@@ -264,28 +239,12 @@ struct Parser::Visitor : public boost::static_visitor<>
 #ifdef DEBUG
             std::cout << "Binary" << std::endl;
 #endif
+            ThrowIfUnexpected(TokenType::OpBinary, "Unexpected operator '" + op->Representation() + "'");
             ParseBinaryOperator(op);
         }
     }
     void operator()(const std::string& s)
     {
-        auto it = m_ParserContext.Keywords().find(s);
-        if( it != m_ParserContext.Keywords().end() )
-        {
-            #ifdef DEBUG
-            std::cout << "Keyword: " << s << "\n";
-            #endif
-            //Giving control over the parsing process to the keyword parser:
-            it->second(m_ParserContext);
-            return;
-        }
-        /*
-        if( m_ParserContext.State() != ParserState::None && !m_ParserContext.ArgExistsStack().top())
-        {
-            m_ParserContext.ArgCounterStack().top()++;
-            m_ParserContext.ArgExistsStack().top() = true;
-        }
-        */
         m_ParserContext.OutputQueue().push_back(s);
         m_ParserContext.LastToken() = TokenType::Identifier;
     }
@@ -374,14 +333,22 @@ private:
     void ParseBinaryOperator(const boost::shared_ptr<IOperator>& Op)
     {
         if( m_ParserContext.LastToken() == TokenType::None || m_ParserContext.LastToken() == TokenType::OpBinary ||
-            m_ParserContext.LastToken() == TokenType::ArgSeperator //|| m_ParserContext.LastToken() == TokenType::Bracket not good because it wouldn't allow
-          )                                                         //something like t1 = (f(),1,2)
+            m_ParserContext.LastToken() == TokenType::ArgSeperator || m_ParserContext.LastToken() == TokenType::OpeningBracket
+          )
         {
             throw std::logic_error("There is an operand missing near operator " + Op->Representation());
         }
         PopHigherPrecedenceOperators(Op);
         m_ParserContext.OperatorStack().push(Op);
         m_ParserContext.LastToken() = TokenType::OpBinary;
+    }
+    void ThrowIfUnexpected(TokenType TType, const std::string& ErrMessage = "Unexpected Token") const
+    {
+        if( m_ParserContext.UnexpectedToken() == TType )
+        {
+            m_ParserContext.UnexpectedToken() = TokenType::None;
+            throw std::logic_error(ErrMessage);
+        }
     }
 };
 
@@ -414,7 +381,7 @@ void Parser::Parse( std::deque<UnparsedToken> TokExpr )
         {
             while( m_Context.EndScope() );//In case of an error reset all scopes so that in the next call of Parse() the output goes in the right outputqueue
                 //No-op
-            throw ParseError("Near Token " + boost::lexical_cast<std::string>(OriginalSize - TokExpr.size()) + ": " + e.what(),Loc);
+            throw ParseError("At Token " + boost::lexical_cast<std::string>(OriginalSize - TokExpr.size()) + ": " + e.what(),Loc);
         }
     } //while
     //if the last operator is a prefix or a binary signal an error, because it always needs more input to evaluate
