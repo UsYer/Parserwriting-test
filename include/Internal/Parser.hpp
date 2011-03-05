@@ -44,13 +44,13 @@ struct ParserContext
     inline void SetUpNewScope(std::deque<Token>* NewOutputQueue = 0);
     inline bool EndScope();
     void Parse(const UnparsedToken&) const; //defined in the cpp-file
-//    inline const std::map<std::string,std::function<bool(ParserContext&)>>& Keywords() const;
-    inline const boost::shared_ptr<IOperator>& OpeningBracket() const;
-    inline const boost::shared_ptr<IOperator>& ClosingBracket() const;
-    inline std::stack<boost::shared_ptr<IOperator>>& ExpectedBracket() const;
-    inline const boost::shared_ptr<IOperator>& ArgumentSeperator() const;
-    inline const std::vector<std::pair<boost::shared_ptr<IOperator>,boost::shared_ptr<IOperator>>>& BracketOperators() const;
-    inline std::stack<OperatorOrFuncCaller>& OperatorStack() const;
+    inline void ThrowIfUnexpected(TokenType TType, const std::string& ErrMessage = "Unexpected Token") const;
+    inline const Types::Operator& OpeningBracket() const;
+    inline const Types::Operator& ClosingBracket() const;
+    inline std::stack<Types::Operator>& ExpectedBracket() const;
+    inline const Types::Operator& ArgumentSeperator() const;
+    inline const std::vector<std::pair<Types::Operator,Types::Operator>>& BracketOperators() const;
+    inline std::stack<Types::Operator>& OperatorStack() const;
     inline std::deque<UnparsedToken>& InputQueue() const;
     inline void InputQueue(std::deque<UnparsedToken>* NewInputQueue);
     inline std::deque<Token>& OutputQueue() const;
@@ -99,13 +99,13 @@ public:
 protected:
 private:
     //Fields for parsed Tokens:
-    std::stack<std::stack<OperatorOrFuncCaller>> m_OperatorStack;
+    std::stack<std::stack<Types::Operator>> m_OperatorStack;
     std::deque<Token> m_OutputQueue;
 //    std::map<std::string,std::function<bool(ParserContext&)>> m_Keywords;
-    boost::shared_ptr<IOperator> m_OpeningBracket;
-    boost::shared_ptr<IOperator> m_ClosingBracket;
-    boost::shared_ptr<IOperator> m_ArgumentSeperator;
-    std::vector<std::pair<boost::shared_ptr<IOperator>/*Openingbracket*/,boost::shared_ptr<IOperator/*Closingbracket*/>>> m_BracketOperators;
+    Types::Operator m_OpeningBracket;
+    Types::Operator m_ClosingBracket;
+    Types::Operator m_ArgumentSeperator;
+    std::vector<std::pair<Types::Operator/*Openingbracket*/,Types::Operator/*Closingbracket*/>> m_BracketOperators;
 
     friend struct Visitor;
     struct Visitor;
@@ -116,7 +116,7 @@ private:
     std::stack<std::stack<bool>> m_ArgExistsStack;
     std::stack<std::stack<unsigned>> m_ArgCounterStack;
     //Keeps track of the expected brackets. If there are still brackets after completly parsing the input at least one closing bracket is missing
-    std::stack<boost::shared_ptr<IOperator/*Closingbracket*/>> m_ExpectedBracket;
+    std::stack<Types::Operator/*Closingbracket*/> m_ExpectedBracket;
     ParserContext m_Context;
     void ResetStates()
     {
@@ -142,7 +142,7 @@ inline void ParserContext::SetUpNewScope(std::deque<Token>* NewOutputQueue)
     }
     else
         m_PopOutputQueue.push(false);
-    m_Parser.m_OperatorStack.push(std::stack<OperatorOrFuncCaller>());
+    m_Parser.m_OperatorStack.push(std::stack<Types::Operator>());
     m_Parser.m_LastToken.push(TokenType::None);
     m_Parser.m_UnexpectedToken.push(TokenType::None);
     m_Parser.m_State.push(ParserState::None);
@@ -175,10 +175,14 @@ inline bool ParserContext::EndScope()
     m_Parser.m_ArgExistsStack.pop();
     return true;
 }
-//inline const std::map<std::string,std::function<bool(ParserContext&)>>& ParserContext::Keywords() const
-//{
-//    return m_Parser.m_Keywords;
-//}
+void ParserContext::ThrowIfUnexpected(TokenType TType, const std::string& ErrMessage) const
+{
+    if( m_Parser.m_UnexpectedToken.top() == TType )
+    {
+        m_Parser.m_UnexpectedToken.top() = TokenType::None;
+        throw std::logic_error(ErrMessage);
+    }
+}
 inline const boost::shared_ptr<IOperator>& ParserContext::OpeningBracket() const
 {
     return m_Parser.m_OpeningBracket;
@@ -199,7 +203,7 @@ inline const std::vector<std::pair<boost::shared_ptr<IOperator>,boost::shared_pt
 {
     return m_Parser.m_BracketOperators;
 }
-inline std::stack<OperatorOrFuncCaller>& ParserContext::OperatorStack() const
+inline std::stack<Types::Operator>& ParserContext::OperatorStack() const
 {
     return m_Parser.m_OperatorStack.top();
 }

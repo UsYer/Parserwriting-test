@@ -41,7 +41,7 @@ MariusParser::MariusParser()
     m_Tokenizer.RegisterToken(new KeywordToken("end",&Keyword::End));
 
     m_Tokenizer.RegisterToken(new OpeningBracketToken);
-    m_Tokenizer.RegisterToken(new GenericClosingBracketToken<ClosingBracket>);
+    m_Tokenizer.RegisterToken(new ClosingBracketToken);
     m_Parser.RegisterBracketOperator(boost::make_shared<OpeningBracket>(), boost::make_shared<ClosingBracket>());
 
     auto IOB = new GenericOpeningBracketToken<IndexOpeningBracket>;

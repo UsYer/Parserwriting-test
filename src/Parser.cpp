@@ -56,22 +56,23 @@ struct Parser::Visitor : public boost::static_visitor<>
     }
     void operator()(long long val)
     {
-        ThrowIfUnexpected(TokenType::Long, "Unexpected number literal");
+        m_ParserContext.ThrowIfUnexpected(TokenType::Long, "Unexpected number literal");
         m_ParserContext.OutputQueue().push_back(val);
         m_ParserContext.LastToken() = TokenType::Long;
     }
     void operator()(double val)
     {
-        ThrowIfUnexpected(TokenType::Double, "Unexpected number literal");
+        m_ParserContext.ThrowIfUnexpected(TokenType::Double, "Unexpected number literal");
         m_ParserContext.OutputQueue().push_back(val);
         m_ParserContext.LastToken() = TokenType::Double;
     }
     void operator()(const boost::shared_ptr<IOperator>& op)
     {
+        //Let's see if we got an opening bracket here
         auto it = std::find_if(m_ParserContext.BracketOperators().begin(), m_ParserContext.BracketOperators().end(), FindOpeningBracket(*op));
         if( it != m_ParserContext.BracketOperators().end() )
         {
-            ThrowIfUnexpected(TokenType::OpeningBracket, "Unexpected opening bracket");
+            m_ParserContext.ThrowIfUnexpected(TokenType::OpeningBracket, "Unexpected opening bracket");
             //check if there is an operator missing. Something like that: 5(5+5), which should read 5*(5+5) for example
             if( m_ParserContext.LastToken() == TokenType::Long || m_ParserContext.LastToken() == TokenType::Double )
             {
@@ -83,7 +84,7 @@ struct Parser::Visitor : public boost::static_visitor<>
             m_ParserContext.LastToken() = TokenType::OpeningBracket;
             return;
         }
-        // TODO (Marius#6#): Extract the closingbracket treatment in a Closingbracket parsable
+        /*
         else if( *op == *m_ParserContext.ClosingBracket() )
         {
             ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
@@ -148,21 +149,23 @@ struct Parser::Visitor : public boost::static_visitor<>
             }
             //if it reaches here, there is a bracket mismatch
             throw std::logic_error("bracket mismatch");//If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
-        }
+        }*/
+        //Or is it a closing bracket?
         it = std::find_if(m_ParserContext.BracketOperators().begin(), m_ParserContext.BracketOperators().end(), FindClosingBracket(*op));
         if( it != m_ParserContext.BracketOperators().end() )
         {
-            ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
+            m_ParserContext.ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
             if( m_ParserContext.ExpectedBracket().empty() ) //Closingbracket but no bracket expected? Definitely a bracket mismatch
                 throw std::logic_error("No closing bracket expected");
-            else if( *m_ParserContext.ExpectedBracket().top() == *it->second )
-                m_ParserContext.ExpectedBracket().pop();
-            else
+            else if( *m_ParserContext.ExpectedBracket().top() != *it->second )
                 throw std::logic_error("Expected '" + m_ParserContext.ExpectedBracket().top()->Representation() + "'");
-
+            else
+                m_ParserContext.ExpectedBracket().pop();
+            if( m_ParserContext.LastToken() == TokenType::ArgSeperator )
+                throw std::logic_error("Expected an expression between ',' and '" + op->Representation() + "'");
             while( !m_ParserContext.OperatorStack().empty() )
             {
-                auto Temp = boost::get<const boost::shared_ptr<IOperator>&>(m_ParserContext.OperatorStack().top());
+                auto Temp = m_ParserContext.OperatorStack().top();
                 m_ParserContext.OutputQueue().push_back(Temp);
                 if( *Temp == *(it->first) )
                 {
@@ -218,7 +221,7 @@ struct Parser::Visitor : public boost::static_visitor<>
 #ifdef DEBUG
             std::cout << "UnaryPostfix" << std::endl;
 #endif
-            ThrowIfUnexpected(TokenType::OpUnaryPostfix, "Unexpected operator '" + op->Representation() + "'");
+            m_ParserContext.ThrowIfUnexpected(TokenType::OpUnaryPostfix, "Unexpected operator '" + op->Representation() + "'");
             if( m_ParserContext.LastToken() == TokenType::None )
                 throw std::logic_error("missing input before operator '" + op->Representation() + "'");
 
@@ -230,7 +233,7 @@ struct Parser::Visitor : public boost::static_visitor<>
 #ifdef DEBUG
             std::cout << "UnaryPrefix" << std::endl;
 #endif
-            ThrowIfUnexpected(TokenType::OpUnaryPrefix, "Unexpected operator '" + op->Representation() + "'");
+            m_ParserContext.ThrowIfUnexpected(TokenType::OpUnaryPrefix, "Unexpected operator '" + op->Representation() + "'");
             m_ParserContext.OperatorStack().push(op);
             m_ParserContext.LastToken() = TokenType::OpUnaryPrefix;
         }
@@ -239,7 +242,7 @@ struct Parser::Visitor : public boost::static_visitor<>
 #ifdef DEBUG
             std::cout << "Binary" << std::endl;
 #endif
-            ThrowIfUnexpected(TokenType::OpBinary, "Unexpected operator '" + op->Representation() + "'");
+            m_ParserContext.ThrowIfUnexpected(TokenType::OpBinary, "Unexpected operator '" + op->Representation() + "'");
             ParseBinaryOperator(op);
         }
     }
@@ -261,31 +264,31 @@ private:
         EraseFromOpStack,
         None
     };
-    bool StartFunctionCall(const std::string& Identifier, Behaviour Behav = Behaviour::None)
-    {
-        (*this)(boost::shared_ptr<IOperator>(new FuncCaller));
-        m_ParserContext.OperatorStack().push(FuncCallerTag());
-        //new functioncall, so we set up the new states
-        m_ParserContext.State() = ParserState::FunctionCall;
-        m_ParserContext.ArgCounterStack().push(0);
-        m_ParserContext.ArgExistsStack().push(false);
-        return true;
-    }
-    void FinishFunctionCall(/*const boost::shared_ptr<IFunction>& Func,*/ Behaviour Behav = Behaviour::None)
-    {
-        //We push the number of arguments on the stack so the function can get it from there
-        m_ParserContext.OutputQueue().push_back(static_cast<long long>(m_ParserContext.ArgCounterStack().top()));
-
-        if( Behav == Behaviour::EraseFromOpStack )
-            m_ParserContext.OperatorStack().pop(); //Remove Function from the OpStack
-
-        //The function is on the outqueue, we're no longer in a function call, hence we reset the states
-        m_ParserContext.State().Restore();
-        if( !m_ParserContext.ArgCounterStack().empty() )
-            m_ParserContext.ArgCounterStack().pop();
-        if( !m_ParserContext.ArgExistsStack().empty() )
-            m_ParserContext.ArgExistsStack().pop();
-    }
+//    bool StartFunctionCall(const std::string& Identifier, Behaviour Behav = Behaviour::None)
+//    {
+//        (*this)(boost::shared_ptr<IOperator>(new FuncCaller));
+//        m_ParserContext.OperatorStack().push(FuncCallerTag());
+//        //new functioncall, so we set up the new states
+//        m_ParserContext.State() = ParserState::FunctionCall;
+//        m_ParserContext.ArgCounterStack().push(0);
+//        m_ParserContext.ArgExistsStack().push(false);
+//        return true;
+//    }
+//    void FinishFunctionCall(/*const boost::shared_ptr<IFunction>& Func,*/ Behaviour Behav = Behaviour::None)
+//    {
+//        //We push the number of arguments on the stack so the function can get it from there
+//        m_ParserContext.OutputQueue().push_back(static_cast<long long>(m_ParserContext.ArgCounterStack().top()));
+//
+//        if( Behav == Behaviour::EraseFromOpStack )
+//            m_ParserContext.OperatorStack().pop(); //Remove Function from the OpStack
+//
+//        //The function is on the outqueue, we're no longer in a function call, hence we reset the states
+//        m_ParserContext.State().Restore();
+//        if( !m_ParserContext.ArgCounterStack().empty() )
+//            m_ParserContext.ArgCounterStack().pop();
+//        if( !m_ParserContext.ArgExistsStack().empty() )
+//            m_ParserContext.ArgExistsStack().pop();
+//    }
     void PopHigherPrecedenceOperators(const boost::shared_ptr<IOperator>& Op)
     {
         #ifdef DEBUG
@@ -293,10 +296,7 @@ private:
         #endif
         while( !m_ParserContext.OperatorStack().empty() ) //While there are items on the stack
         {
-            auto StackTop = m_ParserContext.OperatorStack().top();
-            if( boost::apply_visitor(Is<FuncCallerTag>(), StackTop) ) //and the item on top is an operator
-                break;
-            auto StackOperator = boost::get<const boost::shared_ptr<IOperator>&>(StackTop);
+            auto StackOperator = m_ParserContext.OperatorStack().top();;
             if( *StackOperator == *m_ParserContext.OpeningBracket() )
                 break;
             //there's nothing to do if the current object on top of the stack is a paranthese
@@ -341,14 +341,6 @@ private:
         PopHigherPrecedenceOperators(Op);
         m_ParserContext.OperatorStack().push(Op);
         m_ParserContext.LastToken() = TokenType::OpBinary;
-    }
-    void ThrowIfUnexpected(TokenType TType, const std::string& ErrMessage = "Unexpected Token") const
-    {
-        if( m_ParserContext.UnexpectedToken() == TType )
-        {
-            m_ParserContext.UnexpectedToken() = TokenType::None;
-            throw std::logic_error(ErrMessage);
-        }
     }
 };
 
@@ -395,7 +387,7 @@ void Parser::Parse( std::deque<UnparsedToken> TokExpr )
     {
         while( !m_OperatorStack.top().empty() )
         {
-            m_OutputQueue.push_back(boost::apply_visitor(Utilities::Get<boost::shared_ptr<IOperator>>(),m_OperatorStack.top().top()));
+            m_OutputQueue.push_back(m_OperatorStack.top().top());
             m_OperatorStack.top().pop();
         }
     }

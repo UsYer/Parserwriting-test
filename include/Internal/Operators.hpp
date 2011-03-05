@@ -727,7 +727,6 @@ public:
             }
             const Types::Object& FuncObj(EC.EvalStack.back());
             EC.EvalStack.pop_back();
-            //Types::Scope ThisScope(FuncObj.This()); //Get the this-reference here, because it will be reset in Utilities::Resolve
             ResolvedToken FuncToken(Utilities::Resolve(EC,FuncObj));
             const boost::shared_ptr<IFunction>& Func(boost::apply_visitor(GetFunc(EC),FuncToken));
 
@@ -741,6 +740,56 @@ public:
             EC.DropSignal();
     }
 };
-// TODO (Marius#6#): Create Closingbracket-parsable which correctly resets the parserstate funccall
+inline void ParseClosingBracket(ParserContext& PC)
+{
+    //All the parsing has to be done here, because we have to pop the Openingbracket from stack but
+    //not on the outputqueue
+    PC.ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
+    if( PC.ExpectedBracket().empty() ) //Closingbracket but no bracket expected? Definitely a bracket mismatch
+        throw std::logic_error("No closing bracket expected");
+    else if( *PC.ExpectedBracket().top() != ")" )
+        throw std::logic_error("Expected '" + PC.ExpectedBracket().top()->Representation() + "'");
+    else
+        PC.ExpectedBracket().pop();
+    if( PC.LastToken() == TokenType::ArgSeperator )
+        throw std::logic_error("Expected an expression between ',' and ')'");
+
+    while( !PC.OperatorStack().empty() )
+    {
+        auto Temp = PC.OperatorStack().top();
+        if( *Temp == *PC.OpeningBracket() )
+        {
+            //it's the opening bracket, we're done
+            //Pop the left parenthesis from the stack, but not onto the output queue.
+            PC.OperatorStack().pop();
+            PC.State().Restore();
+            PC.LastToken() = TokenType::ClosingBracket;
+            PC.OutputQueue().push_back(boost::make_shared<ClosingBracket>());
+            return;
+        }
+        else
+        {
+            PC.OutputQueue().push_back(Temp);
+            PC.OperatorStack().pop();
+        }
+    }
+    //if it reaches here, there is a bracket mismatch
+    throw std::logic_error("bracket mismatch");//If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
+}
+
+class ClosingBracketToken : public IToken
+{
+public:
+    ClosingBracketToken():
+        IToken(")")
+    {
+
+    }
+    virtual LastCharType Tokenize(TokenizeContext& TC) const
+    {
+        TC.OutputQueue().push_back(Parsable(")", &ParseClosingBracket));
+        return LastCharType::LikeClosingBracket;
+    }
+};
 }//ns Internal
 #endif // OPERATORS_H_INCLUDED
