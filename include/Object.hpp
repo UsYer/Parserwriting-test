@@ -58,6 +58,12 @@ class Object
         {
             return Object(m_EC, (*m_TableRef)[m_Key]);
         }
+        template <typename T>
+        operator T() const
+        {
+            using namespace Internal::Marshal;
+            return Value<T>::ConvertOut(boost::apply_visitor(Internal::Utilities::Get<typename Type<T>::ToInternal>(),(*m_TableRef)[m_Key]),m_EC);
+        }
     };
     public:
         /** Default constructor */

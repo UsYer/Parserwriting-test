@@ -12,29 +12,29 @@ TEST(SimplePlainAssignment)
 {
     std::cout << "SimplePlainAssignment\n";
     MP.Evaluate("test=1");
-    Types::Object result = MP.GlobalScope()["test"];
-    CHECK_EQUAL(1,(long long)result);
+    long long result = MP.GlobalScope()["test"];
+    CHECK_EQUAL(1,result);
 }
 TEST(PlainAssignment1)
 {
     std::cout << "PlainAssignment1\n";
     MP.Evaluate("test1=1");
-    Types::Object result = MP.GlobalScope()["test1"];
-    CHECK_EQUAL(1,(long long)result);
+    long long result = MP.GlobalScope()["test1"];
+    CHECK_EQUAL(1,result);
 }
 TEST(PlainAssignment2)
 {
     std::cout << "PlainAssignment2\n";
     MP.Evaluate("_2=2");
-    Types::Object result = MP.GlobalScope()["_2"];
-    CHECK_EQUAL(2,(long long)result);
+    long long result = MP.GlobalScope()["_2"];
+    CHECK_EQUAL(2,result);
 }
 TEST(PlainAssignment3)
 {
     std::cout << "PlainAssignment3\n";
     MP.Evaluate("test_3=3");
-    Types::Object result = MP.GlobalScope()["test_3"];
-    CHECK_EQUAL(3,(long long)result);
+    long long result = MP.GlobalScope()["test_3"];
+    CHECK_EQUAL(3,result);
 }
 TEST(AssignmentToLiteral)
 {
@@ -98,26 +98,25 @@ TEST(ChangeInternalValue)
 TEST(ChangeInternalValueWithObject)
 {
     std::cout << "ChangeInternalValueWithObject\n";
-    CHECK_EQUAL(2,static_cast<long long>(Types::Object(MP.GlobalScope()["internal"])));
-    Types::Object test = MP.GlobalScope()["test"];
-    CHECK_EQUAL(1,static_cast<long long>(test));//should be 1 from the SimplePlainAssignmentTest
+    CHECK_EQUAL(2,static_cast<long long>(MP.GlobalScope()["internal"]));
+    long long test = MP.GlobalScope()["test"];
+    CHECK_EQUAL(1,test);//should be 1 from the SimplePlainAssignmentTest
     MP.GlobalScope()["internal"] = test;
-    CHECK_EQUAL(1,static_cast<long long>(Types::Object(MP.GlobalScope()["internal"])));
+    CHECK_EQUAL(1,static_cast<long long>(MP.GlobalScope()["internal"]));
 }
 TEST(CreateInternalValueFromOutside)
 {
     std::cout << "CreateInternalValueFromOutside\n";
     MP.GlobalScope()["created_from_outside"] = 1ll;
-    Types::Object Obj(MP.GlobalScope()["created_from_outside"]);
-    CHECK_EQUAL(1,static_cast<long long>(Obj));
+    long long created_from_outside = MP.GlobalScope()["created_from_outside"];
+    CHECK_EQUAL(1,created_from_outside);
 }
 TEST(ToughFuncCall)
 {
     std::cout << "ToughFuncCall\n";
     MP.Evaluate("result = Math.Max(Math.Max(Math.Pi,4),1)");
-    //CHECK_EQUAL(4,boost::get<double>(MP.GlobalScope()["result"]));
-    Types::Object result = MP.GlobalScope()["result"];
-    CHECK_EQUAL(4,static_cast<double>(result));
+    double result = MP.GlobalScope()["result"];
+    CHECK_EQUAL(4,result);
 }
 TEST(ToughCalculation)
 {
@@ -125,7 +124,7 @@ TEST(ToughCalculation)
     MP.Evaluate("pi = Math.Pi");
     MP.Evaluate("e = 2.718281828459045235360287");
     MP.Evaluate("sqrt = Math.Sqrt");
-    Types::Object result = MP.Evaluate("(((-9))-e/(((((((pi-(((-7)+(-3)/4/e))))/(((-5))-2)-((pi+(-0))*(sqrt((e+e))*(-8))*"
+    double result = MP.Evaluate("(((-9))-e/(((((((pi-(((-7)+(-3)/4/e))))/(((-5))-2)-((pi+(-0))*(sqrt((e+e))*(-8))*"
                 "(((-pi)+(-pi)-(-9)*(6*5))/(-e)-e))/2)/((((sqrt(2/(-e)+6)-(4-2))+((5/(-2))/(1*(-pi)"
                 "+3))/8)*pi*((pi/((-2)/(-6)*1*(-1))*(-6)+(-e)))))/((e+(-2)+(-e)*((((-3)*9+(-e)))+"
                 "(-9)))))))-((((e-7+(((5/pi-(3/1+pi)))))/e)/(-5))/(sqrt((((((1+(-7))))+((((-e)*(-e)))"
@@ -133,14 +132,14 @@ TEST(ToughCalculation)
                 "*(((3+2-8))*(7+6+(-5))+((0/(-e)*(-pi))+7)))+(((((-e)/e/e)+((-6)*5)*e+(3+(-5)/pi))))"
                 "+pi))/sqrt((((9))+((((pi))-8+2))+pi))/e*4)*((-5)/(((-pi))*(sqrt(e)))))-(((((((-e)*(e)"
                 "-pi))/4+(pi)*(-9)))))))+(-pi)");
-    CHECK_CLOSE(-12.2301,static_cast<double>(result),0.001);
+    CHECK_CLOSE(-12.2301,result,0.001);
 }
 TEST(RightParsingOfBracketsWithArgSep)
 {
     std::cout << "RightParsingOfBracketsWithArgSep\n";
     MP.Evaluate("result = Math.Max((5+5)^(2+1),5)");
-    Types::Object result = MP.GlobalScope()["result"];
-    CHECK_EQUAL(1000,static_cast<long long>(result));
+    long long result = MP.GlobalScope()["result"];
+    CHECK_EQUAL(1000,result);
 }
 TEST(NegativeExponent)
 {//Make sure negative exponents yield the correct result
@@ -152,8 +151,8 @@ TEST(RightParsingOfMultipleBrackets)
 {
     std::cout << "RightParsingOfMultipleBrackets\n";
     MP.Evaluate("result = ((5+5))+5");
-    Types::Object result = MP.GlobalScope()["result"];
-    CHECK_EQUAL(15,static_cast<long long>(result));
+    long long result = MP.GlobalScope()["result"];
+    CHECK_EQUAL(15,result);
 }
 long long ExposedFunc(long long One, long long Two)
 {
@@ -164,9 +163,8 @@ TEST(SimpleExposedFunc)
 {
     MP.RegisterFunction("Exposed Function","EF",&ExposedFunc);
     MP.Evaluate("test = EF(2,2)");
-    //CHECK_EQUAL(4,boost::get<long long>(MP.GlobalScope()["test"]));
-    Types::Object result = MP.GlobalScope()["test"];
-    CHECK_EQUAL(4,static_cast<long long>(result));
+    long long result = MP.GlobalScope()["test"];
+    CHECK_EQUAL(4,result);
 }
 void TesterMarshal(Types::Function& Func)
 {
