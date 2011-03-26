@@ -57,12 +57,24 @@ struct Parser::Visitor : public boost::static_visitor<>
     void operator()(long long val)
     {
         m_ParserContext.ThrowIfUnexpected(TokenType::Long, "Unexpected number literal");
+        m_ParserContext.UnexpectedToken() = TokenType::None;
+        //Check if the last token was any of the value tokens
+        if( IsLastTokenValue() )
+            throw std::logic_error("value cannot immediatly follow another value");
+        if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
+            throw std::logic_error("Unexpected number literal");
         m_ParserContext.OutputQueue().push_back(val);
         m_ParserContext.LastToken() = TokenType::Long;
     }
     void operator()(double val)
     {
         m_ParserContext.ThrowIfUnexpected(TokenType::Double, "Unexpected number literal");
+        m_ParserContext.UnexpectedToken() = TokenType::None;
+        //Check if the last token was any of the value tokens
+        if( IsLastTokenValue() )
+            throw std::logic_error("value cannot immediatly follow another value");
+        if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
+            throw std::logic_error("Unexpected number literal");
         m_ParserContext.OutputQueue().push_back(val);
         m_ParserContext.LastToken() = TokenType::Double;
     }
@@ -73,6 +85,7 @@ struct Parser::Visitor : public boost::static_visitor<>
         if( it != m_ParserContext.BracketOperators().end() )
         {
             m_ParserContext.ThrowIfUnexpected(TokenType::OpeningBracket, "Unexpected opening bracket");
+            m_ParserContext.UnexpectedToken() = TokenType::None;
             //check if there is an operator missing. Something like that: 5(5+5), which should read 5*(5+5) for example
             if( m_ParserContext.LastToken() == TokenType::Long || m_ParserContext.LastToken() == TokenType::Double )
             {
@@ -155,6 +168,7 @@ struct Parser::Visitor : public boost::static_visitor<>
         if( it != m_ParserContext.BracketOperators().end() )
         {
             m_ParserContext.ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
+            m_ParserContext.UnexpectedToken() = TokenType::None;
             if( m_ParserContext.ExpectedBracket().empty() ) //Closingbracket but no bracket expected? Definitely a bracket mismatch
                 throw std::logic_error("No closing bracket expected");
             else if( *m_ParserContext.ExpectedBracket().top() != *it->second )
@@ -222,6 +236,7 @@ struct Parser::Visitor : public boost::static_visitor<>
             std::cout << "UnaryPostfix" << std::endl;
 #endif
             m_ParserContext.ThrowIfUnexpected(TokenType::OpUnaryPostfix, "Unexpected operator '" + op->Representation() + "'");
+            m_ParserContext.UnexpectedToken() = TokenType::None;
             if( m_ParserContext.LastToken() == TokenType::None )
                 throw std::logic_error("missing input before operator '" + op->Representation() + "'");
 
@@ -234,6 +249,7 @@ struct Parser::Visitor : public boost::static_visitor<>
             std::cout << "UnaryPrefix" << std::endl;
 #endif
             m_ParserContext.ThrowIfUnexpected(TokenType::OpUnaryPrefix, "Unexpected operator '" + op->Representation() + "'");
+            m_ParserContext.UnexpectedToken() = TokenType::None;
             m_ParserContext.OperatorStack().push(op);
             m_ParserContext.LastToken() = TokenType::OpUnaryPrefix;
         }
@@ -243,11 +259,18 @@ struct Parser::Visitor : public boost::static_visitor<>
             std::cout << "Binary" << std::endl;
 #endif
             m_ParserContext.ThrowIfUnexpected(TokenType::OpBinary, "Unexpected operator '" + op->Representation() + "'");
+            m_ParserContext.UnexpectedToken() = TokenType::None;
             ParseBinaryOperator(op);
         }
     }
     void operator()(const std::string& s)
     {
+        m_ParserContext.ThrowIfUnexpected(TokenType::Identifier, "Unexpected identifier");
+        m_ParserContext.UnexpectedToken() = TokenType::None;
+        if( IsLastTokenValue() )
+            throw std::logic_error("value cannot immediatly follow another value");
+        if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
+            throw std::logic_error("Unexpected identifier");
         m_ParserContext.OutputQueue().push_back(s);
         m_ParserContext.LastToken() = TokenType::Identifier;
     }
@@ -341,6 +364,10 @@ private:
         PopHigherPrecedenceOperators(Op);
         m_ParserContext.OperatorStack().push(Op);
         m_ParserContext.LastToken() = TokenType::OpBinary;
+    }
+    bool IsLastTokenValue() const
+    {
+        return (TokenType::Value & m_ParserContext.LastToken()) == m_ParserContext.LastToken();
     }
 };
 

@@ -36,9 +36,24 @@ TEST(PlainAssignment3)
     long long result = MP.GlobalScope()["test_3"];
     CHECK_EQUAL(3,result);
 }
+TEST(ValueFollowsValue)
+{
+    std::cout << "ValueFollowsValue" << std::endl;
+    CHECK_THROW(MP.Evaluate("5 test"),Exceptions::ParseError);
+}
+TEST(WeirdSyntax1)
+{
+    std::cout << "WeirdSyntax1" << std::endl;
+    CHECK_THROW(MP.Evaluate("MC,[0]55"),Exceptions::ParseError);
+}
+TEST(WeirdSyntax2)
+{
+    std::cout << "WeirdSyntax2" << std::endl;
+    CHECK_THROW(MP.Evaluate("MC.[0]"),Exceptions::ParseError);
+}
 TEST(AssignmentToLiteral)
 {
-    std::cout << "AssignmentToLiteral\n";
+    std::cout << "AssignmentToLiteral" << std::endl;
     CHECK_THROW(MP.Evaluate("5=1"),Exceptions::ParseError);
 }
 //Checks for distinction of unary and binary minus
@@ -209,10 +224,6 @@ TEST(ReturnMarshal)
     MP.RegisterFunction("","TRM",TesterReturnMarshal);
     MP.Evaluate("PassedFunc = TRM(Math.Max)");
     MP.Evaluate("PassedFunc(1,2)");
-}
-TEST(WeirdSyntax1)
-{
-    CHECK_THROW(MP.Evaluate("MC,[0]55"),Exceptions::ParseError);
 }
 #include "TableTests.hpp"
 #include "FunctionDefTests.hpp"

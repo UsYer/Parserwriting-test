@@ -90,7 +90,7 @@
 
 1272150522 c:\dokumente und einstellungen\marius\desktop\quellcodes\parser\include\function.hpp
 
-1298334962 source:c:\users\marius\desktop\quellcodes\parser\unittest\main.cpp
+1301157048 source:c:\users\marius\desktop\quellcodes\parser\unittest\main.cpp
 	<iostream>
 	"../include/MariusParser.hpp"
 	<UnitTest++.h>
@@ -98,7 +98,7 @@
 	"FunctionDefTests.hpp"
 	"FunctionCallTests.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
+1298503326 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Internal/Parser.hpp"
 	"Internal/Tokenizer.hpp"
 	"Internal/Utilities.hpp"
@@ -130,7 +130,7 @@
 	"../MemoryManagment/include/MemoryController.hpp"
 	"../MemoryManagment/include/Reference.hpp"
 
-1276540314 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
+1299344116 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
 	"../MemoryManagment/include/Reference.hpp"
 	"Internal/Marshal.hpp"
 
@@ -278,7 +278,7 @@
 1275339242 c:\users\marius\desktop\quellcodes\parser\include\marshal.hpp
 	<type_traits>
 
-1298476490 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
+1301161221 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
 	<stack>
 	<queue>
 	<string>
@@ -299,7 +299,7 @@
 	"Types.hpp"
 	"IEvaluable.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
+1299347640 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
 	<deque>
 	<stack>
 	"../../MemoryManagment/include/MemoryController.hpp"
@@ -344,13 +344,14 @@
 1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\marshal.hpp
 	<type_traits>
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
+1298503351 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
 	"Utilities.hpp"
 	"Marshal.hpp"
 	<array>
 	<boost/function_types/result_type.hpp>
+	<boost/make_shared.hpp>
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\unittest\tabletests.hpp
+1299344268 c:\users\marius\desktop\quellcodes\parser\unittest\tabletests.hpp
 
 1277144234 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
 	<exception>
@@ -562,7 +563,8 @@
 
 1298329039 c:\users\marius\desktop\quellcodes\parser\include\parsable.hpp
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\itoken.hpp
+1298503937 c:\users\marius\desktop\quellcodes\parser\include\itoken.hpp
+	<boost/make_shared.hpp>
 	"TokenizeContext.hpp"
 
 1298329039 c:\users\marius\desktop\quellcodes\parser\include\tokenizecontext.hpp

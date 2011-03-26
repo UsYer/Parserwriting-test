@@ -322,12 +322,6 @@ void Function(ParserContext& Context)
             std::cout << ArgListParser.m_Args[i] + ", ";
         }
     #endif
-    //A function defined in a function call is a new argument
-//    if( Context.State() == ParserState::FunctionCall && !Context.ArgExistsStack().top() )
-//    {
-//        Context.ArgCounterStack().top()++;
-//        Context.ArgExistsStack().top() = true;
-//    }
     boost::shared_ptr<Detail::RuntimeFunc> RTFunc(new Detail::RuntimeFunc("",Identifier,ArgListParser.m_Args,0));
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
     if( Identifier.empty() )

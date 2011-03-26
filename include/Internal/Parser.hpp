@@ -18,7 +18,7 @@ enum struct ParserState
     None = ~(FunctionCall | BracketPairWithinFunctionCall)
 };
 
-enum struct TokenType
+enum struct TokenType : unsigned
 {
     Long            = (1u << 0),
     Double          = (1u << 1),
@@ -36,6 +36,15 @@ enum struct TokenType
     //Composed Tokentypes for convenience:
     Value = Long | Double | KeywordWithValue | Identifier
 };
+
+inline TokenType operator|(TokenType Lhs, TokenType Rhs)
+{
+    return static_cast<TokenType>(static_cast<unsigned>(Lhs) | static_cast<unsigned>(Rhs));
+}
+inline TokenType operator&(TokenType Lhs, TokenType Rhs)
+{
+    return static_cast<TokenType>(static_cast<unsigned>(Lhs) & static_cast<unsigned>(Rhs));
+}
 class Parser;
 struct ParserContext
 {
@@ -57,8 +66,8 @@ struct ParserContext
     inline StateSaver<ParserState>& State() const;
     inline TokenType& LastToken() const;
     inline TokenType& UnexpectedToken() const;
-    inline std::stack<bool>& ArgExistsStack() const;
-    inline std::stack<unsigned>& ArgCounterStack() const;
+//    inline std::stack<bool>& ArgExistsStack() const;
+//    inline std::stack<unsigned>& ArgCounterStack() const;
     private:
     Parser& m_Parser;
     std::deque<UnparsedToken>* m_InputQueue;
@@ -113,8 +122,8 @@ private:
     std::stack<TokenType> m_LastToken;
     std::stack<TokenType> m_UnexpectedToken;
     std::stack<StateSaver<ParserState>> m_State;
-    std::stack<std::stack<bool>> m_ArgExistsStack;
-    std::stack<std::stack<unsigned>> m_ArgCounterStack;
+//    std::stack<std::stack<bool>> m_ArgExistsStack;
+//    std::stack<std::stack<unsigned>> m_ArgCounterStack;
     //Keeps track of the expected brackets. If there are still brackets after completly parsing the input at least one closing bracket is missing
     std::stack<Types::Operator/*Closingbracket*/> m_ExpectedBracket;
     ParserContext m_Context;
@@ -147,20 +156,20 @@ inline void ParserContext::SetUpNewScope(std::deque<Token>* NewOutputQueue)
     m_Parser.m_UnexpectedToken.push(TokenType::None);
     m_Parser.m_State.push(ParserState::None);
 
-    std::stack<unsigned> InitialArgCounter;
-    InitialArgCounter.push(0);
-    m_Parser.m_ArgCounterStack.push(InitialArgCounter);
-
-    std::stack<bool> InitialArgExist;
-    InitialArgExist.push(false);
-    m_Parser.m_ArgExistsStack.push(InitialArgExist);
+//    std::stack<unsigned> InitialArgCounter;
+//    InitialArgCounter.push(0);
+//    m_Parser.m_ArgCounterStack.push(InitialArgCounter);
+//
+//    std::stack<bool> InitialArgExist;
+//    InitialArgExist.push(false);
+//    m_Parser.m_ArgExistsStack.push(InitialArgExist);
 }
 inline bool ParserContext::EndScope()
 {
     //Before doing anything, we first check that we aren't in the global scope, which means, that there hasn't been set up a new scope so far
     if( m_OutputQueues.size() <= 1 || m_Parser.m_OperatorStack.size() <= 1 || m_Parser.m_LastToken.size() <= 1 ||
-        m_Parser.m_UnexpectedToken.size() <= 1 || m_Parser.m_State.size() <= 1 || m_Parser.m_ArgCounterStack.size() <= 1 ||
-        m_Parser.m_ArgExistsStack.size() <= 1 )
+        m_Parser.m_UnexpectedToken.size() <= 1 || m_Parser.m_State.size() <= 1 /*|| m_Parser.m_ArgCounterStack.size() <= 1 ||
+        m_Parser.m_ArgExistsStack.size() <= 1*/ )
         return false;
     if( m_PopOutputQueue.top() )
     {
@@ -171,13 +180,13 @@ inline bool ParserContext::EndScope()
     m_Parser.m_LastToken.pop();
     m_Parser.m_UnexpectedToken.pop();
     m_Parser.m_State.pop();
-    m_Parser.m_ArgCounterStack.pop();
-    m_Parser.m_ArgExistsStack.pop();
+//    m_Parser.m_ArgCounterStack.pop();
+//    m_Parser.m_ArgExistsStack.pop();
     return true;
 }
 void ParserContext::ThrowIfUnexpected(TokenType TType, const std::string& ErrMessage) const
 {
-    if( m_Parser.m_UnexpectedToken.top() == TType )
+    if( (m_Parser.m_UnexpectedToken.top() & TType) == TType )
     {
         m_Parser.m_UnexpectedToken.top() = TokenType::None;
         throw std::logic_error(ErrMessage);
@@ -234,13 +243,13 @@ inline TokenType& ParserContext::UnexpectedToken() const
 {
     return m_Parser.m_UnexpectedToken.top();
 }
-inline std::stack<bool>& ParserContext::ArgExistsStack() const
-{
-    return m_Parser.m_ArgExistsStack.top();
-}
-inline std::stack<unsigned>& ParserContext::ArgCounterStack() const
-{
-    return m_Parser.m_ArgCounterStack.top();
-}
+//inline std::stack<bool>& ParserContext::ArgExistsStack() const
+//{
+//    return m_Parser.m_ArgExistsStack.top();
+//}
+//inline std::stack<unsigned>& ParserContext::ArgCounterStack() const
+//{
+//    return m_Parser.m_ArgCounterStack.top();
+//}
 }//ns Internal
 #endif // PARSER_H

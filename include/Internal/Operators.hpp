@@ -392,6 +392,33 @@ public:
         EC.EvalStack.push_back(O);
     }
 };
+
+inline void ParseIndexOpeningBracket(ParserContext& PC)
+{
+    PC.ThrowIfUnexpected(TokenType::OpeningBracket);
+    //the generic parsing would allow nothing before an openingbracket. E.g.: (5+5)*2
+    //But this wouldn't make any sense for our index-bracket
+    if( PC.LastToken() == TokenType::None )
+        throw std::logic_error("Missing input before '['");
+    else if( PC.LastToken() == TokenType::OpBinary || PC.LastToken() == TokenType::OpUnaryPrefix )
+        throw std::logic_error("Unexpected operator before '['");
+    PC.Parse(boost::make_shared<IndexOpeningBracket>());
+
+}
+class IndexOpeningBracketToken : public IToken
+{
+public:
+    IndexOpeningBracketToken():
+        IToken("[")
+    {
+
+    }
+    virtual LastCharType Tokenize(TokenizeContext& TC) const
+    {
+        TC.OutputQueue().push_back(Parsable("[", &ParseIndexOpeningBracket));
+        return LastCharType::LikeOpeningBracket;
+    }
+};
 class IndexClosingBracket : public IOperator
 {
 
@@ -458,12 +485,12 @@ public:
         EC.EvalStack.push_back(Types::Object(Table));
     }
 };
-// TODO (Marius#9#): Implement an m_Unexpected field in which Parsables can state which kind of token is not allowed to directly follow after it
-//Important: Make sure that m_Unexpected gets reset after more than the immediatly following token is read
 inline void ParseTableOp(ParserContext& PC)
 {
     PC.Parse(boost::make_shared<TableOp>());
     PC.LastToken() = TokenType::ArgSeperator;
+    //The table-op doesn't accept everything a anormal binary-op would accept
+    PC.UnexpectedToken() = (TokenType::OpeningBracket /*| TokenType::Value*/); // FIXME (Marius#8#): OR-ing a TokenType with a composed TokenType doesn't work
 }
 
 class OpeningBracket : public IOperator
@@ -506,7 +533,7 @@ public:
                 std::cout << "Is funccall\n";
                 #endif
                 EC.SetSignal(SignalType::FuncCall);
-                EC.EvalStack.push_back(Types::Object(boost::shared_ptr<IFunction>(new ArgListStartMarker)));
+                EC.EvalStack.push_back(Types::Object(boost::make_shared<ArgListStartMarker>()));
             }
             else
             {
@@ -581,6 +608,7 @@ public:
 
 inline void ParseOpeningBracket(ParserContext& PC)
 {
+    PC.ThrowIfUnexpected(TokenType::OpeningBracket);
  // Compare with openingbracket parsing in the parser
     if( PC.LastToken() == TokenType::Identifier )
     {   //the generic bracket parsing algorithm will take care of the Bracket, nothing more to do for us here

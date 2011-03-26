@@ -43,13 +43,19 @@ MariusParser::MariusParser()
     m_Tokenizer.RegisterToken(new OpeningBracketToken);
     m_Tokenizer.RegisterToken(new ClosingBracketToken);
     m_Parser.RegisterBracketOperator(boost::make_shared<OpeningBracket>(), boost::make_shared<ClosingBracket>());
-
+/*
     auto IOB = new GenericOpeningBracketToken<IndexOpeningBracket>;
     auto ICB = new GenericClosingBracketToken<IndexClosingBracket>;
     m_Tokenizer.RegisterToken(IOB);
     m_Tokenizer.RegisterToken(ICB);
     m_Parser.RegisterBracketOperator(IOB->GetOp(), ICB->GetOp());
-
+//*/
+//*
+    auto ICB = new GenericClosingBracketToken<IndexClosingBracket>;
+    m_Tokenizer.RegisterToken(new IndexOpeningBracketToken);
+    m_Tokenizer.RegisterToken(ICB);
+    m_Parser.RegisterBracketOperator(boost::make_shared<IndexOpeningBracket>(), ICB->GetOp());
+//*/
     RegisterFunction(boost::make_shared<TypeFunc>());
 
     Internal::Types::Table MCScope;
