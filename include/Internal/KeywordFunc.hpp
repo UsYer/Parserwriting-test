@@ -57,6 +57,7 @@ class RuntimeFunc: public IFunction
         #endif
             boost::apply_visitor(FE,T);
         }
+        EC.EvalStack.push_back(Types::Object((*LocalScopeRef)["__RETURN__"]));
     }
 };
 struct ParseFuncBeginning : public boost::static_visitor<std::string>
@@ -284,6 +285,7 @@ class AnonFuncHolder : public IEvaluable
 
 /* TODO (Marius#9#): Implement returning values from functions
 example: function test([args...]) return [...] end
+1. This needs a reworked Evaluation mechanism. At least a way to end the current Evaluationscope is mandatory to support returns
 */
 ///Parses a function defined at runtime
 void Function(ParserContext& Context)

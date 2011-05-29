@@ -65,7 +65,9 @@ MariusParser::MariusParser()
     Internal::Types::Table T;
     T.Add("Max",boost::make_shared<MaxFunc>());
     T.Add("Sqrt",boost::make_shared<SqrtFunc>());
+    T.Add("Ln",Internal::BindFunc("Ln","Ln",static_cast<double(*)(double)>(&std::log)));
     T.Add("Pi",3.141592653589793238462643);
+    T.Add("E",2.718281828459045235360287);
     CountedReference Ref(m_Evaluator.m_MC.Save(T));
     (*m_Evaluator.m_GlobalScope)["Math"] = Ref;
     RegisterFunction(boost::make_shared<CreateNullFunc>());

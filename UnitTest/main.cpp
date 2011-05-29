@@ -137,7 +137,7 @@ TEST(ToughCalculation)
 {
     std::cout << "ToughCalculation\n";
     MP.Evaluate("pi = Math.Pi");
-    MP.Evaluate("e = 2.718281828459045235360287");
+    MP.Evaluate("e = Math.E");
     MP.Evaluate("sqrt = Math.Sqrt");
     double result = MP.Evaluate("(((-9))-e/(((((((pi-(((-7)+(-3)/4/e))))/(((-5))-2)-((pi+(-0))*(sqrt((e+e))*(-8))*"
                 "(((-pi)+(-pi)-(-9)*(6*5))/(-e)-e))/2)/((((sqrt(2/(-e)+6)-(4-2))+((5/(-2))/(1*(-pi)"
