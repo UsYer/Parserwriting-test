@@ -19,7 +19,7 @@ public:
     {
         return m_ArgCount;
     }
-    void SuppliedArguments(const Member& Args, unsigned ArgCount);
+    void SuppliedArguments(const Member& Args, int ArgCount);
     void SuppliedArguments(const Member& Args);
     unsigned ReturnCount() const
     {

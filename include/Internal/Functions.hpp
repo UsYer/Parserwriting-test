@@ -56,14 +56,17 @@ public:
     void Eval(EvaluationContext& EC)
     {
         if( m_SuppliedArguments == 0 )
+        {
+            EC.EvalStack.push_back(Types::Object(NullReference()));
             return;
+        }
         NumberToken One, Two;
         Max Maximum;
         if( m_SuppliedArguments == 1 )
             One = Utilities::GetNumberToken(m_LocalScope[0]);
         else
         {
-            const auto& Args = *boost::get<const CountedReference&>(m_LocalScope[0]); //the arguments have been placed in a table, get it
+            const auto& Args = *boost::get<const CountedReference&>(m_LocalScope[0]); //the arguments have been placed in a table, get them
             One = Utilities::GetNumberToken(Args[0]);
             for( unsigned i = 1; i < m_SuppliedArguments; i++)
             {
@@ -154,5 +157,42 @@ public:
         EC.EvalStack.push_back(Types::Object(Refcount));
     }
 };
-}
+class PrintFunc : public IFunction
+{
+public:
+    PrintFunc():
+        IFunction("","Print",/*ArgCount::Variable*/-1,0)
+    {
+    }
+    void Eval(EvaluationContext& EC)
+    {
+        if( m_SuppliedArguments > 1 )
+        {
+            const auto& ArgTable = *boost::apply_visitor(Utilities::Get<CountedReference>(),m_LocalScope[0]);
+            for( auto it = ArgTable.IndexBegin(); it != ArgTable.IndexEnd(); it++)
+                std::cout << Utilities::PrintValue(EC,Types::Object(it->second)) << " ";
+        }
+        else if ( m_SuppliedArguments == 1 )
+        {
+            std::cout << Utilities::PrintValue(EC,Types::Object(m_LocalScope[0]));
+        }
+        std::cout << std::endl;
+    }
+};
+// TODO (Marius#8#): Finish global catch handler (translation from runtime to native exceptions)
+class GlobalExceptionHandleFunc : public IFunction
+{
+public:
+    GlobalExceptionHandleFunc():
+        IFunction("","__GLOBALCATCH__",1,0)
+    {
+    }
+    virtual void Eval( EvaluationContext& EC )
+    {
+//        auto Exception = Utilities::GetWithResolve<CountedReference>(EC,m_LocalScope[0]);
+        throw Exceptions::RuntimeException("Unhandled runtime exception");
+    }
+};
+
+}//ns Internal
 #endif // FUNCTIONS_HPP_INCLUDED

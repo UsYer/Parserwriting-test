@@ -745,7 +745,7 @@ public:
             #ifdef DEBUG
             std::cout << "No. of provided Args for funccall: " << ArgCount << std::endl;
             #endif
-            if( ArgCount >= 1 ) //there should still be ArgListStartMarker
+            if( ArgCount >= 1 ) //there should still be an ArgListStartMarker
             {
                 if( !EC.EvalStack.back().Visit(IsMarker()) )
                 {
@@ -763,7 +763,7 @@ public:
             Func->Eval(EC);
             Func->This(NullReference()); //Very Important! Reset the this-ref to prevent a crash on shutdown. The MC gets deleted before the functions
                                         //who would still hold a ref to their this-scopes. When  funcs get deleted the and the ref does it's decref, the MC is already gone -> Crash!
-        }
+        }// FIXME (Marius#9#): The arguments for variadic functions remain in the localscope. Math.Max(1,2) | Math.Max() still yields 2
         else
             EC.DropSignal();
     }
@@ -819,5 +819,42 @@ public:
         return LastCharType::LikeClosingBracket;
     }
 };
+
+class ThrowOp : public IOperator
+{
+public:
+    ThrowOp():
+        IOperator("","throw", -15,ArityType::UnaryPrefix,AssociativityType::Right)
+    {
+    }
+    void Eval(EvaluationContext& EC)
+    {
+        if( EC.EvalStack.empty() )
+            throw std::logic_error("Missing argument for throw");
+        Types::Function CatchBlock;
+        try //search for the corresponding catch handler. If it throws there is none and we will forward the exception to native code
+        {
+            CatchBlock = Utilities::GetWithResolve<Types::Function>(EC,Types::Object("__CATCH__"));
+        }
+        catch(const std::logic_error&)
+        {
+            throw std::runtime_error("Unhandled runtime exception"); // TODO (Marius#9#): Add translation from internal exception to native exceptions. Make corresponding native classes which will be thrown
+        }
+        if( CatchBlock->ArgCount() == 0 )
+        {
+            EC.EvalStack.pop_back();
+            CatchBlock->Eval(EC);
+        }// TODO (Marius#9#): Somehow the EvalScope has to end here
+        else if( CatchBlock->ArgCount() == 1 )
+        {
+            CatchBlock->SuppliedArguments(Utilities::Resolve(EC,EC.EvalStack.back()),1);
+            EC.EvalStack.pop_back();
+            CatchBlock->Eval(EC);
+        }
+        else
+            throw std::logic_error("Catch handler expects too many arguments");
+    }
+};
+
 }//ns Internal
 #endif // OPERATORS_H_INCLUDED

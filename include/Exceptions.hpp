@@ -40,5 +40,14 @@ private:
     std::string m_Message;
     Location m_Location;
 };
+// TODO (Marius#8#): Make RuntimeException useful. e.g.: Stacktrace and further info
+class RuntimeException : public std::runtime_error
+{
+public:
+    RuntimeException(const std::string& Message):
+        std::runtime_error(Message)
+    {}
+};
+
 }
 #endif // EXCEPTIONS_HPP_INCLUDED

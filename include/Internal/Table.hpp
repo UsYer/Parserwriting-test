@@ -14,6 +14,8 @@ class Table
     public:
         typedef std::map<std::string,Member>::iterator KeyIterator;
         typedef std::map<unsigned,Member>::iterator IndexIterator;
+        typedef std::map<std::string,Member>::const_iterator ConstKeyIterator;
+        typedef std::map<unsigned,Member>::const_iterator ConstIndexIterator;
         /** Default constructor */
         Table();
         Table(const Table& Other);
@@ -38,6 +40,10 @@ class Table
         KeyIterator KeyEnd();
         IndexIterator IndexBegin();
         IndexIterator IndexEnd();
+        ConstKeyIterator KeyBegin() const;
+        ConstKeyIterator KeyEnd() const;
+        ConstIndexIterator IndexBegin() const;
+        ConstIndexIterator IndexEnd() const;
         unsigned KeySize() const;
         unsigned IndexSize() const;
         bool Contains(const std::string& Key) const;

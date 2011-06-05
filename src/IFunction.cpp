@@ -91,7 +91,7 @@ void IFunction::SuppliedArguments(const Member& Args)
 {
     m_SuppliedArguments = boost::apply_visitor(ArgAssigner(m_LocalScope,*this),Args);
 }
-void IFunction::SuppliedArguments(const Member& Args, unsigned ArgCount)
+void IFunction::SuppliedArguments(const Member& Args, int ArgCount)
 {
     if( m_ArgCount != -1)
     { //if the function does not take a variable amount of args check if it's the right amount
@@ -100,6 +100,7 @@ void IFunction::SuppliedArguments(const Member& Args, unsigned ArgCount)
         else if( ArgCount < m_ArgCount )
             throw std::logic_error("Too few arguments for function '" + Representation() + "'; should be " + boost::lexical_cast<std::string>(m_ArgCount) + " argument(s)");
     }
+    m_SuppliedArguments = ArgCount;
     if( !ArgCount ) //nothing to do for zero args
         return;
     if( ArgCount == 1 )
@@ -158,5 +159,5 @@ void IFunction::SuppliedArguments(const Member& Args, unsigned ArgCount)
             }
         }
     }
-    m_SuppliedArguments = ArgCount;
+//    m_SuppliedArguments = ArgCount;
 }

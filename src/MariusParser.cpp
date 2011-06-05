@@ -9,6 +9,8 @@
 #include "../include/Internal/Is.hpp"
 #include "../include/Internal/KeywordFunc.hpp"
 #include "../include/Internal/KeywordEnd.hpp"
+#include "../include/Internal/KeywordTry.hpp"
+#include "../include/Internal/KeywordCatch.hpp"
 using namespace Internal;
 Evaluator::Evaluator():
         m_GlobalScope(m_MC.Save(Types::Table())),
@@ -36,9 +38,12 @@ MariusParser::MariusParser()
     m_Tokenizer.RegisterToken(new OperatorToken<LessOp>);
     m_Tokenizer.RegisterToken(new OperatorToken<GreaterOp>);
     m_Tokenizer.RegisterToken(new OperatorToken<NotOp>);
+    m_Tokenizer.RegisterToken(new OperatorToken<ThrowOp>);
 
     m_Tokenizer.RegisterToken(new KeywordToken("func",&Keyword::Function));
     m_Tokenizer.RegisterToken(new KeywordToken("end",&Keyword::End));
+    m_Tokenizer.RegisterToken(new KeywordToken("try",&Keyword::Try));
+    m_Tokenizer.RegisterToken(new KeywordToken("catch",&Keyword::Catch));
 
     m_Tokenizer.RegisterToken(new OpeningBracketToken);
     m_Tokenizer.RegisterToken(new ClosingBracketToken);
@@ -72,6 +77,8 @@ MariusParser::MariusParser()
     (*m_Evaluator.m_GlobalScope)["Math"] = Ref;
     RegisterFunction(boost::make_shared<CreateNullFunc>());
     RegisterFunction(boost::make_shared<CreateTableFunc>());
+    RegisterFunction(boost::make_shared<PrintFunc>());
+    (*m_Evaluator.m_GlobalScope)["__CATCH__"] = boost::make_shared<GlobalExceptionHandleFunc>();
 }
 
 MariusParser::~MariusParser()
@@ -152,7 +159,7 @@ MariusParser::~MariusParser()
 
     if( !m_Evaluator.Stack.empty() )
     {
-        std::cout << "\nResult: " << Utilities::PrintValue(m_Evaluator.m_EC,m_Evaluator.Stack.back()) << std::endl;
+        //std::cout << "\nResult: " << Utilities::PrintValue(m_Evaluator.m_EC,m_Evaluator.Stack.back()) << std::endl;
         return ::Types::Object(m_Evaluator.m_EC,Utilities::Resolve(m_Evaluator.m_EC,m_Evaluator.Stack.back()));
     }
     else

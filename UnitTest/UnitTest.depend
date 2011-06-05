@@ -90,7 +90,7 @@
 
 1272150522 c:\dokumente und einstellungen\marius\desktop\quellcodes\parser\include\function.hpp
 
-1301157048 source:c:\users\marius\desktop\quellcodes\parser\unittest\main.cpp
+1306588479 source:c:\users\marius\desktop\quellcodes\parser\unittest\main.cpp
 	<iostream>
 	"../include/MariusParser.hpp"
 	<UnitTest++.h>
@@ -98,7 +98,7 @@
 	"FunctionDefTests.hpp"
 	"FunctionCallTests.hpp"
 
-1298503326 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
+1298506926 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Internal/Parser.hpp"
 	"Internal/Tokenizer.hpp"
 	"Internal/Utilities.hpp"
@@ -107,12 +107,12 @@
 	"Internal/BindFunc.hpp"
 	"Exceptions.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
 	<map>
 	<list>
 	<boost/circular_buffer.hpp>
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
 
 1274652408 c:\users\marius\desktop\quellcodes\parser\include\parser.hpp
 	<stack>
@@ -130,7 +130,7 @@
 	"../MemoryManagment/include/MemoryController.hpp"
 	"../MemoryManagment/include/Reference.hpp"
 
-1299344116 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
+1299347716 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
 	"../MemoryManagment/include/Reference.hpp"
 	"Internal/Marshal.hpp"
 
@@ -161,7 +161,7 @@
 	"Object.hpp"
 	"Typenames.hpp"
 
-1260305036 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
+1260308636 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
 	<stdexcept>
 
 1274653504 c:\users\marius\desktop\quellcodes\parser\include\table.hpp
@@ -182,10 +182,10 @@
 
 1274649545 c:\users\marius\desktop\quellcodes\parser\include\typenames.hpp
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
 	"Internal/Marshal.hpp"
 
-1188362910 k:\unittest++\src\unittest++.h
+1188366510 k:\unittest++\src\unittest++.h
 	"Config.h"
 	"Test.h"
 	"TestList.h"
@@ -196,20 +196,20 @@
 	"TestRunner.h"
 	"TimeConstraint.h"
 
-1225373916 k:\unittest++\src\config.h
+1225377516 k:\unittest++\src\config.h
 
-1225287488 k:\unittest++\src\test.h
+1225291088 k:\unittest++\src\test.h
 	"TestDetails.h"
 
-1174314856 k:\unittest++\src\testdetails.h
+1174318456 k:\unittest++\src\testdetails.h
 
-1180464158 k:\unittest++\src\testlist.h
+1180467758 k:\unittest++\src\testlist.h
 
-1174314856 k:\unittest++\src\testsuite.h
+1174318456 k:\unittest++\src\testsuite.h
 
-1174314856 k:\unittest++\src\testresults.h
+1174318456 k:\unittest++\src\testresults.h
 
-1225391226 k:\unittest++\src\testmacros.h
+1225394826 k:\unittest++\src\testmacros.h
 	"Config.h"
 	"ExecuteTest.h"
 	"AssertException.h"
@@ -217,56 +217,56 @@
 	"MemoryOutStream.h"
 	"Posix/SignalTranslator.h"
 
-1225287488 k:\unittest++\src\executetest.h
+1225291088 k:\unittest++\src\executetest.h
 	"TestDetails.h"
 	"MemoryOutStream.h"
 	"AssertException.h"
 	"CurrentTest.h"
 	"Posix/SignalTranslator.h"
 
-1174314856 k:\unittest++\src\memoryoutstream.h
+1174318456 k:\unittest++\src\memoryoutstream.h
 	"Config.h"
 	<sstream>
 	<cstddef>
 
-1174314856 k:\unittest++\src\assertexception.h
+1174318456 k:\unittest++\src\assertexception.h
 	<exception>
 
-1225287488 k:\unittest++\src\currenttest.h
+1225291088 k:\unittest++\src\currenttest.h
 
-1224680202 k:\unittest++\src\posix\signaltranslator.h
+1224683802 k:\unittest++\src\posix\signaltranslator.h
 	<setjmp.h>
 	<signal.h>
 
-1225287488 k:\unittest++\src\checkmacros.h
+1225291088 k:\unittest++\src\checkmacros.h
 	"Checks.h"
 	"AssertException.h"
 	"MemoryOutStream.h"
 	"TestDetails.h"
 	"CurrentTest.h"
 
-1225373262 k:\unittest++\src\checks.h
+1225376862 k:\unittest++\src\checks.h
 	"Config.h"
 	"TestResults.h"
 	"MemoryOutStream.h"
 
-1225287488 k:\unittest++\src\testrunner.h
+1225291088 k:\unittest++\src\testrunner.h
 	"Test.h"
 	"TestList.h"
 	"CurrentTest.h"
 
-1225287488 k:\unittest++\src\timeconstraint.h
+1225291088 k:\unittest++\src\timeconstraint.h
 	"TimeHelpers.h"
 
-1174314856 k:\unittest++\src\timehelpers.h
+1174318456 k:\unittest++\src\timehelpers.h
 	"Config.h"
 	"Posix/TimeHelpers.h"
 	"Win32/TimeHelpers.h"
 
-1174314856 k:\unittest++\src\posix\timehelpers.h
+1174318456 k:\unittest++\src\posix\timehelpers.h
 	<sys/time.h>
 
-1225373916 k:\unittest++\src\win32\timehelpers.h
+1225377516 k:\unittest++\src\win32\timehelpers.h
 	"../Config.h"
 
 1275338590 c:\users\marius\desktop\quellcodes\parser\include\tokens.hpp
@@ -278,7 +278,7 @@
 1275339242 c:\users\marius\desktop\quellcodes\parser\include\marshal.hpp
 	<type_traits>
 
-1301161221 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
+1301164821 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
 	<stack>
 	<queue>
 	<string>
@@ -288,40 +288,40 @@
 	"IFunction.hpp"
 	"StateSaver.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\tokens.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\internal\tokens.hpp
 	<boost/variant.hpp>
 	<boost/shared_ptr.hpp>
 	"../../MemoryManagment/include/MemoryController.hpp"
 	"../../MemoryManagment/include/Reference.hpp"
 	"../Parsable.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\ioperator.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\internal\ioperator.hpp
 	"Types.hpp"
 	"IEvaluable.hpp"
 
-1299347640 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
+1306793240 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
 	<deque>
 	<stack>
 	"../../MemoryManagment/include/MemoryController.hpp"
 	"../../MemoryManagment/include/Reference.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\ievaluable.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\internal\ievaluable.hpp
 	<string>
 	"Tokens.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
+1307226334 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
 	"IEvaluable.hpp"
 	"Table.hpp"
 
-1274042533 c:\users\marius\desktop\quellcodes\parser\include\internal\statesaver.hpp
+1274046133 c:\users\marius\desktop\quellcodes\parser\include\internal\statesaver.hpp
 	<stack>
 	<cassert>
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\tokenizer.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\internal\tokenizer.hpp
 	<boost/ptr_container/ptr_set.hpp>
 	"../IToken.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
+1307197907 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
 	<boost/lexical_cast.hpp>
 	"../../MemoryManagment/include/Exceptions.hpp"
 	"Table.hpp"
@@ -329,34 +329,34 @@
 	"Typenames.hpp"
 	"Is.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
+1307197636 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
 	<map>
 	<string>
 	<memory>
 	"Tokens.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\object.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\internal\object.hpp
 	"Tokens.hpp"
 	"Types.hpp"
 
-1276363908 c:\users\marius\desktop\quellcodes\parser\include\internal\typenames.hpp
+1276367508 c:\users\marius\desktop\quellcodes\parser\include\internal\typenames.hpp
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\internal\marshal.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\internal\marshal.hpp
 	<type_traits>
 
-1298503351 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
+1307196067 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
 	"Utilities.hpp"
 	"Marshal.hpp"
 	<array>
 	<boost/function_types/result_type.hpp>
 	<boost/make_shared.hpp>
 
-1299344268 c:\users\marius\desktop\quellcodes\parser\unittest\tabletests.hpp
+1299347868 c:\users\marius\desktop\quellcodes\parser\unittest\tabletests.hpp
 
-1277144234 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
+1307195758 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
 	<exception>
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\unittest\functiondeftests.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\unittest\functiondeftests.hpp
 
 1292868695 source:c:\users\marius\parser\unittest\main.cpp
 	<iostream>
@@ -561,13 +561,13 @@
 1285448997 c:\users\marius\desktop\quellcodes\parser\include\internal\tokenizecontext.hpp
 	<array>
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\parsable.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\parsable.hpp
 
-1298503937 c:\users\marius\desktop\quellcodes\parser\include\itoken.hpp
+1298507537 c:\users\marius\desktop\quellcodes\parser\include\itoken.hpp
 	<boost/make_shared.hpp>
 	"TokenizeContext.hpp"
 
-1298329039 c:\users\marius\desktop\quellcodes\parser\include\tokenizecontext.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\tokenizecontext.hpp
 
 1292868696 c:\users\marius\parser\include\parsable.hpp
 
@@ -578,7 +578,7 @@
 
 1282168943 c:\users\marius\parser\include\internal\is.hpp
 
-1274126657 c:\users\marius\desktop\quellcodes\parser\include\internal\is.hpp
+1274130257 c:\users\marius\desktop\quellcodes\parser\include\internal\is.hpp
 
-1298477360 c:\users\marius\desktop\quellcodes\parser\unittest\functioncalltests.hpp
+1307230956 c:\users\marius\desktop\quellcodes\parser\unittest\functioncalltests.hpp
 

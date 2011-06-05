@@ -121,6 +121,22 @@ Member& Table::Add(const std::string& Key, const Member& Value)
 {
     return Impl->m_IndexData.end();
 }
+/*inline*/ Table::ConstKeyIterator Table::KeyBegin() const
+{
+    return Impl->m_AssocData.cbegin();
+}
+/*inline*/ Table::ConstKeyIterator Table::KeyEnd()const
+{
+    return Impl->m_AssocData.cend();
+}
+/*inline*/ Table::ConstIndexIterator Table::IndexBegin()const
+{
+    return Impl->m_IndexData.cbegin();
+}
+/*inline*/ Table::ConstIndexIterator Table::IndexEnd()const
+{
+    return Impl->m_IndexData.cend();
+}
 unsigned Table::KeySize() const
 {
     return Impl->m_AssocData.size();

@@ -8,12 +8,14 @@
 namespace Internal
 {
 class IOperator;
+class IFunction;
 namespace Types
 {
     typedef CountedReference Scope;
     class Object;
     typedef std::deque<Object> Stack;
     typedef boost::shared_ptr<IOperator> Operator;
+    typedef boost::shared_ptr<IFunction> Function;
 }
 enum struct SignalType: unsigned
 {

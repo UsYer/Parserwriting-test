@@ -120,7 +120,7 @@ struct PrintValueVisitor : public boost::static_visitor<std::string>
     EvaluationContext& m_EC;
 };
 
-inline std::string PrintValue(EvaluationContext& EC, Types::Object& Val )
+inline std::string PrintValue(EvaluationContext& EC, const Types::Object& Val )
 {
     EC.This = Val.This();
     return Val.Visit(PrintValueVisitor(EC));
@@ -344,7 +344,7 @@ inline bool ResolvesTo( EvaluationContext& EC, const Types::Object& Val )
     return boost::apply_visitor(Is<T>(),Resolve(EC,Val));
 }
 template<typename T>
-static T GetWithResolve( EvaluationContext& EC, Types::Object& Val, const std::string& ErrorMessage = "" )
+static T GetWithResolve( EvaluationContext& EC, const Types::Object& Val, const std::string& ErrorMessage = "" )
 {
     ResolvedToken Token(Utilities::Resolve(EC,Val));
     return boost::apply_visitor(Get<T>(ErrorMessage),Token);

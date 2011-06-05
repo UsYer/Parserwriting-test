@@ -112,9 +112,14 @@ int main()
             std::cerr << std::string("\nerror: ") + e.what() << std::endl;
             continue;
         }
-        catch(std::logic_error& e)
+        catch(Exceptions::RuntimeException& e)
         {
             std::cerr << std::string("\nruntime error: ") + e.what() << std::endl;
+            continue;
+        }
+        catch(std::logic_error& e)
+        {
+            std::cerr << std::string("\nlogic error: ") + e.what() << std::endl;
             continue;
         }
         catch(...)
