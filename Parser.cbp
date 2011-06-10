@@ -186,6 +186,7 @@
 		<Unit filename="include\IParsable.hpp" />
 		<Unit filename="include\IToken.hpp" />
 		<Unit filename="include\Internal\BindFunc.hpp" />
+		<Unit filename="include\Internal\EvaluationContext.hpp" />
 		<Unit filename="include\Internal\FuncCaller.hpp" />
 		<Unit filename="include\Internal\Functions.hpp" />
 		<Unit filename="include\Internal\IEvaluable.hpp" />
@@ -218,6 +219,7 @@
 			<Option target="Debug 4.5 64bit" />
 			<Option target="Release 4.5 64bit" />
 		</Unit>
+		<Unit filename="src\EvaluationContext.cpp" />
 		<Unit filename="src\Functions.cpp" />
 		<Unit filename="src\IEvaluable.cpp" />
 		<Unit filename="src\IFunction.cpp" />
@@ -232,7 +234,7 @@
 		<Extensions>
 			<AutoVersioning>
 				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="5" build_times_to_increment_minor="100" />
-				<Settings autoincrement="1" date_declarations="1" do_auto_increment="1" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Settings autoincrement="1" date_declarations="1" update_manifest="1" do_auto_increment="1" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
 				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
@@ -242,7 +244,7 @@
 			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
 				<comment_style block="0" line="2" />
-				<doxyfile_project />
+				<doxyfile_project use_auto_version="1" />
 				<doxyfile_build />
 				<doxyfile_warnings />
 				<doxyfile_output />

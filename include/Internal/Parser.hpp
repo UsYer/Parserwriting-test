@@ -87,9 +87,9 @@ public:
 
     void Parse( std::deque<UnparsedToken> TokExpr );
 
-    std::queue<Token> GetOutput() const
+    std::deque<Token> GetOutput() const
     {
-        return std::queue<Token>(m_OutputQueue);
+        return m_OutputQueue;
     }
     void Clear()
     {

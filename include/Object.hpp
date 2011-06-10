@@ -25,9 +25,9 @@ class Object
         const Internal::CountedReference m_TableRef;
         //Attention: Made the key to reference on a const object, because otherwise there would be an error with array initialisation in case the key is a static string like "test"
         const KeyType& m_Key;
-        const Internal::EvaluationContext& m_EC;
+        Internal::EvaluationContext& m_EC;
         public:
-        TableProxy(const Internal::CountedReference& Ref, const KeyType& Key, const Internal::EvaluationContext& EC):
+        TableProxy(const Internal::CountedReference& Ref, const KeyType& Key, Internal::EvaluationContext& EC):
             m_TableRef(Ref),
             m_Key(Key),
             m_EC(EC)
@@ -67,7 +67,7 @@ class Object
     };
     public:
         /** Default constructor */
-        Object(const Internal::EvaluationContext& EC,const Internal::Member& Value):
+        Object(Internal::EvaluationContext& EC,const Internal::Member& Value):
             m_Value(Value),
             m_EC(EC)
         {}
@@ -96,12 +96,12 @@ class Object
         template <typename... T>
         Object operator()(T... Args) const
         {
-            return Function(boost::apply_visitor(Internal::Utilities::Get<boost::shared_ptr<Internal::IFunction>>(),m_Value),m_EC.Scope,m_EC.MC)(Args...);
+            return Function(boost::apply_visitor(Internal::Utilities::Get<boost::shared_ptr<Internal::IFunction>>(),m_Value),m_EC.Scope(),m_EC.MC)(Args...);
         }
     protected:
     private:
         Internal::Member m_Value; //!< Member variable "m_Value"
-        Internal::EvaluationContext m_EC;
+        Internal::EvaluationContext& m_EC;
 };
 }//ns Types
 namespace Marshal
@@ -117,11 +117,11 @@ struct Value<Types::Object>
             return Val;
         }
     };
-    static Types::Object ConvertOut(const Internal::ResolvedToken& Val, const Internal::EvaluationContext& EC)
+    static Types::Object ConvertOut(const Internal::ResolvedToken& Val, Internal::EvaluationContext& EC)
     {
         return Types::Object(EC,Val);
     }
-    static Internal::Member ConvertIn(const Types::Object& Obj, const Internal::EvaluationContext& EC)
+    static Internal::Member ConvertIn(const Types::Object& Obj, Internal::EvaluationContext& EC)
     {
         return Obj.Visit(GetValue());
     }

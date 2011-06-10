@@ -6,6 +6,7 @@
 #include "Object.hpp"
 #include "Typenames.hpp"
 #include "Is.hpp"
+#include "EvaluationContext.hpp"
 namespace Internal
 {
 namespace Utilities
@@ -40,7 +41,7 @@ struct PrintTypeVisitor : public boost::static_visitor<std::string>
     {
         Types::Scope Scope((NullReference()));
         if( m_EC.This.IsNull() )
-            Scope = m_EC.Scope;
+            Scope = m_EC.Scope();
         else
         {
             Scope = m_EC.This;
@@ -94,7 +95,7 @@ struct PrintValueVisitor : public boost::static_visitor<std::string>
     {
         Types::Scope Scope((NullReference()));
         if( m_EC.This.IsNull() )
-            Scope = m_EC.Scope;
+            Scope = m_EC.Scope();
         else
         {
             Scope = m_EC.This;
@@ -191,7 +192,7 @@ struct GetNumberTokenVisitor : public boost::static_visitor< NumberToken >
     {
         Types::Scope Scope((NullReference()));
         if( m_EC.This.IsNull() )
-            Scope = m_EC.Scope;
+            Scope = m_EC.Scope();
         else
         {
             Scope = m_EC.This;
@@ -300,7 +301,7 @@ struct ResolveVisitor : public boost::static_visitor<ResolvedToken>
     {
         Types::Scope Scope((NullReference()));
         if( m_EC.This.IsNull() )
-            Scope = m_EC.Scope;
+            Scope = m_EC.Scope();
         else
         {
             Scope = m_EC.This;
