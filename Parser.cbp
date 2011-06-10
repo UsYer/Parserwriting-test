@@ -186,6 +186,7 @@
 		<Unit filename="include\IParsable.hpp" />
 		<Unit filename="include\IToken.hpp" />
 		<Unit filename="include\Internal\BindFunc.hpp" />
+		<Unit filename="include\Internal\EvaluationContext.hpp" />
 		<Unit filename="include\Internal\FuncCaller.hpp" />
 		<Unit filename="include\Internal\Functions.hpp" />
 		<Unit filename="include\Internal\IEvaluable.hpp" />
@@ -223,6 +224,7 @@
 			<Option target="Debug 4.5 64bit" />
 			<Option target="Release 4.5 64bit" />
 		</Unit>
+		<Unit filename="src\EvaluationContext.cpp" />
 		<Unit filename="src\Functions.cpp" />
 		<Unit filename="src\IEvaluable.cpp" />
 		<Unit filename="src\IFunction.cpp" />
@@ -247,7 +249,7 @@
 			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
 				<comment_style block="0" line="2" />
-				<doxyfile_project />
+				<doxyfile_project use_auto_version="1" />
 				<doxyfile_build />
 				<doxyfile_warnings />
 				<doxyfile_output />

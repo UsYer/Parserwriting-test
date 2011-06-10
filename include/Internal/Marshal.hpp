@@ -43,15 +43,15 @@ struct Value
 {
     typedef typename MakePlain<T>::Type Type;
     template <typename U>
-    static Type ConvertOut(const U& Val, const Internal::EvaluationContext& EC)
+    static Type ConvertOut(const U& Val,  Internal::EvaluationContext& EC)
     {
         return ::Marshal::Value<Type>::ConvertOut(Val, EC);
     }
-    static Internal::Types::Object ConvertIn(const T& Val, const Internal::EvaluationContext& EC)
+    static Internal::Types::Object ConvertIn(const T& Val,  Internal::EvaluationContext& EC)
     {
         return Internal::Types::Object(::Marshal::Value<Type>::ConvertIn(Val, EC));
     }
-    static ResolvedToken ConvertInNoObject(const T& Val, const Internal::EvaluationContext& EC)
+    static ResolvedToken ConvertInNoObject(const T& Val,  Internal::EvaluationContext& EC)
     {
         return ::Marshal::Value<Type>::ConvertIn(Val, EC);
     }

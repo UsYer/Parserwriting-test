@@ -1,8 +1,6 @@
 #include <iostream>
 #include <windows.h>
 #include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
-#define foreach BOOST_FOREACH
 #include "../include/MariusParser.hpp"
 #include "../include/Internal/Operators.hpp"
 #include "../include/Internal/Functions.hpp"
@@ -12,17 +10,9 @@
 #include "../include/Internal/KeywordTry.hpp"
 #include "../include/Internal/KeywordCatch.hpp"
 using namespace Internal;
-Evaluator::Evaluator():
-        m_GlobalScope(m_MC.Save(Types::Table())),
-        m_ActiveScope(m_GlobalScope),
-        m_EC(Stack,m_ActiveScope,m_MC)
-{
-}
-void Evaluator::operator()(const boost::shared_ptr<IEvaluable>& Evaluable)
-{
-    Evaluable->Eval(m_EC);
-}
-MariusParser::MariusParser()
+MariusParser::MariusParser():
+    m_GlobalScope(m_MC.Save(Internal::Types::Table())),
+    m_EC(Stack,m_GlobalScope,m_MC)
 {
     //Set up builtin operators and functions
     m_Tokenizer.RegisterToken(new ParsedOperatorToken(Internal::AssignmentOp(),&ParseAssignment)); //Needs to set LastToken and ParserState while parsing
@@ -65,7 +55,7 @@ MariusParser::MariusParser()
 
     Internal::Types::Table MCScope;
     MCScope.Add("GetRefCount",boost::make_shared<GetRefCountFunc>());
-    (*m_Evaluator.m_GlobalScope)["MC"] = m_Evaluator.m_MC.Save(MCScope);
+    (*m_GlobalScope)["MC"] = m_MC.Save(MCScope);
 
     Internal::Types::Table T;
     T.Add("Max",boost::make_shared<MaxFunc>());
@@ -73,8 +63,8 @@ MariusParser::MariusParser()
     T.Add("Ln",Internal::BindFunc("Ln","Ln",static_cast<double(*)(double)>(&std::log)));
     T.Add("Pi",3.141592653589793238462643);
     T.Add("E",2.718281828459045235360287);
-    CountedReference Ref(m_Evaluator.m_MC.Save(T));
-    (*m_Evaluator.m_GlobalScope)["Math"] = Ref;
+    CountedReference Ref(m_MC.Save(T));
+    (*m_GlobalScope)["Math"] = Ref;
     RegisterFunction(boost::make_shared<CreateNullFunc>());
     RegisterFunction(boost::make_shared<CreateTableFunc>());
     RegisterFunction(boost::make_shared<PrintFunc>());
@@ -90,7 +80,7 @@ MariusParser::~MariusParser()
 {
     m_Tokenizer.Clear();
     m_Parser.Clear();
-    m_Evaluator.Stack.clear();
+    m_EC.Stack.Clear();
 
     LARGE_INTEGER start_ticks, ende_ticks, frequenz;
 
@@ -128,7 +118,7 @@ MariusParser::~MariusParser()
     Took += "Parsing took:\t\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
     tick_diff += ende_ticks.QuadPart - start_ticks.QuadPart;
 
-    std::queue< Token > Q = m_Parser.GetOutput();
+    auto Q = m_Parser.GetOutput();
 #ifdef DEBUG
     std::cout << "Output.size = " << Q.size() << std::endl;
 #endif
@@ -139,7 +129,7 @@ MariusParser::~MariusParser()
     std::cout << "--- Evaluating ---" << std::endl;
 #endif
     QueryPerformanceCounter(&start_ticks);
-    while( !Q.empty() )
+    /*while( !Q.empty() )
     {
         Token t = Q.front();
 #ifdef DEBUG
@@ -147,7 +137,10 @@ MariusParser::~MariusParser()
 #endif
         boost::apply_visitor(m_Evaluator,t);
         Q.pop();
-    }
+    }*/
+    m_EC.NewScope(m_EC.GlobalScope,&Q);
+    m_EC.EvalScope();
+    m_EC.EndScope();
     QueryPerformanceCounter(&ende_ticks);
 
     Took += "Evaluation took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
@@ -157,13 +150,13 @@ MariusParser::~MariusParser()
             " and " + boost::lexical_cast<std::string>((double)tick_diff / frequenz.QuadPart) + " ms\n";
     std::cout << Took << std::endl;
 
-    if( !m_Evaluator.Stack.empty() )
+    if( !m_EC.Stack.Empty() )
     {
-        //std::cout << "\nResult: " << Utilities::PrintValue(m_Evaluator.m_EC,m_Evaluator.Stack.back()) << std::endl;
-        return ::Types::Object(m_Evaluator.m_EC,Utilities::Resolve(m_Evaluator.m_EC,m_Evaluator.Stack.back()));
+        std::cout << "\nResult: " << Utilities::PrintValue(m_EC,m_EC.Stack.Top()) << std::endl;
+        return ::Types::Object(m_EC,Utilities::Resolve(m_EC,m_EC.Stack.Top()));
     }
     else
     {
-        return ::Types::Object(m_Evaluator.m_EC,NullReference());
+        return ::Types::Object(m_EC,NullReference());
     }
 }

@@ -7,7 +7,7 @@ class Object;
 class Function
 {
     boost::shared_ptr<Internal::IFunction> m_Function;
-    Internal::Types::Scope& m_SymTable;
+    Internal::Types::Scope m_SymTable;
     Internal::MemoryController& m_MC;
     template<typename T>
     void MakeArgTable(Internal::Types::Table& Args, Internal::EvaluationContext& EC, T Val) const
@@ -24,7 +24,7 @@ class Function
     {
     }
     public:
-    Function(const boost::shared_ptr<Internal::IFunction>& Function, Internal::Types::Scope& Table, Internal::MemoryController& MC):
+    Function(const boost::shared_ptr<Internal::IFunction>& Function, const Internal::Types::Scope& Table, Internal::MemoryController& MC):
         m_Function(Function),
         m_SymTable(Table),
         m_MC(MC)
@@ -81,9 +81,9 @@ struct Type<Types::Function>
 template<>
 struct Value<Types::Function>
 {
-    static Types::Function ConvertOut(const boost::shared_ptr<Internal::IFunction>& Val, const Internal::EvaluationContext& EC)
+    static Types::Function ConvertOut(const boost::shared_ptr<Internal::IFunction>& Val, Internal::EvaluationContext& EC)
     {
-        return Types::Function(Val,EC.Scope,EC.MC);
+        return Types::Function(Val,EC.Scope(),EC.MC);
     }
 };
 }//ns Marshal

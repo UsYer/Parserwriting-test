@@ -41,7 +41,7 @@ struct DoAssignment : public boost::static_visitor<Member>
     {
         Types::Scope Scope((NullReference()));
         if( m_EC.This.IsNull() )
-            Scope = m_EC.Scope;
+            Scope = m_EC.Scope();
         else
         {
             Scope = m_EC.This;

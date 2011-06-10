@@ -98,7 +98,11 @@
 	"FunctionDefTests.hpp"
 	"FunctionCallTests.hpp"
 
+<<<<<<< HEAD
 1298506926 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
+=======
+1307478641 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
+>>>>>>> Develop
 	"Internal/Parser.hpp"
 	"Internal/Tokenizer.hpp"
 	"Internal/Utilities.hpp"
@@ -130,7 +134,11 @@
 	"../MemoryManagment/include/MemoryController.hpp"
 	"../MemoryManagment/include/Reference.hpp"
 
+<<<<<<< HEAD
 1299347716 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
+=======
+1307723456 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
+>>>>>>> Develop
 	"../MemoryManagment/include/Reference.hpp"
 	"Internal/Marshal.hpp"
 
@@ -182,7 +190,11 @@
 
 1274649545 c:\users\marius\desktop\quellcodes\parser\include\typenames.hpp
 
+<<<<<<< HEAD
 1298332639 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
+=======
+1307722825 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
+>>>>>>> Develop
 	"Internal/Marshal.hpp"
 
 1188366510 k:\unittest++\src\unittest++.h
@@ -278,7 +290,11 @@
 1275339242 c:\users\marius\desktop\quellcodes\parser\include\marshal.hpp
 	<type_traits>
 
+<<<<<<< HEAD
 1301164821 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
+=======
+1307313755 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
+>>>>>>> Develop
 	<stack>
 	<queue>
 	<string>
@@ -299,9 +315,12 @@
 	"Types.hpp"
 	"IEvaluable.hpp"
 
+<<<<<<< HEAD
 1306793240 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
+=======
+1307310170 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
+>>>>>>> Develop
 	<deque>
-	<stack>
 	"../../MemoryManagment/include/MemoryController.hpp"
 	"../../MemoryManagment/include/Reference.hpp"
 
@@ -309,7 +328,11 @@
 	<string>
 	"Tokens.hpp"
 
+<<<<<<< HEAD
 1307226334 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
+=======
+1307308551 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
+>>>>>>> Develop
 	"IEvaluable.hpp"
 	"Table.hpp"
 
@@ -321,15 +344,24 @@
 	<boost/ptr_container/ptr_set.hpp>
 	"../IToken.hpp"
 
+<<<<<<< HEAD
 1307197907 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
+=======
+1307316179 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
+>>>>>>> Develop
 	<boost/lexical_cast.hpp>
 	"../../MemoryManagment/include/Exceptions.hpp"
 	"Table.hpp"
 	"Object.hpp"
 	"Typenames.hpp"
 	"Is.hpp"
+	"EvaluationContext.hpp"
 
+<<<<<<< HEAD
 1307197636 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
+=======
+1307308551 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
+>>>>>>> Develop
 	<map>
 	<string>
 	<memory>
@@ -341,10 +373,17 @@
 
 1276367508 c:\users\marius\desktop\quellcodes\parser\include\internal\typenames.hpp
 
+<<<<<<< HEAD
 1298332639 c:\users\marius\desktop\quellcodes\parser\include\internal\marshal.hpp
 	<type_traits>
 
 1307196067 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
+=======
+1307723554 c:\users\marius\desktop\quellcodes\parser\include\internal\marshal.hpp
+	<type_traits>
+
+1307308551 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
+>>>>>>> Develop
 	"Utilities.hpp"
 	"Marshal.hpp"
 	<array>
@@ -353,7 +392,11 @@
 
 1299347868 c:\users\marius\desktop\quellcodes\parser\unittest\tabletests.hpp
 
+<<<<<<< HEAD
 1307195758 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
+=======
+1307308551 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
+>>>>>>> Develop
 	<exception>
 
 1298332639 c:\users\marius\desktop\quellcodes\parser\unittest\functiondeftests.hpp
@@ -579,6 +622,16 @@
 1282168943 c:\users\marius\parser\include\internal\is.hpp
 
 1274130257 c:\users\marius\desktop\quellcodes\parser\include\internal\is.hpp
+<<<<<<< HEAD
 
 1307230956 c:\users\marius\desktop\quellcodes\parser\unittest\functioncalltests.hpp
+=======
+
+1307308551 c:\users\marius\desktop\quellcodes\parser\unittest\functioncalltests.hpp
+
+1307723919 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
+	<stack>
+	<boost/foreach.hpp>
+	"Types.hpp"
+>>>>>>> Develop
 

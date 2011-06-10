@@ -8,6 +8,7 @@ namespace Keyword
 {
 namespace Detail
 {
+
 struct ParseFuncBeginning : public boost::static_visitor<std::string>
 {
     const ParserContext& m_Context;
@@ -62,7 +63,7 @@ class FuncRegistrar : public IEvaluable
             EC.DropSignal();
             throw std::logic_error("Named function definition is not allowed in a function call");
         }
-        (*EC.Scope)[m_Func->Representation()] = m_Func;
+        (*EC.Scope())[m_Func->Representation()] = m_Func;
     }
 };
 /**
