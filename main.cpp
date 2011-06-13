@@ -6,10 +6,6 @@ Like extracting the actual value of a userside Object.
 When marshaling values in make sure to dereference pointers in order to copy the argument.
  */
 // TODO (Marius#3#): Implement function overloading
-/* TODO (Marius#4#): Replace std-exceptions with own Exceptions that clearly represent the kind of error that happened.
-E.g.: ParsingException : std::exception; EvaluationException: std::exception;
-UserExeption : std::exception; the last one covers all error concerning embedding: marshaling ... */
-/* TODO (Marius#4#): Decide wether exceptions or result-returnvalue should be used inside MariusParser and how the user should be informed about errors (expetions or returnvalues?) */
 /* NOTE (Marius#3#): Ideas for Scope:
 All variables are going into a local scope
 Globals: Scope.Global["var"] or Scope.Global.var
@@ -109,17 +105,17 @@ int main()
         }
         catch(Exceptions::ParseError& e)
         {
-            std::cerr << std::string("\nerror: ") + e.what() << std::endl;
+            std::cerr << "\nerror: " << e.what() << std::endl;
             continue;
         }
         catch(Exceptions::RuntimeException& e)
         {
-            std::cerr << std::string("\nruntime error: ") + e.what() << std::endl;
+            std::cerr << "\n" << e.Name() << ": " << e.what() << std::endl;
             continue;
         }
         catch(std::logic_error& e)
         {
-            std::cerr << std::string("\nlogic error: ") + e.what() << std::endl;
+            std::cerr << "\nlogic error: " << e.what() << std::endl;
             continue;
         }
         catch(...)

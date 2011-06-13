@@ -6,6 +6,7 @@
 #include "../Parsable.hpp"
 #include "Utilities.hpp"
 #include "Is.hpp"
+#include "../Exceptions.hpp"
 namespace Internal
 {
 class AssignmentOp : public IOperator
@@ -281,7 +282,7 @@ public:
         const Types::Scope& ScopeRef(Utilities::GetWithResolve<Types::Scope>(EC, EC.EvalStack.back()));
         EC.EvalStack.pop_back();
         if( ScopeRef.IsNull() )
-            throw NullReferenceException("Dereferencing a nullreference");
+            throw Exceptions::NullReferenceException("Dereferencing a nullreference");
         Types::Object Val(Identifier);
         Val.This(ScopeRef);
         EC.EvalStack.push_back(Val);
@@ -553,26 +554,26 @@ class OpeningBracketFuncCall : public OpeningBracket
         {}
         void operator()(long long ) const
         {
-            throw std::logic_error("Expected function; Is long");
+            throw Exceptions::TypeException("Expected function; Is long");
         }
         void operator()(double )const
         {
-            throw std::logic_error("Expected function; Is double");
+            throw Exceptions::TypeException("Expected function; Is double");
         }
         void operator()(const boost::shared_ptr<IOperator>& op)const
         {
-            throw std::logic_error("Expected function; Is operator " + op->Representation());
+            throw Exceptions::TypeException("Expected function; Is operator " + op->Representation());
         }
         void operator()(const Reference& R)const
         {
             if( R.IsNull() )
-                throw NullReferenceException("Calling a nullreference");
+                throw Exceptions::NullReferenceException("Calling a nullreference");
             else
-                throw std::logic_error("Expected function; Is table");
+                throw Exceptions::TypeException("Expected function; Is table");
         }
         void operator()(NullReference)const
         {
-            throw NullReferenceException("Calling a nullreference");
+            throw Exceptions::NullReferenceException("Calling a nullreference");
         }
         void operator()(const boost::shared_ptr<IFunction>& op)const
         {
@@ -677,26 +678,26 @@ class ClosingBracket : public IOperator
         }
         boost::shared_ptr<IFunction> operator()(long long ) const
         {
-            throw std::logic_error("Expected function; Is long");
+            throw Exceptions::TypeException("Expected function; Is long");
         }
         boost::shared_ptr<IFunction> operator()(double )const
         {
-            throw std::logic_error("Expected function; Is double");
+            throw Exceptions::TypeException("Expected function; Is double");
         }
         boost::shared_ptr<IFunction> operator()(const boost::shared_ptr<IOperator>& op)const
         {
-            throw std::logic_error("Expected function; Is operator " + op->Representation());
+            throw Exceptions::TypeException("Expected function; Is operator " + op->Representation());
         }
         boost::shared_ptr<IFunction> operator()(const Reference& R)const
         {
             if( R.IsNull() )
-                throw NullReferenceException("Calling a nullreference");
+                throw Exceptions::NullReferenceException("Calling a nullreference");
             else
-                throw std::logic_error("Expected function; Is table");
+                throw Exceptions::TypeException("Expected function; Is table");
         }
         boost::shared_ptr<IFunction> operator()(NullReference)const
         {
-            throw NullReferenceException("Calling a nullreference");
+            throw Exceptions::NullReferenceException("Calling a nullreference");
         }
         boost::shared_ptr<IFunction> operator()(const boost::shared_ptr<IFunction>& op)const
         {
@@ -760,10 +761,19 @@ public:
 
             Func->SuppliedArguments(Args,ArgCount);
             Func->This(FuncObj.This());
-            Func->Eval(EC);
+            try
+            { //Make sure native exceptions are properly transformed to internal exceptions
+                Func->Eval(EC);
+            }
+            catch( Exceptions::RuntimeException& e )
+            {
+                Func->This(NullReference());
+                EC.Throw(e);
+                EC.EndScope();
+            }
             Func->This(NullReference()); //Very Important! Reset the this-ref to prevent a crash on shutdown. The MC gets deleted before the functions
                                         //who would still hold a ref to their this-scopes. When  funcs get deleted the and the ref does it's decref, the MC is already gone -> Crash!
-        }// FIXME (Marius#9#): The arguments for variadic functions remain in the localscope. Math.Max(1,2) | Math.Max() still yields 2
+        }
         else
             EC.DropSignal();
     }
@@ -829,30 +839,17 @@ public:
     }
     void Eval(EvaluationContext& EC)
     {
-        if( EC.EvalStack.empty() )
+        if( EC.Stack.Empty() )
             throw std::logic_error("Missing argument for throw");
-        Types::Function CatchBlock;
-        try //search for the corresponding catch handler. If it throws there is none and we will forward the exception to native code
+        auto Ex = Utilities::GetWithResolve<CountedReference>(EC, EC.Stack.Pop(), "\"throw\" argument has to be an exception type");
+        if( !(*Ex).Contains("__EXCEPTION__") )
         {
-            CatchBlock = Utilities::GetWithResolve<Types::Function>(EC,Types::Object("__CATCH__"));
+            EC.Throw(Exceptions::TypeException("\"throw\" argument has to be an exception type"));
+            EC.EndScope();
+            return;
         }
-        catch(const std::logic_error&)
-        {
-            throw std::runtime_error("Unhandled runtime exception"); // TODO (Marius#9#): Add translation from internal exception to native exceptions. Make corresponding native classes which will be thrown
-        }
-        if( CatchBlock->ArgCount() == 0 )
-        {
-            EC.EvalStack.pop_back();
-            CatchBlock->Eval(EC);
-        }// TODO (Marius#9#): Somehow the EvalScope has to end here
-        else if( CatchBlock->ArgCount() == 1 )
-        {
-            CatchBlock->SuppliedArguments(Utilities::Resolve(EC,EC.EvalStack.back()),1);
-            EC.EvalStack.pop_back();
-            CatchBlock->Eval(EC);
-        }
-        else
-            throw std::logic_error("Catch handler expects too many arguments");
+        EC.Throw(Ex);
+        EC.EndScope();
     }
 };
 

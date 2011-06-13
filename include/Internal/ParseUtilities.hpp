@@ -116,8 +116,10 @@ const char* Expected(TokenType Type)
         case TokenType::None:
             return "none";
         break;
+        default:
+            return "unknown";
+        break;
     }
-    return "unknown";
 }
 struct ParseArgumentList : public boost::static_visitor<void>
 {
@@ -182,6 +184,27 @@ struct ParseArgumentList : public boost::static_visitor<void>
         {
             throw std::logic_error(std::string("Expected ") + Expected(m_Expected) + "; got " + Rep);
         }
+    }
+};
+/**
+Holds an function after it's been created.
+
+Necessary, because the function would otherwise be evaluated directly when encoutered.
+Instead, the FuncHolder gets evaluated which then pushes the real func on the stack.
+Now something like this is possible: func = function() ... end
+*/
+class FuncHolder : public IEvaluable
+{
+    Types::Function m_Func;
+    public:
+
+    FuncHolder(const Types::Function& Func, const std::string& FuncHolderName = "__FUNCHOLDER__"):
+        IEvaluable("", FuncHolderName),
+        m_Func(Func)
+    {}
+    void Eval(EvaluationContext& EC)
+    {
+        EC.Stack.Push(m_Func);
     }
 };
 }//ns Internal

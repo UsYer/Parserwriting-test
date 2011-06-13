@@ -16,6 +16,6 @@ TEST(VariadicFuncCallWithChangingArgcount)
     std::cout << "VariadicFuncCallWithChangingArgcount\n";
     MP.Evaluate("Math.Max(1,2)");
     long long Result;
-    CHECK_THROW( Result = MP.Evaluate("Math.Max()"), std::logic_error);
+    CHECK_THROW( Result = MP.Evaluate("Math.Max()"), Exceptions::RuntimeException);
 }
 #endif // FUNCTIONCALLTESTS_HPP_INCLUDED

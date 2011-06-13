@@ -8,32 +8,6 @@ namespace Detail
 {
 class TryBlock: public IFunction
 {
-    class FuncEvaluator : public boost::static_visitor<>
-    {
-        Types::Stack m_Stack;
-        EvaluationContext m_EC;
-
-        public:
-        FuncEvaluator(MemoryController& MC, Types::Scope& LocalScope):
-            m_EC(m_Stack, LocalScope, MC)
-        {}
-        void operator()(long long Val)
-        {
-            m_Stack.push_back(Types::Object(Val));
-        }
-        void operator()(double val)
-        {
-            m_Stack.push_back(Types::Object(val));
-        }
-        void operator()(const boost::shared_ptr<IEvaluable>& Evaluable)
-        {
-            Evaluable->Eval(m_EC);
-        }
-        void operator()(const std::string& s)
-        {
-            m_Stack.push_back(Types::Object(s));
-        }
-    };
     public:
     std::deque<Token> m_FuncInstructions;
     TryBlock():
@@ -42,35 +16,17 @@ class TryBlock: public IFunction
     }
     virtual void Eval(EvaluationContext& EC)
     {
-        CountedReference LocalScopeRef(EC.MC.Save(m_LocalScope));
-        (*LocalScopeRef)["__PARENT__"] = EC.Scope;
-        (*LocalScopeRef)["This"] = m_This;
-        Types::Function CatchBlock = Utilities::GetWithResolve<Types::Function>(EC,EC.EvalStack.back(),"Catchblock is not a function");
-        EC.EvalStack.pop_back();
+        Types::Function CatchBlock = Utilities::GetWithResolve<Types::Function>(EC,Types::Object(m_LocalScope[0]),"Catchblock is not a function");
         if( CatchBlock->Representation() != "__CATCH__" )
             throw std::logic_error("No Catchblock");
+        auto LocalScopeRef = EC.MC.Save(m_LocalScope);
+        (*LocalScopeRef)["__PARENT__"] = EC.Scope(); //Save the actual parentscope before setting up the new scope because otherwise it would point to this scope: infinite recursion
+        (*LocalScopeRef)["This"] = m_This;
         (*LocalScopeRef)["__CATCH__"] = CatchBlock;
-        FuncEvaluator FE(EC.MC,LocalScopeRef);
-        foreach(Token& T,m_FuncInstructions)
-        {
-        #ifdef DEBUG
-            std::cout << boost::apply_visitor(Utilities::PrintValueNoResolve(),T) << " ";
-        #endif
-            boost::apply_visitor(FE,T);
-        }
-    }
-};
-class TryHolder : public IEvaluable
-{
-    boost::shared_ptr<IFunction> m_Func;
-    public:
-    TryHolder(const boost::shared_ptr<IFunction>& Func):
-        IEvaluable("","__TRYHOLDER__"),
-        m_Func(Func)
-    {}
-    void Eval(EvaluationContext& EC)
-    {
-        EC.EvalStack.push_back(Types::Object(m_Func));
+//        (*EC.Scope())["__CATCH__"] = CatchBlock;
+        EC.NewScope(LocalScopeRef,&m_FuncInstructions);
+//        EC.NewScope(EC.Scope(),&m_FuncInstructions); //the try scope still operates on the previous scope
+        EC.EvalScope();
     }
 };
 }//ns Detail
@@ -80,7 +36,7 @@ void Try(ParserContext& Context)
         throw std::logic_error("Missing input after \"try\"");
     auto TryFunc = boost::make_shared<Detail::TryBlock>();
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
-    Context.OutputQueue().push_back(boost::make_shared<Detail::TryHolder>(TryFunc));
+    Context.OutputQueue().push_back(boost::make_shared<FuncHolder>(TryFunc, "__TRYHOLDER__"));
     Context.LastToken() = TokenType::KeywordWithValue;
     Context.SetUpNewScope(&TryFunc->m_FuncInstructions);
 }

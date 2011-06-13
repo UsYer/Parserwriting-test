@@ -157,6 +157,17 @@ public:
         EC.EvalStack.push_back(Types::Object(Refcount));
     }
 };
+class GetMCSizeFunc : public IFunction
+{
+public:
+    GetMCSizeFunc():IFunction("Gets the amount of refs managed by the MC","ItemCount",0,1)
+    {
+    }
+    virtual void Eval(EvaluationContext& EC)
+    {
+        EC.EvalStack.push_back(Types::Object((long long)EC.MC.Size()));
+    }
+};
 class PrintFunc : public IFunction
 {
 public:
@@ -189,10 +200,54 @@ public:
     }
     virtual void Eval( EvaluationContext& EC )
     {
-//        auto Exception = Utilities::GetWithResolve<CountedReference>(EC,m_LocalScope[0]);
-        throw Exceptions::RuntimeException("Unhandled runtime exception");
+        auto Exception = Utilities::GetWithResolve<CountedReference>(EC,Types::Object(m_LocalScope[0]));
+        throw Exceptions::RuntimeException("Unhandled runtime exception","RuntimeException",boost::apply_visitor(Utilities::Get<long long>(),(*Exception)["TypeId"]));
     }
 };
-
+/*
+class CreateRuntimeExceptionFunc : public IFunction
+{
+    public:
+    CreateRuntimeExceptionFunc():
+        IFunction("","RuntimeException",0,1)
+    {}
+    virtual void Eval( EvaluationContext& EC )
+    {
+        Types::Table ExceptionTable;
+        ExceptionTable["__EXCEPTION__"] = 1LL;
+        ExceptionTable["TypeId"] = 1LL;
+        EC.Stack.Push(EC.MC.Save(ExceptionTable));
+    }
+};
+class CreateTypeExceptionFunc : public IFunction
+{
+    public:
+    CreateTypeExceptionFunc():
+        IFunction("","TypeException",0,1)
+    {}
+    virtual void Eval( EvaluationContext& EC )
+    {
+        Types::Table ExceptionTable;
+        ExceptionTable["__EXCEPTION__"] = 1LL;
+        ExceptionTable["TypeId"] = 2LL;
+        EC.Stack.Push(EC.MC.Save(ExceptionTable));
+    }
+};*/
+class CreateExceptionFunc : public IFunction
+{
+    long long m_Id;
+    public:
+    CreateExceptionFunc(const std::string& Name, long long Id):
+        IFunction("",Name,0,1),
+        m_Id(Id)
+    {}
+    virtual void Eval( EvaluationContext& EC )
+    {
+        Types::Table ExceptionTable;
+        ExceptionTable["__EXCEPTION__"] = 1LL;
+        ExceptionTable["TypeId"] = m_Id;
+        EC.Stack.Push(EC.MC.Save(ExceptionTable));
+    }
+};
 }//ns Internal
 #endif // FUNCTIONS_HPP_INCLUDED

@@ -66,6 +66,7 @@ class Object
         }
     };
     public:
+        // TODO (Marius#6#): Make Object copyable (EC ref is the problem. Would it hurt to use a pointer instead?)
         /** Default constructor */
         Object(Internal::EvaluationContext& EC,const Internal::Member& Value):
             m_Value(Value),

@@ -1,6 +1,6 @@
 #include "../include/MemoryController.hpp"
 #include "../include/Reference.hpp"
-#include "../include/Exceptions.hpp"
+#include "../../include/Exceptions.hpp"
 #include "../../include/Internal/Table.hpp"
 using namespace Internal;
 Reference::Reference( const Reference& Other ):
@@ -21,7 +21,7 @@ Reference& Reference::operator=( Reference Other )
 MemoryController::Value& Reference::operator*() const
 {
     if( !m_MC )
-        throw NullReferenceException("Dereferencing a null reference");
+        throw Exceptions::NullReferenceException("Dereferencing a null reference");
 
     return m_MC->GetValue(*this);
 }

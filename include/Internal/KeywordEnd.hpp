@@ -16,27 +16,19 @@ struct ScopeEnder : public IFunction
         EC.EndScope();
     }
 };
-class EvalHolder : public IEvaluable
-{
-    public:
-    EvalHolder():
-        IEvaluable("","__EVALHOLDER__")
-    {}
-    void Eval(EvaluationContext& EC)
-    {
-        EC.Stack.Push(boost::make_shared<ScopeEnder>());
-    }
-};
 }//ns Detail
 void End(ParserContext& Context)
 {
+    if( Context.LastToken() == TokenType::OpUnaryPrefix || Context.LastToken() == TokenType::OpBinary )
+        throw std::logic_error("missing argument after operator");
     //End of parsing a scope, so pop the remaining operators on the Outqueue to not miss them
     while( !Context.OperatorStack().empty() )
     {
         Context.OutputQueue().push_back(Context.OperatorStack().top());
         Context.OperatorStack().pop();
     }
-    Context.OutputQueue().push_back(boost::make_shared<Detail::EvalHolder>());
+//    Context.OutputQueue().push_back(boost::make_shared<FuncHolder>(boost::make_shared<Detail::ScopeEnder>()));
+    Context.OutputQueue().push_back(boost::make_shared<Detail::ScopeEnder>());
     if( !Context.EndScope() )
         throw std::logic_error("Scope mismatch, end is superfluous.");
 }

@@ -1,7 +1,7 @@
 #ifndef UTILITIES_HPP_INCLUDED
 #define UTILITIES_HPP_INCLUDED
 #include <boost/lexical_cast.hpp>
-#include "../../MemoryManagment/include/Exceptions.hpp"
+#include "../Exceptions.hpp"
 #include "Table.hpp"
 #include "Object.hpp"
 #include "Typenames.hpp"
@@ -49,7 +49,7 @@ struct PrintTypeVisitor : public boost::static_visitor<std::string>
         }
         auto it = (*Scope).Find(s);
         if( it == (*Scope).KeyEnd() )
-            throw std::logic_error("Identifier " + s + " unknown");
+            throw Exceptions::NameException("Identifier " + s + " unknown");
 
         return boost::apply_visitor(*this,it->second);
     }
@@ -103,20 +103,20 @@ struct PrintValueVisitor : public boost::static_visitor<std::string>
         }
         auto it = (*Scope).Find(s);
         if( it == (*Scope).KeyEnd() )
-            throw std::logic_error("Identifier " + s + " unknown");
+            throw Exceptions::NameException("Identifier " + s + " unknown");
 
         return boost::apply_visitor(*this,it->second);
     }
     std::string operator()(const Reference& ref)const
     {
         if( ref.IsNull() )
-            throw NullReferenceException("Dereferencing a nullreference");
+            throw Exceptions::NullReferenceException("Dereferencing a nullreference");
         else
             return "Reference -> table";
     }
     std::string operator()(const NullReference&)const
     {
-        throw NullReferenceException("Dereferencing a null reference");
+        throw Exceptions::NullReferenceException("Dereferencing a null reference");
     }
     EvaluationContext& m_EC;
 };
@@ -125,6 +125,18 @@ inline std::string PrintValue(EvaluationContext& EC, const Types::Object& Val )
 {
     EC.This = Val.This();
     return Val.Visit(PrintValueVisitor(EC));
+}
+inline std::string PrintValueNoThrow(EvaluationContext& EC, const Types::Object& Val )
+{
+    EC.This = Val.This();
+    try
+    {
+        return Val.Visit(PrintValueVisitor(EC));
+    }
+    catch(std::exception&)
+    {
+        return "";
+    }
 }
 ///Used in Parser
 struct PrintValueNoResolve : public boost::static_visitor<std::string>
@@ -158,7 +170,7 @@ struct PrintValueNoResolve : public boost::static_visitor<std::string>
     }
     std::string operator()(const NullReference&)const
     {
-        throw NullReferenceException("Dereferencing a null reference");
+        throw Exceptions::NullReferenceException("Dereferencing a null reference");
     }
 };
 
@@ -182,11 +194,11 @@ struct GetNumberTokenVisitor : public boost::static_visitor< NumberToken >
     }
     NumberToken operator()(const boost::shared_ptr<IOperator>& op)const
     {
-        throw std::logic_error("Can't take operators as operands");
+        throw Exceptions::TypeException("Can't take operators as operands");
     }
     NumberToken operator()(const boost::shared_ptr<IFunction>& op)const
     {
-        throw std::logic_error("Can't take functions as operands");
+        throw Exceptions::TypeException("Can't take functions as operands");
     }
     NumberToken operator()(const std::string& s)const
     {
@@ -200,20 +212,20 @@ struct GetNumberTokenVisitor : public boost::static_visitor< NumberToken >
         }
         auto it = (*Scope).Find(s);
         if( it == (*Scope).KeyEnd() )
-            throw std::logic_error("Identifier " + s + " unknown");
+            throw Exceptions::NameException("Identifier " + s + " unknown");
 
         return boost::apply_visitor(*this,it->second);
     }
     NumberToken operator()(const Reference& R)const
     {
         if( R.IsNull() )
-            throw NullReferenceException("Dereferencing a nullreference");
+            throw Exceptions::NullReferenceException("Dereferencing a nullreference");
         else
-            throw std::logic_error("Table is not convertible to a number");
+            throw Exceptions::TypeException("Table is not convertible to a number");
     }
     NumberToken operator()(const NullReference&)const
     {
-        throw NullReferenceException("Dereferencing a null reference");
+        throw Exceptions::NullReferenceException("Dereferencing a null reference");
     }
     EvaluationContext& m_EC;
 };
@@ -239,18 +251,18 @@ struct GetNumberTokenNoResolveVisitor : public boost::static_visitor< NumberToke
     NumberToken operator()(const Reference& R)const
     {
         if( R.IsNull() )
-            throw NullReferenceException("Dereferencing a nullreference");
+            throw Exceptions::NullReferenceException("Dereferencing a nullreference");
         else
-            throw std::logic_error("Table is not convertible to a number");
+            throw Exceptions::TypeException("Table is not convertible to a number");
     }
     NumberToken operator()(const NullReference&)const
     {
-        throw NullReferenceException("Dereferencing a null reference");
+        throw Exceptions::NullReferenceException("Dereferencing a null reference");
     }
     template<typename U>
     NumberToken operator()(U) const
     {
-        throw std::logic_error(std::string("Expected number; Is ") + Type<U>::Name());
+        throw Exceptions::TypeException(std::string("Expected number; Is ") + Type<U>::Name());
     }
 };
 inline NumberToken GetNumberToken(const ResolvedToken& Val )
@@ -271,9 +283,9 @@ struct Get : public boost::static_visitor<T>
     T operator()(U) const
     {
         if( m_ErrorMessage.empty() )
-            throw std::logic_error(std::string("Expected ") + Type<T>::Name() + "; Is " + Type<U>::Name());
+            throw Exceptions::TypeException(std::string("Expected ") + Type<T>::Name() + "; Is " + Type<U>::Name());
         else
-            throw std::logic_error(m_ErrorMessage);
+            throw Exceptions::TypeException(m_ErrorMessage);
     }
     T operator()(T Type) const
     {
@@ -316,7 +328,7 @@ struct ResolveVisitor : public boost::static_visitor<ResolvedToken>
         {
             auto Parent = (*Scope).Find("__PARENT__");
             if( Parent == (*Scope).KeyEnd() ) //We reached global scope
-                throw std::logic_error("Identifier " + Identifer + " unknown");
+                throw Exceptions::NameException("Identifier " + Identifer + " unknown");
             Scope = boost::apply_visitor(Get<Types::Scope>(),Parent->second);
             it = (*Scope).Find(Identifer);
         }

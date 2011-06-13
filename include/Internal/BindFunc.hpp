@@ -170,6 +170,10 @@ public:
         {
             VariadicInvoker<Args...>::Invoke(Function,EC,IFunction::m_LocalScope);
         }
+        catch( Exceptions::RuntimeException& Ex)
+        {
+            EC.Throw(Ex);
+        }
         catch(std::logic_error& E)
         {
             throw std::logic_error("In function \"" + m_Representation + "\" " + E.what());

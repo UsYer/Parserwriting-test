@@ -66,26 +66,7 @@ class FuncRegistrar : public IEvaluable
         (*EC.Scope())[m_Func->Representation()] = m_Func;
     }
 };
-/**
-Holds an anonymous function after it's been created.
 
-Necessary, because the function would otherwise be evaluated directly when encoutered.
-Instead, the FuncHolder gets evaluated which then pushes the real func on the stack.
-Now something like this is possible: func = function() ... end
-*/
-class AnonFuncHolder : public IEvaluable
-{
-    boost::shared_ptr<IFunction> m_Func;
-    public:
-    AnonFuncHolder(const boost::shared_ptr<IFunction>& Func):
-        IEvaluable("","AnonFuncHolder"),
-        m_Func(Func)
-    {}
-    void Eval(EvaluationContext& EC)
-    {
-        EC.EvalStack.push_back(Types::Object(m_Func));
-    }
-};
 } //namespace Detail
 
 /* TODO (Marius#9#): Implement returning values from functions
@@ -132,7 +113,7 @@ void Function(ParserContext& Context)
     auto RTFunc = boost::make_shared<RuntimeFunc>("",Identifier,ArgListParser.m_Args,0);
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
     if( Identifier.empty() )
-        Context.OutputQueue().push_back(boost::make_shared<Detail::AnonFuncHolder>(RTFunc));
+        Context.OutputQueue().push_back(boost::make_shared<FuncHolder>(RTFunc));
     else
         Context.OutputQueue().push_back(boost::make_shared<Detail::FuncRegistrar>(RTFunc));
     Context.LastToken() = TokenType::KeywordWithValue;

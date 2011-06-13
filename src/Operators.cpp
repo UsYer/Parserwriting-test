@@ -57,14 +57,12 @@ struct DoAssignment : public boost::static_visitor<Member>
     Member operator()(const CountedReference& Ref)const
     {
         if( Ref.IsNull() )
-            throw NullReferenceException("Assignment to a nullreference");
-        // FIXME (Marius#8#): Doesn't work at all
-        //Lhs is already a reference e.g. table.member = 1
+            throw Exceptions::NullReferenceException("Assignment to a nullreference");
         return Ref;
     }
     Member operator()(const NullReference&)const
     {
-        throw NullReferenceException("Assignment to a nullreference");
+        throw Exceptions::NullReferenceException("Assignment to a nullreference");
     }
 };
 

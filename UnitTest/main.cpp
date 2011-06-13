@@ -6,7 +6,7 @@ MariusParser MP;
 TEST(UnknownIdentifer)
 {
     std::cout << "UnknownIdentifer\n";
-    CHECK_THROW(MP.Evaluate("unknown+5"), std::logic_error);
+    CHECK_THROW(MP.Evaluate("unknown+5"), Exceptions::RuntimeException);
 }
 TEST(SimplePlainAssignment)
 {
@@ -213,7 +213,7 @@ TEST(NullRefAsReturnValue)
 {
     MP.RegisterFunction("","NullRefAsReturnValue",ReturnNullFunc);
 
-    CHECK_THROW(MP.Evaluate("TOP(NullRefAsReturnValue)"), std::logic_error);
+    CHECK_THROW(MP.Evaluate("TOP(NullRefAsReturnValue)"), Exceptions::RuntimeException);
 }
 Types::Object TesterReturnMarshal(const Types::Object& Val)
 {
@@ -225,6 +225,7 @@ TEST(ReturnMarshal)
     MP.Evaluate("PassedFunc = TRM(Math.Max)");
     MP.Evaluate("PassedFunc(1,2)");
 }
+#include "ExceptionTests.hpp"
 #include "TableTests.hpp"
 #include "FunctionDefTests.hpp"
 #include "FunctionCallTests.hpp"

@@ -176,7 +176,6 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="MemoryManagment\include\Exceptions.hpp" />
 		<Unit filename="MemoryManagment\include\MemoryController.hpp" />
 		<Unit filename="MemoryManagment\include\Reference.hpp" />
 		<Unit filename="MemoryManagment\src\MemoryController.cpp" />
@@ -249,7 +248,7 @@
 			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
 				<comment_style block="0" line="2" />
-				<doxyfile_project use_auto_version="1" />
+				<doxyfile_project project_number="2.1.2393" use_auto_version="1" />
 				<doxyfile_build />
 				<doxyfile_warnings />
 				<doxyfile_output />

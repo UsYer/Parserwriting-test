@@ -55,6 +55,7 @@ MariusParser::MariusParser():
 
     Internal::Types::Table MCScope;
     MCScope.Add("GetRefCount",boost::make_shared<GetRefCountFunc>());
+    MCScope.Add("ItemCount",boost::make_shared<GetMCSizeFunc>());
     (*m_GlobalScope)["MC"] = m_MC.Save(MCScope);
 
     Internal::Types::Table T;
@@ -68,7 +69,11 @@ MariusParser::MariusParser():
     RegisterFunction(boost::make_shared<CreateNullFunc>());
     RegisterFunction(boost::make_shared<CreateTableFunc>());
     RegisterFunction(boost::make_shared<PrintFunc>());
-    (*m_Evaluator.m_GlobalScope)["__CATCH__"] = boost::make_shared<GlobalExceptionHandleFunc>();
+    (*m_GlobalScope)["__CATCH__"] = boost::make_shared<GlobalExceptionHandleFunc>();
+    RegisterFunction(boost::make_shared<CreateExceptionFunc>("RuntimeException",1));
+    RegisterFunction(boost::make_shared<CreateExceptionFunc>("TypeException",2));
+    RegisterFunction(boost::make_shared<CreateExceptionFunc>("NameException",3));
+    RegisterFunction(boost::make_shared<CreateExceptionFunc>("NullReferenceException",4));
 }
 
 MariusParser::~MariusParser()
@@ -78,10 +83,13 @@ MariusParser::~MariusParser()
 
 ::Types::Object MariusParser::Evaluate(const std::string& Input)
 {
+    //Even though all these components will be cleared as needed in the process they are also cleared here.
+    //This is neccesary because an exception could be thrown anywhere while parsing and the later clear commands would not be issued
     m_Tokenizer.Clear();
     m_Parser.Clear();
     m_EC.Stack.Clear();
-
+    while( m_EC.EndScope() );
+        //No-op. resetting Evalscope tp global scope
     LARGE_INTEGER start_ticks, ende_ticks, frequenz;
 
     unsigned long tick_diff = 0;
@@ -94,6 +102,7 @@ MariusParser::~MariusParser()
 #endif
     QueryPerformanceCounter(&start_ticks);
     std::deque<UnparsedToken> UTs = m_Tokenizer.Tokenize(Input);
+    m_Tokenizer.Clear();
     QueryPerformanceCounter(&ende_ticks);
 
     tick_diff = ende_ticks.QuadPart - start_ticks.QuadPart;
@@ -119,6 +128,7 @@ MariusParser::~MariusParser()
     tick_diff += ende_ticks.QuadPart - start_ticks.QuadPart;
 
     auto Q = m_Parser.GetOutput();
+    m_Parser.Clear();
 #ifdef DEBUG
     std::cout << "Output.size = " << Q.size() << std::endl;
 #endif
@@ -129,18 +139,10 @@ MariusParser::~MariusParser()
     std::cout << "--- Evaluating ---" << std::endl;
 #endif
     QueryPerformanceCounter(&start_ticks);
-    /*while( !Q.empty() )
-    {
-        Token t = Q.front();
-#ifdef DEBUG
-        std::cout << boost::apply_visitor(Utilities::PrintValueNoResolve(),t) << " ";
-#endif
-        boost::apply_visitor(m_Evaluator,t);
-        Q.pop();
-    }*/
-    m_EC.NewScope(m_EC.GlobalScope,&Q);
+//    m_EC.NewScope(m_EC.GlobalScope,&Q);
+    m_EC.SetGlobalScopeInstructions(&Q);
     m_EC.EvalScope();
-    m_EC.EndScope();
+//    m_EC.EndScope();
     QueryPerformanceCounter(&ende_ticks);
 
     Took += "Evaluation took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
@@ -152,11 +154,17 @@ MariusParser::~MariusParser()
 
     if( !m_EC.Stack.Empty() )
     {
-        std::cout << "\nResult: " << Utilities::PrintValue(m_EC,m_EC.Stack.Top()) << std::endl;
-        return ::Types::Object(m_EC,Utilities::Resolve(m_EC,m_EC.Stack.Top()));
+        std::cout << "\nResult: " << Utilities::PrintValueNoThrow(m_EC,m_EC.Stack.Top()) << std::endl;
+        ::Types::Object Result(m_EC,Utilities::Resolve(m_EC,m_EC.Stack.Pop()));
+        m_EC.Stack.Clear();
+        while( m_EC.EndScope() );
+        //No-op. resetting Evalscope tp global scope
+        return Result;
     }
     else
     {
+        while( m_EC.EndScope() );
+        //No-op. resetting Evalscope tp global scope
         return ::Types::Object(m_EC,NullReference());
     }
 }
