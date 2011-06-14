@@ -138,3 +138,8 @@ void EvaluationContext::Throw(const CountedReference& Ex)
         throw std::logic_error("Catch handler expects too many arguments");
     CatchBlock->Eval(*this);
 }
+void EvaluationContext::Return(const Types::Object& RetVal)
+{
+    (*Scope())["__RETURN__"] = Utilities::Resolve(*this,RetVal);
+    EndScope();
+}

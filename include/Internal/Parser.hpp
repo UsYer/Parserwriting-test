@@ -15,6 +15,9 @@ enum struct ParserState
     FunctionCall,
     Assignment,
     BracketPairWithinFunctionCall,
+    FuncDef,
+    TryBlock,
+    CatchBlock,
     None = ~(FunctionCall | BracketPairWithinFunctionCall)
 };
 
@@ -66,8 +69,6 @@ struct ParserContext
     inline StateSaver<ParserState>& State() const;
     inline TokenType& LastToken() const;
     inline TokenType& UnexpectedToken() const;
-//    inline std::stack<bool>& ArgExistsStack() const;
-//    inline std::stack<unsigned>& ArgCounterStack() const;
     private:
     Parser& m_Parser;
     std::deque<UnparsedToken>* m_InputQueue;
@@ -110,7 +111,6 @@ private:
     //Fields for parsed Tokens:
     std::stack<std::stack<Types::Operator>> m_OperatorStack;
     std::deque<Token> m_OutputQueue;
-//    std::map<std::string,std::function<bool(ParserContext&)>> m_Keywords;
     Types::Operator m_OpeningBracket;
     Types::Operator m_ClosingBracket;
     Types::Operator m_ArgumentSeperator;
@@ -122,8 +122,6 @@ private:
     std::stack<TokenType> m_LastToken;
     std::stack<TokenType> m_UnexpectedToken;
     std::stack<StateSaver<ParserState>> m_State;
-//    std::stack<std::stack<bool>> m_ArgExistsStack;
-//    std::stack<std::stack<unsigned>> m_ArgCounterStack;
     //Keeps track of the expected brackets. If there are still brackets after completly parsing the input at least one closing bracket is missing
     std::stack<Types::Operator/*Closingbracket*/> m_ExpectedBracket;
     ParserContext m_Context;
@@ -155,21 +153,12 @@ inline void ParserContext::SetUpNewScope(std::deque<Token>* NewOutputQueue)
     m_Parser.m_LastToken.push(TokenType::None);
     m_Parser.m_UnexpectedToken.push(TokenType::None);
     m_Parser.m_State.push(ParserState::None);
-
-//    std::stack<unsigned> InitialArgCounter;
-//    InitialArgCounter.push(0);
-//    m_Parser.m_ArgCounterStack.push(InitialArgCounter);
-//
-//    std::stack<bool> InitialArgExist;
-//    InitialArgExist.push(false);
-//    m_Parser.m_ArgExistsStack.push(InitialArgExist);
 }
 inline bool ParserContext::EndScope()
 {
     //Before doing anything, we first check that we aren't in the global scope, which means, that there hasn't been set up a new scope so far
     if( m_OutputQueues.size() <= 1 || m_Parser.m_OperatorStack.size() <= 1 || m_Parser.m_LastToken.size() <= 1 ||
-        m_Parser.m_UnexpectedToken.size() <= 1 || m_Parser.m_State.size() <= 1 /*|| m_Parser.m_ArgCounterStack.size() <= 1 ||
-        m_Parser.m_ArgExistsStack.size() <= 1*/ )
+        m_Parser.m_UnexpectedToken.size() <= 1 || m_Parser.m_State.size() <= 1 )
         return false;
     if( m_PopOutputQueue.top() )
     {
@@ -180,8 +169,6 @@ inline bool ParserContext::EndScope()
     m_Parser.m_LastToken.pop();
     m_Parser.m_UnexpectedToken.pop();
     m_Parser.m_State.pop();
-//    m_Parser.m_ArgCounterStack.pop();
-//    m_Parser.m_ArgExistsStack.pop();
     return true;
 }
 void ParserContext::ThrowIfUnexpected(TokenType TType, const std::string& ErrMessage) const

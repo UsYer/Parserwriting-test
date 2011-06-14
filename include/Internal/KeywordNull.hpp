@@ -6,6 +6,8 @@ namespace Keyword
 {
     void Null(ParserContext& PC)
     {
+        PC.ThrowIfUnexpected(TokenType::KeywordWithValue, "Unexpected \"null\"");
+        PC.UnexpectedToken() = TokenType::None;
         PC.OutputQueue().push_back(boost::make_shared<ValueHolder>(NullReference()));
         PC.LastToken() = TokenType::KeywordWithValue;
     }

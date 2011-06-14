@@ -118,6 +118,7 @@ void Function(ParserContext& Context)
         Context.OutputQueue().push_back(boost::make_shared<Detail::FuncRegistrar>(RTFunc));
     Context.LastToken() = TokenType::KeywordWithValue;
     Context.SetUpNewScope(&RTFunc->m_FuncInstructions);
+    Context.State() = ParserState::FuncDef;
 }
 }//namespace Keyword
 }//namespace Internal

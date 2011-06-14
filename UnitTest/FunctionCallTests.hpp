@@ -14,8 +14,36 @@ TEST(ArgSepAfterOpeningBracket)
 TEST(VariadicFuncCallWithChangingArgcount)
 {
     std::cout << "VariadicFuncCallWithChangingArgcount\n";
-    MP.Evaluate("Math.Max(1,2)");
-    long long Result;
+    long long Result = MP.Evaluate("Math.Max(1,2)");
+    CHECK_EQUAL(Result,2);
     CHECK_THROW( Result = MP.Evaluate("Math.Max()"), Exceptions::RuntimeException);
 }
+TEST(ReturnValues)
+{
+    std::cout << "ReturnValues\n";
+    long long Result = MP.Evaluate("func() return 5 end()");
+    CHECK_EQUAL( Result, 5);
+}
+TEST(ReturnValuesAnonFunc)
+{
+    std::cout << "ReturnValuesAnonFunc\n";
+    MP.Evaluate("func f() return 5 end");
+    long long Result = MP.Evaluate("f()");
+    CHECK_EQUAL( Result, 5);
+}
+TEST(ReturnArg)
+{
+    std::cout << "ReturnArg\n";
+    MP.Evaluate("func f(arg) return 5+5^arg++ end");
+    long long Result = MP.Evaluate("f(2)");
+    CHECK_EQUAL( Result, 130);
+}
+TEST(ReturnFunc)
+{
+    std::cout << "ReturnFunc\n";
+    MP.Evaluate("func f() return func(eins,zwei) return (eins,zwei) end end");
+    long long Result = MP.Evaluate("f()(1,2)[1]");
+    CHECK_EQUAL( Result, 2);
+}
+
 #endif // FUNCTIONCALLTESTS_HPP_INCLUDED

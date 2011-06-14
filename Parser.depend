@@ -35,12 +35,12 @@
 	"../../include/Exceptions.hpp"
 	"../../include/Internal/Table.hpp"
 
-1308044364 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
+1308079735 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
 	<iostream>
 	"version.h"
 	"include/MariusParser.hpp"
 
-1308079565 c:\users\marius\desktop\quellcodes\parser\version.h
+1308090728 c:\users\marius\desktop\quellcodes\parser\version.h
 
 1307981788 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Internal/Parser.hpp"
@@ -51,7 +51,7 @@
 	"Internal/BindFunc.hpp"
 	"Exceptions.hpp"
 
-1307738918 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
+1308090716 c:\users\marius\desktop\quellcodes\parser\include\internal\parser.hpp
 	<stack>
 	<queue>
 	<string>
@@ -133,7 +133,7 @@
 	"../include/Internal/IFunction.hpp"
 	"../include/Internal/Utilities.hpp"
 
-1308046202 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
+1308084784 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
 	<iostream>
 	<windows.h>
 	<boost/lexical_cast.hpp>
@@ -146,6 +146,7 @@
 	"../include/Internal/KeywordTry.hpp"
 	"../include/Internal/KeywordCatch.hpp"
 	"../include/Internal/KeywordNull.hpp"
+	"../include/Internal/KeywordReturn.hpp"
 
 1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
 	<cmath>
@@ -461,7 +462,7 @@
 
 1292868696 c:\users\marius\parser\include\tokenizecontext.hpp
 
-1308046174 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordfunc.hpp
+1308085139 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordfunc.hpp
 	"RuntimeFunc.hpp"
 	"ParseUtilities.hpp"
 
@@ -474,16 +475,18 @@
 
 1308078200 c:\users\marius\desktop\quellcodes\parser\include\internal\parseutilities.hpp
 
-1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
+1308085046 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
 	<stack>
 	<boost/foreach.hpp>
 	"Types.hpp"
 
-1308044364 source:c:\users\marius\desktop\quellcodes\parser\src\evaluationcontext.cpp
+1308085063 source:c:\users\marius\desktop\quellcodes\parser\src\evaluationcontext.cpp
 	"../include/Internal/Types.hpp"
 	"../include/Internal/IFunction.hpp"
 	"../include/Internal/Utilities.hpp"
 	"../include/Exceptions.hpp"
 
-1308078564 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordnull.hpp
+1308081756 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordnull.hpp
+
+1308086955 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordreturn.hpp
 
