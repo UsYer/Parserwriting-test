@@ -113,7 +113,7 @@ void Function(ParserContext& Context)
     auto RTFunc = boost::make_shared<RuntimeFunc>("",Identifier,ArgListParser.m_Args,0);
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
     if( Identifier.empty() )
-        Context.OutputQueue().push_back(boost::make_shared<FuncHolder>(RTFunc));
+        Context.OutputQueue().push_back(boost::make_shared<ValueHolder>(RTFunc));
     else
         Context.OutputQueue().push_back(boost::make_shared<Detail::FuncRegistrar>(RTFunc));
     Context.LastToken() = TokenType::KeywordWithValue;

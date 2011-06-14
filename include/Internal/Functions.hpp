@@ -201,38 +201,11 @@ public:
     virtual void Eval( EvaluationContext& EC )
     {
         auto Exception = Utilities::GetWithResolve<CountedReference>(EC,Types::Object(m_LocalScope[0]));
-        throw Exceptions::RuntimeException("Unhandled runtime exception","RuntimeException",boost::apply_visitor(Utilities::Get<long long>(),(*Exception)["TypeId"]));
+        auto TypeId = boost::apply_visitor(Utilities::Get<long long>(),(*Exception)["TypeId"]);
+        throw Exceptions::RuntimeException("Unhandled runtime exception",Exceptions::ExceptionNames[TypeId],TypeId);
     }
 };
-/*
-class CreateRuntimeExceptionFunc : public IFunction
-{
-    public:
-    CreateRuntimeExceptionFunc():
-        IFunction("","RuntimeException",0,1)
-    {}
-    virtual void Eval( EvaluationContext& EC )
-    {
-        Types::Table ExceptionTable;
-        ExceptionTable["__EXCEPTION__"] = 1LL;
-        ExceptionTable["TypeId"] = 1LL;
-        EC.Stack.Push(EC.MC.Save(ExceptionTable));
-    }
-};
-class CreateTypeExceptionFunc : public IFunction
-{
-    public:
-    CreateTypeExceptionFunc():
-        IFunction("","TypeException",0,1)
-    {}
-    virtual void Eval( EvaluationContext& EC )
-    {
-        Types::Table ExceptionTable;
-        ExceptionTable["__EXCEPTION__"] = 1LL;
-        ExceptionTable["TypeId"] = 2LL;
-        EC.Stack.Push(EC.MC.Save(ExceptionTable));
-    }
-};*/
+
 class CreateExceptionFunc : public IFunction
 {
     long long m_Id;

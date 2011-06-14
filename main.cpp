@@ -110,7 +110,7 @@ int main()
         }
         catch(Exceptions::RuntimeException& e)
         {
-            std::cerr << "\n" << e.Name() << ": " << e.what() << std::endl;
+            std::cerr << "\n" << e.what() << ": " << e.Name() << std::endl;
             continue;
         }
         catch(std::logic_error& e)

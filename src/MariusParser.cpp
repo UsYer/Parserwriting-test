@@ -9,6 +9,7 @@
 #include "../include/Internal/KeywordEnd.hpp"
 #include "../include/Internal/KeywordTry.hpp"
 #include "../include/Internal/KeywordCatch.hpp"
+#include "../include/Internal/KeywordNull.hpp"
 using namespace Internal;
 MariusParser::MariusParser():
     m_GlobalScope(m_MC.Save(Internal::Types::Table())),
@@ -34,6 +35,7 @@ MariusParser::MariusParser():
     m_Tokenizer.RegisterToken(new KeywordToken("end",&Keyword::End));
     m_Tokenizer.RegisterToken(new KeywordToken("try",&Keyword::Try));
     m_Tokenizer.RegisterToken(new KeywordToken("catch",&Keyword::Catch));
+    m_Tokenizer.RegisterToken(new KeywordToken("null",&Keyword::Null));
 
     m_Tokenizer.RegisterToken(new OpeningBracketToken);
     m_Tokenizer.RegisterToken(new ClosingBracketToken);

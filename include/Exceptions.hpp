@@ -91,6 +91,9 @@ public:
     {
     }
 };
+// FIXME (Marius#9#): Just a temporary helper to convienently get the Exception name based on the TypeId.
+//   When strings are implemented this shouldn't be neccesary anymore
+static const char* ExceptionNames[] = { "DummyFor1-basedAcces", "RuntimeException", "TypeException", "NameException", "NullReferenceException" };
 }//ns Exceptions
 /*
 namespace Marshal

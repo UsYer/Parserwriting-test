@@ -187,24 +187,24 @@ struct ParseArgumentList : public boost::static_visitor<void>
     }
 };
 /**
-Holds an function after it's been created.
+Holds a value which should not be directly evaluated.
 
 Necessary, because the function would otherwise be evaluated directly when encoutered.
-Instead, the FuncHolder gets evaluated which then pushes the real func on the stack.
-Now something like this is possible: func = function() ... end
+Instead, the ValueHolder gets evaluated which then pushes the real func on the stack.
+Now something like this is possible: f = func() ... end
 */
-class FuncHolder : public IEvaluable
+class ValueHolder : public IEvaluable
 {
-    Types::Function m_Func;
+    ValueToken m_Value;
     public:
-
-    FuncHolder(const Types::Function& Func, const std::string& FuncHolderName = "__FUNCHOLDER__"):
+    template< typename T>
+    ValueHolder(const T& Value, const std::string& FuncHolderName = "__VALUEHOLDER__"):
         IEvaluable("", FuncHolderName),
-        m_Func(Func)
+        m_Value(Value)
     {}
     void Eval(EvaluationContext& EC)
     {
-        EC.Stack.Push(m_Func);
+        EC.Stack.Push(m_Value);
     }
 };
 }//ns Internal

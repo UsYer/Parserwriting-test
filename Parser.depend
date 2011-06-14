@@ -6,7 +6,7 @@
 	"../include/Exceptions.hpp"
 	<iostream>
 
-1307738906 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
 	<map>
 	<string>
 	<memory>
@@ -26,21 +26,21 @@
 
 1298332639 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
 
-1307993803 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
 	<stdexcept>
 
-1307993837 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\reference.cpp
+1308044364 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\reference.cpp
 	"../include/MemoryController.hpp"
 	"../include/Reference.hpp"
 	"../../include/Exceptions.hpp"
 	"../../include/Internal/Table.hpp"
 
-1308005042 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
+1308044364 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
 	<iostream>
 	"version.h"
 	"include/MariusParser.hpp"
 
-1308005492 c:\users\marius\desktop\quellcodes\parser\version.h
+1308079565 c:\users\marius\desktop\quellcodes\parser\version.h
 
 1307981788 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Internal/Parser.hpp"
@@ -65,7 +65,7 @@
 	"Types.hpp"
 	"IEvaluable.hpp"
 
-1307738918 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\types.hpp
 	<deque>
 	"../../MemoryManagment/include/MemoryController.hpp"
 	"../../MemoryManagment/include/Reference.hpp"
@@ -74,7 +74,7 @@
 	<string>
 	"Tokens.hpp"
 
-1307738906 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
 	"IEvaluable.hpp"
 	"Table.hpp"
 
@@ -86,7 +86,7 @@
 	<boost/ptr_container/ptr_set.hpp>
 	"../IToken.hpp"
 
-1307994457 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
 	<boost/lexical_cast.hpp>
 	"../Exceptions.hpp"
 	"Table.hpp"
@@ -95,13 +95,13 @@
 	"Is.hpp"
 	"EvaluationContext.hpp"
 
-1298332639 c:\users\marius\desktop\quellcodes\parser\include\internal\object.hpp
+1308046624 c:\users\marius\desktop\quellcodes\parser\include\internal\object.hpp
 	"Tokens.hpp"
 	"Types.hpp"
 
 1276367508 c:\users\marius\desktop\quellcodes\parser\include\internal\typenames.hpp
 
-1307976728 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
 	"../MemoryManagment/include/Reference.hpp"
 	"Internal/Marshal.hpp"
 
@@ -111,14 +111,14 @@
 1307738918 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
 	"Internal/Marshal.hpp"
 
-1307831368 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp
 	"Utilities.hpp"
 	"Marshal.hpp"
 	<array>
 	<boost/function_types/result_type.hpp>
 	<boost/make_shared.hpp>
 
-1307994429 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
+1308079565 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
 	<stdexcept>
 	<boost/lexical_cast.hpp>
 
@@ -126,14 +126,14 @@
 
 1307738918 source:c:\users\marius\desktop\quellcodes\parser\src\ievaluable.cpp
 
-1307738906 source:c:\users\marius\desktop\quellcodes\parser\src\ifunction.cpp
+1308044364 source:c:\users\marius\desktop\quellcodes\parser\src\ifunction.cpp
 	<boost/lexical_cast.hpp>
 	<iostream>
 	"../include/Internal/Types.hpp"
 	"../include/Internal/IFunction.hpp"
 	"../include/Internal/Utilities.hpp"
 
-1307983350 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
+1308046202 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
 	<iostream>
 	<windows.h>
 	<boost/lexical_cast.hpp>
@@ -145,8 +145,9 @@
 	"../include/Internal/KeywordEnd.hpp"
 	"../include/Internal/KeywordTry.hpp"
 	"../include/Internal/KeywordCatch.hpp"
+	"../include/Internal/KeywordNull.hpp"
 
-1308003214 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
 	<cmath>
 	<boost/make_shared.hpp>
 	"../IToken.hpp"
@@ -157,10 +158,10 @@
 
 1274130257 c:\users\marius\desktop\quellcodes\parser\include\internal\is.hpp
 
-1308005482 c:\users\marius\desktop\quellcodes\parser\include\internal\functions.hpp
+1308079539 c:\users\marius\desktop\quellcodes\parser\include\internal\functions.hpp
 	<iostream>
 
-1307994502 source:c:\users\marius\desktop\quellcodes\parser\src\operators.cpp
+1308044364 source:c:\users\marius\desktop\quellcodes\parser\src\operators.cpp
 	<boost/shared_ptr.hpp>
 	<iostream>
 	"../MemoryManagment/include/MemoryController.hpp"
@@ -197,7 +198,7 @@
 
 1298324894 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordfunction.hpp
 
-1307918044 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordend.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordend.hpp
 
 1298332875 source:c:\users\marius\desktop\quellcodes\parser\src\tokenizer.cpp
 	<queue>
@@ -211,7 +212,7 @@
 	"../include/Internal/Tokenizer.hpp"
 	"../include/Internal/Types.hpp"
 
-1307738906 source:c:\users\marius\desktop\quellcodes\parser\src\table.cpp
+1308044364 source:c:\users\marius\desktop\quellcodes\parser\src\table.cpp
 	"../MemoryManagment/include/MemoryController.hpp"
 	"../MemoryManagment/include/Reference.hpp"
 	"../include/Internal/Table.hpp"
@@ -460,27 +461,29 @@
 
 1292868696 c:\users\marius\parser\include\tokenizecontext.hpp
 
-1307740152 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordfunc.hpp
+1308046174 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordfunc.hpp
 	"RuntimeFunc.hpp"
 	"ParseUtilities.hpp"
 
-1307739170 c:\users\marius\desktop\quellcodes\parser\include\internal\runtimefunc.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\runtimefunc.hpp
 
-1308003277 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordtry.hpp
+1308046185 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordtry.hpp
 
-1308004360 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordcatch.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordcatch.hpp
 	"ParseUtilities.hpp"
 
-1307743537 c:\users\marius\desktop\quellcodes\parser\include\internal\parseutilities.hpp
+1308078200 c:\users\marius\desktop\quellcodes\parser\include\internal\parseutilities.hpp
 
-1308005042 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
 	<stack>
 	<boost/foreach.hpp>
 	"Types.hpp"
 
-1308000504 source:c:\users\marius\desktop\quellcodes\parser\src\evaluationcontext.cpp
+1308044364 source:c:\users\marius\desktop\quellcodes\parser\src\evaluationcontext.cpp
 	"../include/Internal/Types.hpp"
 	"../include/Internal/IFunction.hpp"
 	"../include/Internal/Utilities.hpp"
 	"../include/Exceptions.hpp"
+
+1308078564 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordnull.hpp
 
