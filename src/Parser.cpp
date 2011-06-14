@@ -97,72 +97,6 @@ struct Parser::Visitor : public boost::static_visitor<>
             m_ParserContext.LastToken() = TokenType::OpeningBracket;
             return;
         }
-        /*
-        else if( *op == *m_ParserContext.ClosingBracket() )
-        {
-            ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
-            if( m_ParserContext.LastToken() == TokenType::ArgSeperator )
-                throw std::logic_error("Expected an expression between ',' and '" + op->Representation() + "'");
-            if( m_ParserContext.ExpectedBracket().empty() ) //Closingbracket but no bracket expected? Definitely a bracket mismatch
-                throw std::logic_error("No closing bracket expected");
-            else if( *m_ParserContext.ExpectedBracket().top() == *op )
-                m_ParserContext.ExpectedBracket().pop();
-            else
-                throw std::logic_error("Expected '" + m_ParserContext.ExpectedBracket().top()->Representation() + "'");
-            while( !m_ParserContext.OperatorStack().empty() )
-            {
-                // TODO (Marius#6#): Check whether this if is really necessary. i think not and it's kinda buggy because it doesn't take the argcount into Consideration
-                if( boost::apply_visitor(Is<FuncCallerTag>(), m_ParserContext.OperatorStack().top()) )
-                {
-                    //m_ParserContext.OutputQueue().push_back(m_ParserContext.OperatorStack().top());
-                    //m_ParserContext.OutputQueue().push_back(m_ParserContext.LastFuncIdentifiers->top());
-                    //m_ParserContext.LastFuncIdentifiers->pop();
-                    //m_ParserContext.OutputQueue().push_back(boost::shared_ptr<IEvaluable>(new FuncCaller));
-                    //m_ParserContext.OperatorStack().pop();
-                }
-                else//Until the token at the top of the stack is a left parenthesis, pop operators off the stack onto the output queue.
-                {
-                    //it's an operator
-                    auto Temp = boost::get<const boost::shared_ptr<IOperator>&>(m_ParserContext.OperatorStack().top());
-                    if( *Temp == *m_ParserContext.OpeningBracket() )
-                    {
-                        //it's the opening bracket, we're done
-                        //Pop the left parenthesis from the stack, but not onto the output queue.
-//                        m_ParserContext.OutputQueue().push_back(Temp);
-                        m_ParserContext.OperatorStack().pop();
-                        //Check if this bracketsequence belongs to a function call:
-                        if( !m_ParserContext.OperatorStack().empty() && boost::apply_visitor(Is<FuncCallerTag>(), m_ParserContext.OperatorStack().top()) )
-                        {
-                            m_ParserContext.OperatorStack().pop();
-                            FinishFunctionCall();
-                        }
-                        else
-                        { //The openingbracket doesn't belong to a funccall, but we still have to restore the former state, because it could have been altered when the openingbracket was parsed
-                            m_ParserContext.State().Restore();
-                        }
-                        m_ParserContext.LastToken() = TokenType::ClosingBracket;
-//#ifdef DEBUG
-//                        std::cout << "ArgCounter: " << m_ParserContext.ArgCounterStack().top() << std::endl;
-//#endif
-                        m_ParserContext.OutputQueue().push_back(op);
-                        return;
-                    }
-//                    else if( *Temp == *m_ParserContext.ArgumentSeperator() )
-//                    {
-//                        if( m_ParserContext.State() != ParserState::FunctionCall ) //The ','-op is a normal operator outside a functioncall
-//                            m_ParserContext.OutputQueue().push_back(Temp);
-//                        m_ParserContext.OperatorStack().pop();
-//                    }
-                    else
-                    {
-                        m_ParserContext.OutputQueue().push_back(Temp);
-                        m_ParserContext.OperatorStack().pop();
-                    }
-                }
-            }
-            //if it reaches here, there is a bracket mismatch
-            throw std::logic_error("bracket mismatch");//If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
-        }*/
         //Or is it a closing bracket?
         it = std::find_if(m_ParserContext.BracketOperators().begin(), m_ParserContext.BracketOperators().end(), FindClosingBracket(*op));
         if( it != m_ParserContext.BracketOperators().end() )
@@ -419,5 +353,13 @@ void Parser::Parse( std::deque<UnparsedToken> TokExpr )
         }
     }
     /* FIXME (Marius#3#): Provide better error message */
-    else throw ParseError("Scope missmatch: " + boost::lexical_cast<std::string>(m_OperatorStack.size()),Loc);
+    else
+    {
+        //cleaning up here, because otherwise in a new evaluation all tokens that use Context.OutputQueue.push_back() will go
+        //in the unclosed scope and not in the correct new one
+        int UnclosedScopes =  m_OperatorStack.size() - 1;
+        for( int i = 0 ; i < UnclosedScopes; i++ )
+            m_Context.EndScope();
+        throw ParseError("Scope missmatch: " + boost::lexical_cast<std::string>(UnclosedScopes) + " unclosed scope(s)",Loc);
+    }
 }
