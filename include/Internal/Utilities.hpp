@@ -6,6 +6,7 @@
 #include "Object.hpp"
 #include "Typenames.hpp"
 #include "Is.hpp"
+#include "Get.hpp"
 #include "EvaluationContext.hpp"
 namespace Internal
 {
@@ -269,29 +270,7 @@ inline NumberToken GetNumberToken(const ResolvedToken& Val )
 {
     return boost::apply_visitor(GetNumberTokenNoResolveVisitor(),Val);
 }
-template<typename T>
-struct Get : public boost::static_visitor<T>
-{
-    std::string m_ErrorMessage;
-    Get():
-        m_ErrorMessage("")
-    {}
-    Get(const std::string& ErrorMessage):
-            m_ErrorMessage(ErrorMessage)
-    {}
-    template<typename U>
-    T operator()(U) const
-    {
-        if( m_ErrorMessage.empty() )
-            throw Exceptions::TypeException(std::string("Expected ") + Type<T>::Name() + "; Is " + Type<U>::Name());
-        else
-            throw Exceptions::TypeException(m_ErrorMessage);
-    }
-    T operator()(T Type) const
-    {
-        return Type;
-    }
-};
+
 struct ResolveVisitor : public boost::static_visitor<ResolvedToken>
 {
     EvaluationContext& m_EC;

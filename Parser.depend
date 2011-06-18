@@ -40,7 +40,7 @@
 	"version.h"
 	"include/MariusParser.hpp"
 
-1308090728 c:\users\marius\desktop\quellcodes\parser\version.h
+1308428399 c:\users\marius\desktop\quellcodes\parser\version.h
 
 1307981788 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Internal/Parser.hpp"
@@ -74,7 +74,7 @@
 	<string>
 	"Tokens.hpp"
 
-1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
+1308428387 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
 	"IEvaluable.hpp"
 	"Table.hpp"
 
@@ -148,7 +148,7 @@
 	"../include/Internal/KeywordNull.hpp"
 	"../include/Internal/KeywordReturn.hpp"
 
-1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
+1308404097 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
 	<cmath>
 	<boost/make_shared.hpp>
 	"../IToken.hpp"
@@ -159,7 +159,7 @@
 
 1274130257 c:\users\marius\desktop\quellcodes\parser\include\internal\is.hpp
 
-1308079539 c:\users\marius\desktop\quellcodes\parser\include\internal\functions.hpp
+1308427160 c:\users\marius\desktop\quellcodes\parser\include\internal\functions.hpp
 	<iostream>
 
 1308044364 source:c:\users\marius\desktop\quellcodes\parser\src\operators.cpp
@@ -475,7 +475,7 @@
 
 1308078200 c:\users\marius\desktop\quellcodes\parser\include\internal\parseutilities.hpp
 
-1308085046 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
+1308404528 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
 	<stack>
 	<boost/foreach.hpp>
 	"Types.hpp"
