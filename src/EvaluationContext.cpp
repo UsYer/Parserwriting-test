@@ -138,6 +138,56 @@ void EvaluationContext::Throw(const CountedReference& Ex)
         throw std::logic_error("Catch handler expects too many arguments");
     CatchBlock->Eval(*this);
 }
+struct ArgCounter : public boost::static_visitor<unsigned>
+{
+    ArgCounter()
+    {}
+    template <typename T>
+    unsigned operator()(const T& ) const
+    {
+        return 1;
+    }
+    unsigned operator()(const CountedReference& Ref) const
+    {
+        auto it = (*Ref).Find("__ARGCOUNT__");
+        if( it != (*Ref).KeyEnd() )
+            return boost::apply_visitor(Utilities::Get<long long>("ArgCount field of the argument table has to be an integer"),it->second);
+        else
+            return 1;
+    }
+    unsigned operator()(const boost::shared_ptr<IFunction>& Func) const
+    {
+        if( *Func == "__ALSM__" )
+            return 0;
+        else
+            return 1;
+    }
+};
+void EvaluationContext::Call(const Types::Object& FuncObj, const ResolvedToken& Args)
+{
+    ResolvedToken FuncToken(Utilities::Resolve(*this,FuncObj));
+    const boost::shared_ptr<IFunction>& Func(boost::apply_visitor(Utilities::Get<Types::Function>(),FuncToken));
+    Call(Func,Args,FuncObj.This());
+}
+void EvaluationContext::Call(const Types::Function& Func, const ResolvedToken& Args, const Types::Scope& ThisScope)
+{
+    Func->SuppliedArguments(Args,boost::apply_visitor(ArgCounter(),Args));
+    Func->This(ThisScope);
+    try
+    { //Make sure native exceptions are properly transformed to internal exceptions
+        Func->Eval(*this);
+    }
+    catch( Exceptions::RuntimeException& e )
+    {
+        Func->This(NullReference());
+        Throw(e);
+        EndScope();
+    }
+    Func->This(NullReference()); //Very Important! Reset the this-ref to prevent a crash on shutdown. The MC gets deleted before the functions
+                                //who would still hold a ref to their this-scopes. When  funcs get deleted the and the ref does it's decref, the MC is already gone -> Crash!
+
+}
+
 void EvaluationContext::Return(const Types::Object& RetVal)
 {
     (*Scope())["__RETURN__"] = Utilities::Resolve(*this,RetVal);

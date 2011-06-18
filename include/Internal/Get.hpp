@@ -1,6 +1,11 @@
 #ifndef GET_HPP_INCLUDED
 #define GET_HPP_INCLUDED
 #include "../Exceptions.hpp"
+#include "Typenames.hpp"
+namespace Internal
+{
+namespace Utilities
+{
 template<typename T>
 struct Get : public boost::static_visitor<T>
 {
@@ -24,4 +29,6 @@ struct Get : public boost::static_visitor<T>
         return Type;
     }
 };
+}//ns Utilities
+}//ns Internal
 #endif // GET_HPP_INCLUDED

@@ -109,6 +109,10 @@ struct EvaluationContext
         m_ScopeInstructions.pop_back();
         return true;
     }
+    //function specific:
+    void Call(const Types::Object& Callable, const ResolvedToken& Args);
+    void Call(const Types::Function& Callable, const ResolvedToken& Args, const Types::Scope& ThisScope = NullReference());
+    void Return(const Types::Object& RetVal);
     //--Exception specific:
     void Throw(const Exceptions::RuntimeException& Ex);
     void Throw(const CountedReference& Ex);

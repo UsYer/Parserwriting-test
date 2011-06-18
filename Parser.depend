@@ -40,7 +40,7 @@
 	"version.h"
 	"include/MariusParser.hpp"
 
-1308428399 c:\users\marius\desktop\quellcodes\parser\version.h
+1308430050 c:\users\marius\desktop\quellcodes\parser\version.h
 
 1307981788 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Internal/Parser.hpp"
@@ -74,9 +74,10 @@
 	<string>
 	"Tokens.hpp"
 
-1308428387 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
+1308431814 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
 	"IEvaluable.hpp"
 	"Table.hpp"
+	"Get.hpp"
 
 1274046133 c:\users\marius\desktop\quellcodes\parser\include\internal\statesaver.hpp
 	<stack>
@@ -86,13 +87,13 @@
 	<boost/ptr_container/ptr_set.hpp>
 	"../IToken.hpp"
 
-1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
+1308429048 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
 	<boost/lexical_cast.hpp>
 	"../Exceptions.hpp"
 	"Table.hpp"
 	"Object.hpp"
-	"Typenames.hpp"
 	"Is.hpp"
+	"Get.hpp"
 	"EvaluationContext.hpp"
 
 1308046624 c:\users\marius\desktop\quellcodes\parser\include\internal\object.hpp
@@ -159,7 +160,7 @@
 
 1274130257 c:\users\marius\desktop\quellcodes\parser\include\internal\is.hpp
 
-1308427160 c:\users\marius\desktop\quellcodes\parser\include\internal\functions.hpp
+1308431941 c:\users\marius\desktop\quellcodes\parser\include\internal\functions.hpp
 	<iostream>
 
 1308044364 source:c:\users\marius\desktop\quellcodes\parser\src\operators.cpp
@@ -176,9 +177,11 @@
 	"../include/Internal/Parser.hpp"
 	"../include/Internal/Operators.hpp"
 
-1274130107 c:\users\marius\desktop\quellcodes\parser\include\internal\get.hpp
+1308429103 c:\users\marius\desktop\quellcodes\parser\include\internal\get.hpp
+	"../Exceptions.hpp"
+	"Typenames.hpp"
 
-1301165194 source:c:\users\marius\desktop\quellcodes\parser\src\parser.cpp
+1308090822 source:c:\users\marius\desktop\quellcodes\parser\src\parser.cpp
 	<algorithm>
 	<iostream>
 	"../MemoryManagment/include/MemoryController.hpp"
@@ -480,7 +483,7 @@
 	<boost/foreach.hpp>
 	"Types.hpp"
 
-1308085063 source:c:\users\marius\desktop\quellcodes\parser\src\evaluationcontext.cpp
+1308429234 source:c:\users\marius\desktop\quellcodes\parser\src\evaluationcontext.cpp
 	"../include/Internal/Types.hpp"
 	"../include/Internal/IFunction.hpp"
 	"../include/Internal/Utilities.hpp"

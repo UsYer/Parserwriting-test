@@ -353,9 +353,10 @@
 	<string>
 	"Tokens.hpp"
 
-1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
+1308431814 c:\users\marius\desktop\quellcodes\parser\include\internal\ifunction.hpp
 	"IEvaluable.hpp"
 	"Table.hpp"
+	"Get.hpp"
 
 1274046133 c:\users\marius\desktop\quellcodes\parser\include\internal\statesaver.hpp
 	<stack>
@@ -365,13 +366,13 @@
 	<boost/ptr_container/ptr_set.hpp>
 	"../IToken.hpp"
 
-1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
+1308429048 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
 	<boost/lexical_cast.hpp>
 	"../Exceptions.hpp"
 	"Table.hpp"
 	"Object.hpp"
-	"Typenames.hpp"
 	"Is.hpp"
+	"Get.hpp"
 	"EvaluationContext.hpp"
 
 1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
@@ -628,10 +629,14 @@
 
 1308091634 c:\users\marius\desktop\quellcodes\parser\unittest\functioncalltests.hpp
 
-1308085046 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
+1308404528 c:\users\marius\desktop\quellcodes\parser\include\internal\evaluationcontext.hpp
 	<stack>
 	<boost/foreach.hpp>
 	"Types.hpp"
 
 1308004966 c:\users\marius\desktop\quellcodes\parser\unittest\exceptiontests.hpp
+
+1308429103 c:\users\marius\desktop\quellcodes\parser\include\internal\get.hpp
+	"../Exceptions.hpp"
+	"Typenames.hpp"
 

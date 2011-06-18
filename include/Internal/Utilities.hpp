@@ -4,7 +4,6 @@
 #include "../Exceptions.hpp"
 #include "Table.hpp"
 #include "Object.hpp"
-#include "Typenames.hpp"
 #include "Is.hpp"
 #include "Get.hpp"
 #include "EvaluationContext.hpp"

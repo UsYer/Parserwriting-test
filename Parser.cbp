@@ -188,6 +188,7 @@
 		<Unit filename="include\Internal\EvaluationContext.hpp" />
 		<Unit filename="include\Internal\FuncCaller.hpp" />
 		<Unit filename="include\Internal\Functions.hpp" />
+		<Unit filename="include\Internal\Get.hpp" />
 		<Unit filename="include\Internal\IEvaluable.hpp" />
 		<Unit filename="include\Internal\IFunction.hpp" />
 		<Unit filename="include\Internal\IOperator.hpp" />

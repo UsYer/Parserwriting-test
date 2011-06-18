@@ -33,9 +33,6 @@ public:
     {}
     void Eval(EvaluationContext& EC)
     {
-        /*Types::Object Val = EC.EvalStack.back();
-        EC.EvalStack.pop_back();
-        ResolvedToken Token(Utilities::Resolve(EC,Val));*/
         std::cout << "\n" << boost::apply_visitor(Type(),m_LocalScope[0]) << "\n";
     }
 };
@@ -57,24 +54,23 @@ public:
     {
         if( m_SuppliedArguments == 0 )
         {
-            EC.EvalStack.push_back(Types::Object(NullReference()));
+            EC.Stack.Push(NullReference());
             return;
         }
         NumberToken One, Two;
         Max Maximum;
         if( m_SuppliedArguments == 1 )
-            One = Utilities::GetNumberToken(m_LocalScope[0]);
+            One = Utilities::GetNumberToken(IFunction::GetArg(0));
         else
         {
-            const auto& Args = *boost::get<const CountedReference&>(m_LocalScope[0]); //the arguments have been placed in a table, get them
-            One = Utilities::GetNumberToken(Args[0]);
+            One = Utilities::GetNumberToken(IFunction::GetArg(0));
             for( unsigned i = 1; i < m_SuppliedArguments; i++)
             {
-                Two = Utilities::GetNumberToken(Args[i]);
+                Two = Utilities::GetNumberToken(IFunction::GetArg(i));
                 One = boost::apply_visitor(Maximum,One,Two);
             }
         }
-        EC.EvalStack.push_back(Types::Object(One));
+        EC.Stack.Push(One);
     }
 
 };
@@ -95,8 +91,8 @@ class SqrtFunc : public IFunction
     }
     void Eval(EvaluationContext& EC)
     {
-        NumberToken Arg(Utilities::GetNumberToken(m_LocalScope[0]));
-        EC.EvalStack.push_back(Types::Object(boost::apply_visitor(Sqrt(),Arg)));
+        NumberToken Arg(Utilities::GetNumberToken(IFunction::GetArg(0)));
+        EC.Stack.Push(boost::apply_visitor(Sqrt(),Arg));
     }
 };
 class CreateTableFunc : public IFunction
@@ -108,22 +104,16 @@ public:
     }
     void Eval(EvaluationContext& EC)
     {
-        /*Types::Table Tab;
-        for( int i = m_SuppliedArguments - 1; i >= 0 ; i-- )
-        {
-            Tab[i] = Utilities::Resolve(EC, EC.EvalStack.back());
-            EC.EvalStack.pop_back();
-        }*/
-        if( m_SuppliedArguments > 1 )
-            EC.EvalStack.push_back(Types::Object(m_LocalScope[0]));
+        if( m_SuppliedArguments > 1 ) //More than one arg means the arg table itself will be returned
+            EC.Stack.Push(m_LocalScope[0]);
         else if ( m_SuppliedArguments == 1 )
         {
             Types::Table Tab;
-            Tab[0] = m_LocalScope[0];
-            EC.EvalStack.push_back(Types::Object(EC.MC.Save(Tab)));
+            Tab[0] = IFunction::GetArg(0);
+            EC.Stack.Push(EC.MC.Save(Tab));
         }
         else //0 args
-            EC.EvalStack.push_back(Types::Object(EC.MC.Save(Types::Table())));
+            EC.Stack.Push(EC.MC.Save(Types::Table()));
     }
 };
 
@@ -136,7 +126,7 @@ public:
     }
     void Eval(EvaluationContext& EC)
     {
-        EC.EvalStack.push_back(Types::Object(NullReference()));
+        EC.Stack.Push(NullReference());
     }
 };
 class GetRefCountFunc : public IFunction
@@ -149,12 +139,12 @@ public:
     {
         Reference WeakRef;
         {
-            Member Ref = boost::apply_visitor(Utilities::ResolveVisitor(EC),m_LocalScope[0]);
-            WeakRef = boost::apply_visitor(Utilities::Get<CountedReference>(),Ref).GetWeakReference();
+//            Member Ref = boost::apply_visitor(Utilities::ResolveVisitor(EC),m_LocalScope[0]);
+            WeakRef = IFunction::GetArg<CountedReference>(0).GetWeakReference();
             m_LocalScope.ClearIndexValues();
         }
         long long Refcount = EC.MC.GetRefCount(WeakRef);
-        EC.EvalStack.push_back(Types::Object(Refcount));
+        EC.Stack.Push(Refcount);
     }
 };
 class GetMCSizeFunc : public IFunction
@@ -165,7 +155,7 @@ public:
     }
     virtual void Eval(EvaluationContext& EC)
     {
-        EC.EvalStack.push_back(Types::Object((long long)EC.MC.Size()));
+        EC.Stack.Push((long long)EC.MC.Size());
     }
 };
 class PrintFunc : public IFunction
@@ -177,16 +167,20 @@ public:
     }
     void Eval(EvaluationContext& EC)
     {
-        if( m_SuppliedArguments > 1 )
+        for( unsigned i = 0; i < m_SuppliedArguments; i++ )
         {
-            const auto& ArgTable = *boost::apply_visitor(Utilities::Get<CountedReference>(),m_LocalScope[0]);
-            for( auto it = ArgTable.IndexBegin(); it != ArgTable.IndexEnd(); it++)
-                std::cout << Utilities::PrintValue(EC,Types::Object(it->second)) << " ";
+            std::cout << Utilities::PrintValue(EC,Types::Object(IFunction::GetArg(i))) << " ";
         }
-        else if ( m_SuppliedArguments == 1 )
-        {
-            std::cout << Utilities::PrintValue(EC,Types::Object(m_LocalScope[0]));
-        }
+//        if( m_SuppliedArguments > 1 )
+//        {
+//            const auto& ArgTable = *boost::apply_visitor(Utilities::Get<CountedReference>(),m_LocalScope[0]);
+//            for( auto it = ArgTable.IndexBegin(); it != ArgTable.IndexEnd(); it++)
+//                std::cout << Utilities::PrintValue(EC,Types::Object(it->second)) << " ";
+//        }
+//        else if ( m_SuppliedArguments == 1 )
+//        {
+//            std::cout << Utilities::PrintValue(EC,Types::Object(m_LocalScope[0]));
+//        }
         std::cout << std::endl;
     }
 };
@@ -200,7 +194,7 @@ public:
     }
     virtual void Eval( EvaluationContext& EC )
     {
-        auto Exception = Utilities::GetWithResolve<CountedReference>(EC,Types::Object(m_LocalScope[0]));
+        const auto& Exception = IFunction::GetArg<CountedReference>(0);
         auto TypeId = boost::apply_visitor(Utilities::Get<long long>(),(*Exception)["TypeId"]);
         throw Exceptions::RuntimeException("Unhandled runtime exception",Exceptions::ExceptionNames[TypeId],TypeId);
     }

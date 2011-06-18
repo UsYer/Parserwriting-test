@@ -2,6 +2,7 @@
 #define IFUNCTION_HPP_INCLUDED
 #include "IEvaluable.hpp"
 #include "Table.hpp"
+#include "Get.hpp"
 namespace Internal
 {
 class EvaluationContext;
@@ -38,6 +39,24 @@ protected:
         m_ArgCount(ArgCount),
         m_ReturnCount(ReturnCount)
     {}
+    template <typename T>
+    T GetArg(unsigned ArgIdx) const
+    {
+        const ResolvedToken& Arg = GetArg(ArgIdx); //why th fuck does apply_visitor require the visitable to be an lvalue?
+        return boost::apply_visitor(Utilities::Get<T>(),Arg);
+    }
+    ResolvedToken GetArg(unsigned ArgIdx) const
+    {
+        if( ArgIdx > m_SuppliedArguments )
+            throw std::invalid_argument("Indexed argument does not exist");
+        if( m_SuppliedArguments == 1 )
+            return m_LocalScope[0];
+        else
+        {
+            const auto& Args = *boost::get<const CountedReference&>(m_LocalScope[0]); //the arguments have been placed in a table, get them
+            return Args[ArgIdx];
+        }
+    }
     unsigned m_SuppliedArguments;///< No. of supplied arguments when the function is called. Only necessary to check when m_ArgCount == Variable
     Types::Table m_LocalScope;
     Types::Scope m_This;

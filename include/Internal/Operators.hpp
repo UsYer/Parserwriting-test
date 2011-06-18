@@ -739,8 +739,7 @@ public:
         if( EC.Signal(SignalType::FuncCall) )
         {
             EC.DropSignal(); //We're not in a FuncCall anymore if the body of the func gets evaluated
-            ResolvedToken Args(Utilities::Resolve(EC,EC.EvalStack.back()));
-            EC.EvalStack.pop_back();
+            ResolvedToken Args(Utilities::Resolve(EC,EC.Stack.Pop()));
             //Check, whether there are arguments. If there's immediatly an argliststartmarker then there are no args
             long long ArgCount = boost::apply_visitor(ArgCounter(EC),Args);
             #ifdef DEBUG
@@ -748,14 +747,13 @@ public:
             #endif
             if( ArgCount >= 1 ) //there should still be an ArgListStartMarker
             {
-                if( !EC.EvalStack.back().Visit(IsMarker()) )
+                if( !EC.Stack.Top().Visit(IsMarker()) )
                 {
                     throw std::logic_error("Missing ArgListMarker");
                 }
-                EC.EvalStack.pop_back();
+                EC.Stack.Pop();
             }
-            const Types::Object& FuncObj(EC.EvalStack.back());
-            EC.EvalStack.pop_back();
+            const Types::Object& FuncObj(EC.Stack.Pop());
             ResolvedToken FuncToken(Utilities::Resolve(EC,FuncObj));
             const boost::shared_ptr<IFunction>& Func(boost::apply_visitor(GetFunc(EC),FuncToken));
 
