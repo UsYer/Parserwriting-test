@@ -34,9 +34,9 @@ void Try(ParserContext& Context)
 {
     if( Context.InputQueue().empty() )
         throw std::logic_error("Missing input after \"try\"");
-    auto TryFunc = boost::make_shared<Detail::TryBlock>();
+    auto TryFunc = std::make_shared<Detail::TryBlock>();
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
-    Context.OutputQueue().push_back(boost::make_shared<ValueHolder>(TryFunc, "__TRYHOLDER__"));
+    Context.OutputQueue().push_back(std::make_shared<ValueHolder>(TryFunc, "__TRYHOLDER__"));
     Context.LastToken() = TokenType::KeywordWithValue;
     Context.SetUpNewScope(&TryFunc->m_FuncInstructions);
 }

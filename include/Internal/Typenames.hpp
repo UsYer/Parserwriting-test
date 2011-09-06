@@ -11,7 +11,7 @@ struct Type
     }
 };
 template<>
-struct Type<boost::shared_ptr<IOperator>>
+struct Type<std::shared_ptr<IOperator>>
 {
     static const char* Name()
     {
@@ -19,7 +19,7 @@ struct Type<boost::shared_ptr<IOperator>>
     }
 };
 template<>
-struct Type<boost::shared_ptr<IFunction>>
+struct Type<std::shared_ptr<IFunction>>
 {
     static const char* Name()
     {

@@ -27,8 +27,8 @@ void End(ParserContext& Context)
         Context.OutputQueue().push_back(Context.OperatorStack().top());
         Context.OperatorStack().pop();
     }
-//    Context.OutputQueue().push_back(boost::make_shared<FuncHolder>(boost::make_shared<Detail::ScopeEnder>()));
-    Context.OutputQueue().push_back(boost::make_shared<Detail::ScopeEnder>());
+//    Context.OutputQueue().push_back(std::make_shared<FuncHolder>(std::make_shared<Detail::ScopeEnder>()));
+    Context.OutputQueue().push_back(std::make_shared<Detail::ScopeEnder>());
     if( !Context.EndScope() )
         throw std::logic_error("Scope mismatch, end is superfluous.");
 }

@@ -4,7 +4,6 @@
 #include "Marshal.hpp"
 #include <array>
 #include <boost/function_types/result_type.hpp>
-#include <boost/make_shared.hpp>
 //From: http://bytes.com/topic/c/answers/872075-iterate-over-tuple#post3502501
 /*template<class TupleType, size_t N>
 struct do_iterate
@@ -183,9 +182,9 @@ private:
     T Function;
 };
 template<typename T,typename... U>
-boost::shared_ptr<IFunction> BindFunc(const std::string& Name, const std::string& Representation, T (*UserFunc)(U...) )
+std::shared_ptr<IFunction> BindFunc(const std::string& Name, const std::string& Representation, T (*UserFunc)(U...) )
 {
-    return boost::make_shared<UserDefFunction<T (*)(U...),T,U...>>(Name, Representation,UserFunc);
+    return std::make_shared<UserDefFunction<T (*)(U...),T,U...>>(Name, Representation,UserFunc);
 }
 }//namespace Internal
 #endif // BINDFUNC_HPP_INCLUDED

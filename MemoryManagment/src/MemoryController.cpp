@@ -1,4 +1,8 @@
 
+#include <map>
+#include <list>
+//#include <boost/variant.hpp>
+#include <boost/circular_buffer.hpp>
 #include "../../include/Internal/Table.hpp"
 #include "../include/MemoryController.hpp"
 #include "../include/Reference.hpp"
@@ -61,7 +65,6 @@ CountedReference MemoryController::Save(const Value& Val)
     {
         Id = Internal->LastIdNumber++;
     }
-    //LastIdNumber++;
     Internal->AddressMap[Id] = it;
     Internal->RefCounter[Id] = 1;
 #ifdef DEBUG

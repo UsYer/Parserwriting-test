@@ -20,7 +20,7 @@ public:
     {
         m_EC.Stack.Push(val);
     }
-    void operator()(const boost::shared_ptr<IEvaluable>& Evaluable)
+    void operator()(const std::shared_ptr<IEvaluable>& Evaluable)
     {
         try
         { //Make sure native exceptions are properly transformed to internal exceptions
@@ -155,7 +155,7 @@ struct ArgCounter : public boost::static_visitor<unsigned>
         else
             return 1;
     }
-    unsigned operator()(const boost::shared_ptr<IFunction>& Func) const
+    unsigned operator()(const std::shared_ptr<IFunction>& Func) const
     {
         if( *Func == "__ALSM__" )
             return 0;
@@ -166,7 +166,7 @@ struct ArgCounter : public boost::static_visitor<unsigned>
 void EvaluationContext::Call(const Types::Object& FuncObj, const ResolvedToken& Args)
 {
     ResolvedToken FuncToken(Utilities::Resolve(*this,FuncObj));
-    const boost::shared_ptr<IFunction>& Func(boost::apply_visitor(Utilities::Get<Types::Function>(),FuncToken));
+    const std::shared_ptr<IFunction>& Func(boost::apply_visitor(Utilities::Get<Types::Function>(),FuncToken));
     Call(Func,Args,FuncObj.This());
 }
 void EvaluationContext::Call(const Types::Function& Func, const ResolvedToken& Args, const Types::Scope& ThisScope)

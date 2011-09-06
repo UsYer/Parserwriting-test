@@ -15,7 +15,7 @@ class TypeFunc : public IFunction
         {
             return "double";
         }
-        std::string operator()(const boost::shared_ptr<IEvaluable>& op)const
+        std::string operator()(const std::shared_ptr<IEvaluable>& op)const
         {
             return "function";
         }

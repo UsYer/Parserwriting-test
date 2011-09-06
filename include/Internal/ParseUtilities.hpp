@@ -33,13 +33,13 @@ struct SwallowOperator : public boost::static_visitor<>
         m_OpToSwallow(OpToSwallow)
     {
     }
-    SwallowOperator(ParserContext& PC, const Types::Operator& OpToSwallow, const std::string ErrorMessage):
+    SwallowOperator(ParserContext& PC, const Types::Operator& OpToSwallow, const std::string& ErrorMessage):
         m_PC(PC),
         m_ErrorMessage(ErrorMessage),
         m_OpToSwallow(OpToSwallow)
     {
     }
-    void operator()(const boost::shared_ptr<IOperator>& Op) const
+    void operator()(const std::shared_ptr<IOperator>& Op) const
     {
         if( *m_OpToSwallow == *Op )
         {
@@ -73,7 +73,7 @@ struct SwallowOpeningBracket : public boost::static_visitor<>
         m_ErrorMessage(ErrorMessage)
     {
     }
-    void operator()(const boost::shared_ptr<IOperator>& Op) const
+    void operator()(const std::shared_ptr<IOperator>& Op) const
     {
         if( *m_PC.OpeningBracket() == *Op )
         {
@@ -135,7 +135,7 @@ struct ParseArgumentList : public boost::static_visitor<void>
     {
         throw std::logic_error("Number literals are not allowed in the argument list");
     }
-    void operator()(const boost::shared_ptr<IOperator>& Op)
+    void operator()(const std::shared_ptr<IOperator>& Op)
     {
         CheckForOperator(Op->Representation());
     }

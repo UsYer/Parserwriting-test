@@ -2,6 +2,7 @@
 #include "include/MemoryController.hpp"
 #include "include/Reference.hpp"
 #include <vector>
+using namespace Internal;
 int main()
 {
     MemoryController MC;

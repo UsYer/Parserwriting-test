@@ -6,59 +6,6 @@
 		<Option pch_mode="2" />
 		<Option compiler="gnu_gcc_compiler_tdragon" />
 		<Build>
-			<Target title="Debug">
-				<Option output="bin\Debug\Parser" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
-				<Option type="1" />
-				<Option compiler="gnu_gcc_compiler_tdragon" />
-				<Compiler>
-					<Add option="-std=c++0x" />
-					<Add option="-pg" />
-					<Add option="-g" />
-					<Add option="-DDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg -lgmon" />
-					<Add library="Winmm" />
-				</Linker>
-			</Target>
-			<Target title="Release">
-				<Option output="bin\Release\Parser" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
-				<Option type="1" />
-				<Option compiler="gnu_gcc_compiler_tdragon" />
-				<Compiler>
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add option="-std=c++0x" />
-					<Add option="-flto" />
-					<Add option="-DNDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-					<Add option="-flto" />
-					<Add library="Winmm" />
-				</Linker>
-			</Target>
-			<Target title="Release Lib">
-				<Option output="bin\Release Lib\libParser" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="obj\Release Lib\" />
-				<Option type="2" />
-				<Option compiler="gnu_gcc_compiler_tdragon" />
-				<Compiler>
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add option="-std=c++0x" />
-					<Add option="-flto" />
-					<Add option="-DNDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-					<Add option="-flto" />
-					<Add library="Winmm" />
-				</Linker>
-			</Target>
 			<Target title="Debug 4.5 32bit">
 				<Option output="bin\Debug_4_5\Parser32" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug_4_5_32\" />
@@ -171,10 +118,66 @@
 					<Add library="Winmm" />
 				</Linker>
 			</Target>
+			<Target title="Debug mingw-w64 4.6 64bit">
+				<Option output="bin\Debug_4_6\Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug_4_6_64\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Release mingw-w64 4.6 64bit">
+				<Option output="bin\Release_4_6\Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release_4_6_64\" />
+				<Option type="1" />
+				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-flto=1" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-flto=1" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
+			<Target title="Release Lib mingw-w64 4.6 64bit">
+				<Option output="bin\ReleaseLib_4_6\libParser64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj\Release Lib_4_6_64\" />
+				<Option type="2" />
+				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
+				<Compiler>
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-std=c++0x" />
+					<Add option="-flto=1" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-flto=1" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="$(#boost)" />
 		</Compiler>
 		<Unit filename="MemoryManagment\include\MemoryController.hpp" />
 		<Unit filename="MemoryManagment\include\Reference.hpp" />
@@ -219,12 +222,12 @@
 		<Unit filename="include\Parsable.hpp" />
 		<Unit filename="include\TokenizeContext.hpp" />
 		<Unit filename="main.cpp">
-			<Option target="Debug" />
-			<Option target="Release" />
 			<Option target="Debug 4.5 32bit" />
 			<Option target="Release 4.5 32bit" />
 			<Option target="Debug 4.5 64bit" />
 			<Option target="Release 4.5 64bit" />
+			<Option target="Debug mingw-w64 4.6 64bit" />
+			<Option target="Release mingw-w64 4.6 64bit" />
 		</Unit>
 		<Unit filename="src\EvaluationContext.cpp" />
 		<Unit filename="src\Functions.cpp" />

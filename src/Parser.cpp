@@ -21,7 +21,7 @@ struct FindOpeningBracket
     FindOpeningBracket(const IOperator& Bracket):
         BracketToCompare(Bracket)
     {}
-    bool operator()(const std::pair<boost::shared_ptr<IOperator>,boost::shared_ptr<IOperator>>& BracketPair) const
+    bool operator()(const std::pair<std::shared_ptr<IOperator>,std::shared_ptr<IOperator>>& BracketPair) const
     {
         return BracketToCompare == *BracketPair.first;
     }
@@ -32,7 +32,7 @@ struct FindClosingBracket
     FindClosingBracket(const IOperator& Bracket):
         BracketToCompare(Bracket)
     {}
-    bool operator()(const std::pair<boost::shared_ptr<IOperator>,boost::shared_ptr<IOperator>>& BracketPair) const
+    bool operator()(const std::pair<std::shared_ptr<IOperator>,std::shared_ptr<IOperator>>& BracketPair) const
     {
         return BracketToCompare == *BracketPair.second;
     }
@@ -78,7 +78,7 @@ struct Parser::Visitor : public boost::static_visitor<>
         m_ParserContext.OutputQueue().push_back(val);
         m_ParserContext.LastToken() = TokenType::Double;
     }
-    void operator()(const boost::shared_ptr<IOperator>& op)
+    void operator()(const std::shared_ptr<IOperator>& op)
     {
         //Let's see if we got an opening bracket here
         auto it = std::find_if(m_ParserContext.BracketOperators().begin(), m_ParserContext.BracketOperators().end(), FindOpeningBracket(*op));
@@ -144,9 +144,9 @@ struct Parser::Visitor : public boost::static_visitor<>
                 //         |<->| |<--
                 //               |<->|
                 //      We're in trouble
-                while( !m_ParserContext.OperatorStack().empty() && *boost::get<const boost::shared_ptr<IOperator>&>(m_ParserContext.OperatorStack().top()) != *m_ParserContext.OpeningBracket() )
+                while( !m_ParserContext.OperatorStack().empty() && *boost::get<const std::shared_ptr<IOperator>&>(m_ParserContext.OperatorStack().top()) != *m_ParserContext.OpeningBracket() )
                 {
-                    m_ParserContext.OutputQueue().push_back(boost::get<const boost::shared_ptr<IOperator>&>(m_ParserContext.OperatorStack().top()));
+                    m_ParserContext.OutputQueue().push_back(boost::get<const std::shared_ptr<IOperator>&>(m_ParserContext.OperatorStack().top()));
                     m_ParserContext.OperatorStack().pop();
                 }
                 m_ParserContext.ArgExistsStack().top() = false;
@@ -223,7 +223,7 @@ private:
     };
 //    bool StartFunctionCall(const std::string& Identifier, Behaviour Behav = Behaviour::None)
 //    {
-//        (*this)(boost::shared_ptr<IOperator>(new FuncCaller));
+//        (*this)(std::shared_ptr<IOperator>(new FuncCaller));
 //        m_ParserContext.OperatorStack().push(FuncCallerTag());
 //        //new functioncall, so we set up the new states
 //        m_ParserContext.State() = ParserState::FunctionCall;
@@ -231,7 +231,7 @@ private:
 //        m_ParserContext.ArgExistsStack().push(false);
 //        return true;
 //    }
-//    void FinishFunctionCall(/*const boost::shared_ptr<IFunction>& Func,*/ Behaviour Behav = Behaviour::None)
+//    void FinishFunctionCall(/*const std::shared_ptr<IFunction>& Func,*/ Behaviour Behav = Behaviour::None)
 //    {
 //        //We push the number of arguments on the stack so the function can get it from there
 //        m_ParserContext.OutputQueue().push_back(static_cast<long long>(m_ParserContext.ArgCounterStack().top()));
@@ -246,7 +246,7 @@ private:
 //        if( !m_ParserContext.ArgExistsStack().empty() )
 //            m_ParserContext.ArgExistsStack().pop();
 //    }
-    void PopHigherPrecedenceOperators(const boost::shared_ptr<IOperator>& Op)
+    void PopHigherPrecedenceOperators(const std::shared_ptr<IOperator>& Op)
     {
         #ifdef DEBUG
                     std::cout << "PopHigherPrecedence(" << Op->Representation() << "):\n";
@@ -287,7 +287,7 @@ private:
             }
         }
     }
-    void ParseBinaryOperator(const boost::shared_ptr<IOperator>& Op)
+    void ParseBinaryOperator(const std::shared_ptr<IOperator>& Op)
     {
         if( m_ParserContext.LastToken() == TokenType::None || m_ParserContext.LastToken() == TokenType::OpBinary ||
             m_ParserContext.LastToken() == TokenType::ArgSeperator || m_ParserContext.LastToken() == TokenType::OpeningBracket
@@ -341,7 +341,7 @@ void Parser::Parse( std::deque<UnparsedToken> TokExpr )
     if( m_Context.LastToken() == TokenType::OpUnaryPrefix || m_Context.LastToken() == TokenType::OpBinary )
         throw ParseError("Missing input after operator",Loc);
     //Check if there are closing brackets missing
-    if( m_ExpectedBracket.size() > 0 )
+    if( !m_ExpectedBracket.empty() )
         throw ParseError("Expected '" + m_ExpectedBracket.top()->Representation() + "' before end of input",Loc);
     //No more tokens to be read; pop all operators left from the OpStack to the OutputQueue
     if( m_OperatorStack.size() == 1 )

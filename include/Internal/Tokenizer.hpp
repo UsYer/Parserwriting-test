@@ -7,7 +7,7 @@ namespace Internal
 {
 /*struct SetOrdering
 {
-    bool operator()(const boost::shared_ptr<IOperator>& lhs, const boost::shared_ptr<IOperator>& rhs)
+    bool operator()(const std::shared_ptr<IOperator>& lhs, const std::shared_ptr<IOperator>& rhs)
     {
         return lhs->Representation() < rhs->Representation();
     }

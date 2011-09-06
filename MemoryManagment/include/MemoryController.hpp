@@ -1,9 +1,5 @@
 #ifndef MEMORYCONTROLLER_H
 #define MEMORYCONTROLLER_H
-#include <map>
-#include <list>
-//#include <boost/variant.hpp>
-#include <boost/circular_buffer.hpp>
 namespace Internal
 {
 class Reference;

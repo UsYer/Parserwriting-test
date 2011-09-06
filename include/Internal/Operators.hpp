@@ -1,7 +1,6 @@
 #ifndef OPERATORS_H_INCLUDED
 #define OPERATORS_H_INCLUDED
 #include <cmath>
-#include <boost/make_shared.hpp>
 #include "../IToken.hpp" //For MinusToken, otherwise compilererror in Parser.cpp
 #include "../Parsable.hpp"
 #include "Utilities.hpp"
@@ -22,7 +21,7 @@ inline void ParseAssignment(ParserContext& PC)
     //by the Parser
     if( PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double || PC.LastToken() == TokenType::KeywordWithValue )
         throw std::logic_error("Can't assign to a number literal");
-    PC.Parse(boost::make_shared<AssignmentOp>());
+    PC.Parse(std::make_shared<AssignmentOp>());
     PC.LastToken() = TokenType::Assignment;
     PC.State() = ParserState::Assignment;
 };
@@ -115,12 +114,12 @@ public:
     {
         if( QualifiesForUnary(TC.LastChar()) || (TC.LastChar() == LastCharType::None && QualifiesForUnary(TC.LastChar().Before())) )
         {
-            TC.OutputQueue().push_back(boost::make_shared<UnaryMinusOp>());
+            TC.OutputQueue().push_back(std::make_shared<UnaryMinusOp>());
             return LastCharType::UnaryPrefixOp;
         }
         else
         {
-            TC.OutputQueue().push_back(boost::make_shared<BinaryMinusOp>());
+            TC.OutputQueue().push_back(std::make_shared<BinaryMinusOp>());
             return LastCharType::BinaryOp;
         }
     }
@@ -403,7 +402,7 @@ inline void ParseIndexOpeningBracket(ParserContext& PC)
         throw std::logic_error("Missing input before '['");
     else if( PC.LastToken() == TokenType::OpBinary || PC.LastToken() == TokenType::OpUnaryPrefix )
         throw std::logic_error("Unexpected operator before '['");
-    PC.Parse(boost::make_shared<IndexOpeningBracket>());
+    PC.Parse(std::make_shared<IndexOpeningBracket>());
 
 }
 class IndexOpeningBracketToken : public IToken
@@ -488,7 +487,7 @@ public:
 };
 inline void ParseTableOp(ParserContext& PC)
 {
-    PC.Parse(boost::make_shared<TableOp>());
+    PC.Parse(std::make_shared<TableOp>());
     PC.LastToken() = TokenType::ArgSeperator;
     //The table-op doesn't accept everything a anormal binary-op would accept
     PC.UnexpectedToken() = (TokenType::OpeningBracket /*| TokenType::Value*/); // FIXME (Marius#8#): OR-ing a TokenType with a composed TokenType doesn't work
@@ -515,7 +514,7 @@ protected:
         {
             return false;
         }
-        bool operator()(const boost::shared_ptr<IFunction>& Func) const
+        bool operator()(const std::shared_ptr<IFunction>& Func) const
         {
             return *Func != "__ALSM__";
         }
@@ -534,7 +533,7 @@ public:
                 std::cout << "Is funccall\n";
                 #endif
                 EC.SetSignal(SignalType::FuncCall);
-                EC.EvalStack.push_back(Types::Object(boost::make_shared<ArgListStartMarker>()));
+                EC.EvalStack.push_back(Types::Object(std::make_shared<ArgListStartMarker>()));
             }
             else
             {
@@ -560,7 +559,7 @@ class OpeningBracketFuncCall : public OpeningBracket
         {
             throw Exceptions::TypeException("Expected function; Is double");
         }
-        void operator()(const boost::shared_ptr<IOperator>& op)const
+        void operator()(const std::shared_ptr<IOperator>& op)const
         {
             throw Exceptions::TypeException("Expected function; Is operator " + op->Representation());
         }
@@ -575,7 +574,7 @@ class OpeningBracketFuncCall : public OpeningBracket
         {
             throw Exceptions::NullReferenceException("Calling a nullreference");
         }
-        void operator()(const boost::shared_ptr<IFunction>& op)const
+        void operator()(const std::shared_ptr<IFunction>& op)const
         {
         }
     };
@@ -588,7 +587,7 @@ public:
         ResolvedToken Tok(Utilities::Resolve(EC,EC.EvalStack.back()));
         boost::apply_visitor(ThrowIfNoFunc(),Tok);
         EC.SetSignal(SignalType::FuncCall);
-        EC.EvalStack.push_back(Types::Object(boost::make_shared<ArgListStartMarker>()));
+        EC.EvalStack.push_back(Types::Object(std::make_shared<ArgListStartMarker>()));
     }
 };
 class OpeningBracketNoFuncCall : public OpeningBracket
@@ -613,7 +612,7 @@ inline void ParseOpeningBracket(ParserContext& PC)
  // Compare with openingbracket parsing in the parser
     if( PC.LastToken() == TokenType::Identifier )
     {   //the generic bracket parsing algorithm will take care of the Bracket, nothing more to do for us here
-        auto OB = boost::make_shared<OpeningBracketFuncCall>();
+        auto OB = std::make_shared<OpeningBracketFuncCall>();
         PC.Parse(OB);
         PC.OutputQueue().push_back(OB);
         #ifdef DEBUG
@@ -623,7 +622,7 @@ inline void ParseOpeningBracket(ParserContext& PC)
     }
     else if( PC.LastToken() == TokenType::Assignment || PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double)
     {
-        PC.Parse(boost::make_shared<OpeningBracketNoFuncCall>());
+        PC.Parse(std::make_shared<OpeningBracketNoFuncCall>());
         //PC.OutputQueue().push_back(OB);
         #ifdef DEBUG
         std::cout << "OpeningBracketNoFuncCall\n";
@@ -631,7 +630,7 @@ inline void ParseOpeningBracket(ParserContext& PC)
     }
     else
     {
-        auto OB = boost::make_shared<OpeningBracket>();
+        auto OB = std::make_shared<OpeningBracket>();
         PC.Parse(OB);
         PC.OutputQueue().push_back(OB);
         #ifdef DEBUG
@@ -663,12 +662,12 @@ class ClosingBracket : public IOperator
         {
             return false;
         }
-        bool operator()(const boost::shared_ptr<IFunction>& Func) const
+        bool operator()(const std::shared_ptr<IFunction>& Func) const
         {
             return *Func == "__ALSM__";
         }
     };
-    struct GetFunc: public boost::static_visitor<boost::shared_ptr<IFunction>>
+    struct GetFunc: public boost::static_visitor<std::shared_ptr<IFunction>>
     {
         EvaluationContext& m_EC;
         GetFunc(EvaluationContext& EC):
@@ -676,30 +675,30 @@ class ClosingBracket : public IOperator
         {
 
         }
-        boost::shared_ptr<IFunction> operator()(long long ) const
+        std::shared_ptr<IFunction> operator()(long long ) const
         {
             throw Exceptions::TypeException("Expected function; Is long");
         }
-        boost::shared_ptr<IFunction> operator()(double )const
+        std::shared_ptr<IFunction> operator()(double )const
         {
             throw Exceptions::TypeException("Expected function; Is double");
         }
-        boost::shared_ptr<IFunction> operator()(const boost::shared_ptr<IOperator>& op)const
+        std::shared_ptr<IFunction> operator()(const std::shared_ptr<IOperator>& op)const
         {
             throw Exceptions::TypeException("Expected function; Is operator " + op->Representation());
         }
-        boost::shared_ptr<IFunction> operator()(const Reference& R)const
+        std::shared_ptr<IFunction> operator()(const Reference& R)const
         {
             if( R.IsNull() )
                 throw Exceptions::NullReferenceException("Calling a nullreference");
             else
                 throw Exceptions::TypeException("Expected function; Is table");
         }
-        boost::shared_ptr<IFunction> operator()(NullReference)const
+        std::shared_ptr<IFunction> operator()(NullReference)const
         {
             throw Exceptions::NullReferenceException("Calling a nullreference");
         }
-        boost::shared_ptr<IFunction> operator()(const boost::shared_ptr<IFunction>& op)const
+        std::shared_ptr<IFunction> operator()(const std::shared_ptr<IFunction>& op)const
         {
             return op;
         }
@@ -723,7 +722,7 @@ class ClosingBracket : public IOperator
             else
                 return 1;
         }
-        unsigned operator()(const boost::shared_ptr<IFunction>& Func) const
+        unsigned operator()(const std::shared_ptr<IFunction>& Func) const
         {
             if( *Func == "__ALSM__" )
                 return 0;
@@ -755,7 +754,7 @@ public:
             }
             const Types::Object& FuncObj(EC.Stack.Pop());
             ResolvedToken FuncToken(Utilities::Resolve(EC,FuncObj));
-            const boost::shared_ptr<IFunction>& Func(boost::apply_visitor(GetFunc(EC),FuncToken));
+            const std::shared_ptr<IFunction>& Func(boost::apply_visitor(GetFunc(EC),FuncToken));
 
             Func->SuppliedArguments(Args,ArgCount);
             Func->This(FuncObj.This());
@@ -800,7 +799,7 @@ inline void ParseClosingBracket(ParserContext& PC)
             PC.OperatorStack().pop();
             PC.State().Restore();
             PC.LastToken() = TokenType::ClosingBracket;
-            PC.OutputQueue().push_back(boost::make_shared<ClosingBracket>());
+            PC.OutputQueue().push_back(std::make_shared<ClosingBracket>());
             return;
         }
         else

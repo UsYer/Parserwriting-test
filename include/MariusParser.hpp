@@ -27,13 +27,13 @@ public:
     {
         m_Tokenizer.RegisterToken(Tok);
     }
-    void RegisterFunction(const boost::shared_ptr<Internal::IFunction>& p)
+    void RegisterFunction(const Internal::Types::Function& p)
     {
         (*m_GlobalScope)[p->Representation()] = p;
     }
     void RegisterFunction(const std::string& Name, const std::string& Representation, int ArgCount, unsigned ReturnCount,const Internal::CallbackFunction& Func)
     {
-        (*m_GlobalScope)[Representation] = boost::make_shared<Internal::BindFunction>(Name, Representation, ArgCount, ReturnCount,Func);
+        (*m_GlobalScope)[Representation] = std::make_shared<Internal::BindFunction>(Name, Representation, ArgCount, ReturnCount,Func);
     }
     template<typename T>
     void RegisterFunction(const std::string& Name, const std::string& Representation, T Func)
@@ -47,7 +47,7 @@ public:
         auto it = (*m_GlobalScope).Find(Identifier);
         if( it == (*m_GlobalScope).KeyEnd() )
         {
-            const boost::shared_ptr<Internal::IFunction>& Func(boost::apply_visitor(Internal::Utilities::Get<const boost::shared_ptr<Internal::IFunction>&>(),it->second));
+            auto Func = boost::apply_visitor(Internal::Utilities::Get<const Internal::Types::Function&>(),it->second);
             //Used const_casts here because there were otherwise some strange compiler errors
             return ::Types::Function(Func, const_cast<Internal::Types::Scope&>(m_GlobalScope), const_cast<Internal::MemoryController&>(m_MC));
         }

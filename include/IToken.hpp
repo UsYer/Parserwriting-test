@@ -52,7 +52,7 @@ class OperatorToken : public IToken
         IToken(T().Representation()),// TODO (Marius#5#): Two instantiations? that's bad
         m_Operator(new T)
     {}
-    OperatorToken(const boost::shared_ptr<Internal::IOperator>& Op):
+    OperatorToken(const std::shared_ptr<Internal::IOperator>& Op):
         IToken(Op->Representation()),
         m_Operator(Op)
     {
@@ -72,12 +72,12 @@ class OperatorToken : public IToken
             return LastCharType::BinaryOp;
         }
     }
-    boost::shared_ptr<Internal::IOperator> GetOp() const
+    std::shared_ptr<Internal::IOperator> GetOp() const
     {
         return m_Operator;
     }
     private:
-    boost::shared_ptr<Internal::IOperator> m_Operator;
+    std::shared_ptr<Internal::IOperator> m_Operator;
 };
 
 ///Used when an usual operator should be registered, which needs special parsing
@@ -92,7 +92,7 @@ class ParsedOperatorToken : public IToken
     {
     }
     template <typename U>
-    ParsedOperatorToken(const boost::shared_ptr<Internal::IOperator>& Op, const U& ParseFunc):
+    ParsedOperatorToken(const std::shared_ptr<Internal::IOperator>& Op, const U& ParseFunc):
         IToken(Op->Representation()),
         m_Arity(Op->Arity()),
         m_ParseFunc(Op->Representation(), ParseFunc)
@@ -123,7 +123,7 @@ class GenericOpeningBracketToken : public OperatorToken<T>
 {
     public:
     GenericOpeningBracketToken():
-        OperatorToken<T>(boost::make_shared<T>())
+        OperatorToken<T>(std::make_shared<T>())
     {}
     virtual LastCharType Tokenize(TokenizeContext& TC) const
     {
@@ -136,7 +136,7 @@ class GenericClosingBracketToken : public OperatorToken<T>
 {
     public:
     GenericClosingBracketToken():
-        OperatorToken<T>(boost::make_shared<T>())
+        OperatorToken<T>(std::make_shared<T>())
     {}
     virtual LastCharType Tokenize(TokenizeContext& TC) const
     {

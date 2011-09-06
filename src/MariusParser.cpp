@@ -41,7 +41,7 @@ MariusParser::MariusParser():
 
     m_Tokenizer.RegisterToken(new OpeningBracketToken);
     m_Tokenizer.RegisterToken(new ClosingBracketToken);
-    m_Parser.RegisterBracketOperator(boost::make_shared<OpeningBracket>(), boost::make_shared<ClosingBracket>());
+    m_Parser.RegisterBracketOperator(std::make_shared<OpeningBracket>(), std::make_shared<ClosingBracket>());
 /*
     auto IOB = new GenericOpeningBracketToken<IndexOpeningBracket>;
     auto ICB = new GenericClosingBracketToken<IndexClosingBracket>;
@@ -53,31 +53,31 @@ MariusParser::MariusParser():
     auto ICB = new GenericClosingBracketToken<IndexClosingBracket>;
     m_Tokenizer.RegisterToken(new IndexOpeningBracketToken);
     m_Tokenizer.RegisterToken(ICB);
-    m_Parser.RegisterBracketOperator(boost::make_shared<IndexOpeningBracket>(), ICB->GetOp());
+    m_Parser.RegisterBracketOperator(std::make_shared<IndexOpeningBracket>(), ICB->GetOp());
 //*/
-    RegisterFunction(boost::make_shared<TypeFunc>());
+    RegisterFunction(std::make_shared<TypeFunc>());
 
     Internal::Types::Table MCScope;
-    MCScope.Add("GetRefCount",boost::make_shared<GetRefCountFunc>());
-    MCScope.Add("ItemCount",boost::make_shared<GetMCSizeFunc>());
+    MCScope.Add("GetRefCount",std::make_shared<GetRefCountFunc>());
+    MCScope.Add("ItemCount",std::make_shared<GetMCSizeFunc>());
     (*m_GlobalScope)["MC"] = m_MC.Save(MCScope);
 
     Internal::Types::Table T;
-    T.Add("Max",boost::make_shared<MaxFunc>());
-    T.Add("Sqrt",boost::make_shared<SqrtFunc>());
+    T.Add("Max",std::make_shared<MaxFunc>());
+    T.Add("Sqrt",std::make_shared<SqrtFunc>());
     T.Add("Ln",Internal::BindFunc("Ln","Ln",static_cast<double(*)(double)>(&std::log)));
     T.Add("Pi",3.141592653589793238462643);
     T.Add("E",2.718281828459045235360287);
     CountedReference Ref(m_MC.Save(T));
     (*m_GlobalScope)["Math"] = Ref;
-    RegisterFunction(boost::make_shared<CreateNullFunc>());
-    RegisterFunction(boost::make_shared<CreateTableFunc>());
-    RegisterFunction(boost::make_shared<PrintFunc>());
-    (*m_GlobalScope)["__CATCH__"] = boost::make_shared<GlobalExceptionHandleFunc>();
-    RegisterFunction(boost::make_shared<CreateExceptionFunc>("RuntimeException",1));
-    RegisterFunction(boost::make_shared<CreateExceptionFunc>("TypeException",2));
-    RegisterFunction(boost::make_shared<CreateExceptionFunc>("NameException",3));
-    RegisterFunction(boost::make_shared<CreateExceptionFunc>("NullReferenceException",4));
+    RegisterFunction(std::make_shared<CreateNullFunc>());
+    RegisterFunction(std::make_shared<CreateTableFunc>());
+    RegisterFunction(std::make_shared<PrintFunc>());
+    (*m_GlobalScope)["__CATCH__"] = std::make_shared<GlobalExceptionHandleFunc>();
+    RegisterFunction(std::make_shared<CreateExceptionFunc>("RuntimeException",1));
+    RegisterFunction(std::make_shared<CreateExceptionFunc>("TypeException",2));
+    RegisterFunction(std::make_shared<CreateExceptionFunc>("NameException",3));
+    RegisterFunction(std::make_shared<CreateExceptionFunc>("NullReferenceException",4));
 }
 
 MariusParser::~MariusParser()

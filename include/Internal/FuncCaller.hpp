@@ -7,7 +7,7 @@ namespace Internal
 {
 class FuncCaller : public IOperator
 {
-    struct GetFunc: public boost::static_visitor<boost::shared_ptr<IFunction>>
+    struct GetFunc: public boost::static_visitor<std::shared_ptr<IFunction>>
     {
         EvaluationContext& m_EC;
         GetFunc(EvaluationContext& EC):
@@ -15,30 +15,30 @@ class FuncCaller : public IOperator
         {
 
         }
-        boost::shared_ptr<IFunction> operator()(long long ) const
+        std::shared_ptr<IFunction> operator()(long long ) const
         {
             throw std::logic_error("Expected function; Is long");
         }
-        boost::shared_ptr<IFunction> operator()(double )const
+        std::shared_ptr<IFunction> operator()(double )const
         {
             throw std::logic_error("Expected function; Is double");
         }
-        boost::shared_ptr<IFunction> operator()(const boost::shared_ptr<IOperator>& op)const
+        std::shared_ptr<IFunction> operator()(const std::shared_ptr<IOperator>& op)const
         {
             throw std::logic_error("Expected function; Is operator " + op->Representation());
         }
-        boost::shared_ptr<IFunction> operator()(const Reference& R)const
+        std::shared_ptr<IFunction> operator()(const Reference& R)const
         {
             if( R.IsNull() )
                 throw std::logic_error("Calling a nullreference");
             else
                 throw std::logic_error("Expected function; Is table");
         }
-        boost::shared_ptr<IFunction> operator()(NullReference)const
+        std::shared_ptr<IFunction> operator()(NullReference)const
         {
             throw std::logic_error("Calling a nullreference");
         }
-        boost::shared_ptr<IFunction> operator()(const boost::shared_ptr<IFunction>& op)const
+        std::shared_ptr<IFunction> operator()(const std::shared_ptr<IFunction>& op)const
         {
             return op;
         }
@@ -57,7 +57,7 @@ public:
 
         auto FuncPos = EC.EvalStack.begin() + (EC.EvalStack.size() - 1 - ArgCount); //We jump directly to the identifer of the function
         ResolvedToken FuncToken(Utilities::Resolve(EC,*FuncPos)); //needs to stay as a LHS because apply_visitor the next line dos not like RHS
-        boost::shared_ptr<IFunction> Func(boost::apply_visitor(GetFunc(EC),FuncToken));
+        std::shared_ptr<IFunction> Func(boost::apply_visitor(GetFunc(EC),FuncToken));
         if( Func->ArgCount() != /*ArgCount::Variable*/-1 )
         {
             if( ArgCount > Func->ArgCount() )

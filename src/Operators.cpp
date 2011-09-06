@@ -1,4 +1,4 @@
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -50,7 +50,7 @@ struct DoAssignment : public boost::static_visitor<Member>
         (*Scope)[s] = m_RHS;
         return m_RHS;
     }
-    CountedReference operator()(const boost::shared_ptr<IFunction>& op)const
+    CountedReference operator()(const std::shared_ptr<IFunction>& op)const
     {
         throw std::logic_error("Lhs has to be an Identifier; Is Function ");
     }

@@ -1,6 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 #include <deque>
+#include <memory>
 #include "../../MemoryManagment/include/MemoryController.hpp"
 #include "../../MemoryManagment/include/Reference.hpp"
 
@@ -13,8 +14,8 @@ namespace Types
     typedef CountedReference Scope;
     class Object;
     typedef std::deque<Object> Stack;
-    typedef boost::shared_ptr<IOperator> Operator;
-    typedef boost::shared_ptr<IFunction> Function;
+    typedef std::shared_ptr<IOperator> Operator;
+    typedef std::shared_ptr<IFunction> Function;
 }
 }// ns Internal
 /*

@@ -97,7 +97,7 @@ class Object
         template <typename... T>
         Object operator()(T... Args) const
         {
-            return Function(boost::apply_visitor(Internal::Utilities::Get<boost::shared_ptr<Internal::IFunction>>(),m_Value),m_EC.Scope(),m_EC.MC)(Args...);
+            return Function(boost::apply_visitor(Internal::Utilities::Get<std::shared_ptr<Internal::IFunction>>(),m_Value),m_EC.Scope(),m_EC.MC)(Args...);
         }
     protected:
     private:

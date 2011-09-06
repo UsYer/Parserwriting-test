@@ -22,34 +22,50 @@
 	"include/Reference.hpp"
 	<vector>
 
-1260222001 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\main.cpp
+1260226890 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\main.cpp
 	<iostream>
 	"include/MemoryController.hpp"
 	"include/Reference.hpp"
 	<vector>
 
-1253628903 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
-	<map>
-	<list>
-	<boost/variant.hpp>
-	<boost/circular_buffer.hpp>
+1315228416 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
 
-1260140106 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
+1298332639 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
 
-1260223060 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\memorycontroller.cpp
+1275847059 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\memorycontroller.cpp
+	"../../include/Internal/Table.hpp"
 	"../include/MemoryController.hpp"
 	"../include/Reference.hpp"
 	"../include/Exceptions.hpp"
 	<iostream>
 
-1253627482 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
+1308044364 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
 	<stdexcept>
 
-1260223198 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\reference.cpp
+1308044364 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\reference.cpp
 	"../include/MemoryController.hpp"
 	"../include/Reference.hpp"
-	"../include/Exceptions.hpp"
-	"../../include/Table.hpp"
+	"../../include/Exceptions.hpp"
+	"../../include/Internal/Table.hpp"
 
 1253037660 c:\users\marius\desktop\quellcodes\parser\include\table.hpp
+
+1308044364 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
+	<map>
+	<string>
+	<memory>
+	"Tokens.hpp"
+
+1314727681 c:\users\marius\desktop\quellcodes\parser\include\internal\tokens.hpp
+	<boost/variant.hpp>
+	<boost/shared_ptr.hpp>
+	"../../MemoryManagment/include/MemoryController.hpp"
+	"../../MemoryManagment/include/Reference.hpp"
+	"../Parsable.hpp"
+
+1298332639 c:\users\marius\desktop\quellcodes\parser\include\parsable.hpp
+
+1308079565 c:\users\marius\desktop\quellcodes\parser\include\exceptions.hpp
+	<stdexcept>
+	<boost/lexical_cast.hpp>
 

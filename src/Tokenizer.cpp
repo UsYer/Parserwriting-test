@@ -1,7 +1,7 @@
 #include <queue>
 #include <iostream>
+#include <memory>
 #include <boost/variant.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
@@ -80,7 +80,7 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
             ParseOperator();
             FlushNumBuffer(DecimalNumber);
             DecimalNumber = false; //!Important! reset the DecimalNumber flag because otherwise all following numbers will be regarded as doubles
-            OutputQueue.push_back(boost::shared_ptr<IOperator>(new OpeningBracket));
+            OutputQueue.push_back(std::shared_ptr<IOperator>(new OpeningBracket));
             ++ch;
             LastChar = LastCharType::Bracket;
             continue;
@@ -90,7 +90,7 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
             ParseOperator();
             FlushNumBuffer(DecimalNumber);
             DecimalNumber = false;
-            OutputQueue.push_back(boost::shared_ptr<IOperator>(new ClosingBracket));
+            OutputQueue.push_back(std::shared_ptr<IOperator>(new ClosingBracket));
             ++ch;
             LastChar = LastCharType::Bracket;
             continue;

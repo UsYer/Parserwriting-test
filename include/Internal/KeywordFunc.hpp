@@ -30,7 +30,7 @@ struct ParseFuncBeginning : public boost::static_visitor<std::string>
         m_Context.InputQueue().pop_front();
         return Identifier;
     }
-    std::string operator()(const boost::shared_ptr<IOperator>& Op ) const
+    std::string operator()(const std::shared_ptr<IOperator>& Op ) const
     {
         if( *m_Context.OpeningBracket() == *Op )
         {
@@ -50,9 +50,9 @@ struct ParseFuncBeginning : public boost::static_visitor<std::string>
 
 class FuncRegistrar : public IEvaluable
 {
-    boost::shared_ptr<IFunction> m_Func;
+    std::shared_ptr<IFunction> m_Func;
     public:
-    FuncRegistrar(const boost::shared_ptr<IFunction>& Func):
+    FuncRegistrar(const std::shared_ptr<IFunction>& Func):
         IEvaluable("","FuncRegistrar"),
         m_Func(Func)
     {}
@@ -110,12 +110,12 @@ void Function(ParserContext& Context)
             std::cout << ArgListParser.m_Args[i] + ", ";
         }
     #endif
-    auto RTFunc = boost::make_shared<RuntimeFunc>("",Identifier,ArgListParser.m_Args,0);
+    auto RTFunc = std::make_shared<RuntimeFunc>("",Identifier,ArgListParser.m_Args,0);
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
     if( Identifier.empty() )
-        Context.OutputQueue().push_back(boost::make_shared<ValueHolder>(RTFunc));
+        Context.OutputQueue().push_back(std::make_shared<ValueHolder>(RTFunc));
     else
-        Context.OutputQueue().push_back(boost::make_shared<Detail::FuncRegistrar>(RTFunc));
+        Context.OutputQueue().push_back(std::make_shared<Detail::FuncRegistrar>(RTFunc));
     Context.LastToken() = TokenType::KeywordWithValue;
     Context.SetUpNewScope(&RTFunc->m_FuncInstructions);
     Context.State() = ParserState::FuncDef;

@@ -3,7 +3,7 @@
 #include <stack>
 #include <queue>
 #include <string>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include "Tokens.hpp"
 #include "IOperator.hpp"
 #include "IFunction.hpp"
@@ -101,7 +101,7 @@ public:
         m_OutputQueue.clear();
         ResetStates();
     }
-    void RegisterBracketOperator(const boost::shared_ptr<IOperator>& OpeningBracket, const boost::shared_ptr<IOperator>& ClosingBracket)
+    void RegisterBracketOperator(const std::shared_ptr<IOperator>& OpeningBracket, const std::shared_ptr<IOperator>& ClosingBracket)
     {
         m_BracketOperators.push_back(std::make_pair(OpeningBracket, ClosingBracket));
     }
@@ -179,23 +179,23 @@ void ParserContext::ThrowIfUnexpected(TokenType TType, const std::string& ErrMes
         throw std::logic_error(ErrMessage);
     }
 }
-inline const boost::shared_ptr<IOperator>& ParserContext::OpeningBracket() const
+inline const std::shared_ptr<IOperator>& ParserContext::OpeningBracket() const
 {
     return m_Parser.m_OpeningBracket;
 }
-inline const boost::shared_ptr<IOperator>& ParserContext::ClosingBracket() const
+inline const std::shared_ptr<IOperator>& ParserContext::ClosingBracket() const
 {
     return m_Parser.m_ClosingBracket;
 }
-inline std::stack<boost::shared_ptr<IOperator>>& ParserContext::ExpectedBracket() const
+inline std::stack<std::shared_ptr<IOperator>>& ParserContext::ExpectedBracket() const
 {
     return m_Parser.m_ExpectedBracket;
 }
-inline const boost::shared_ptr<IOperator>& ParserContext::ArgumentSeperator() const
+inline const std::shared_ptr<IOperator>& ParserContext::ArgumentSeperator() const
 {
     return m_Parser.m_ArgumentSeperator;
 }
-inline const std::vector<std::pair<boost::shared_ptr<IOperator>,boost::shared_ptr<IOperator>>>& ParserContext::BracketOperators() const
+inline const std::vector<std::pair<std::shared_ptr<IOperator>,std::shared_ptr<IOperator>>>& ParserContext::BracketOperators() const
 {
     return m_Parser.m_BracketOperators;
 }
@@ -230,13 +230,5 @@ inline TokenType& ParserContext::UnexpectedToken() const
 {
     return m_Parser.m_UnexpectedToken.top();
 }
-//inline std::stack<bool>& ParserContext::ArgExistsStack() const
-//{
-//    return m_Parser.m_ArgExistsStack.top();
-//}
-//inline std::stack<unsigned>& ParserContext::ArgCounterStack() const
-//{
-//    return m_Parser.m_ArgCounterStack.top();
-//}
 }//ns Internal
 #endif // PARSER_H

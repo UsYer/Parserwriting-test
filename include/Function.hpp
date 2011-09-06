@@ -6,7 +6,7 @@ namespace Types
 class Object;
 class Function
 {
-    boost::shared_ptr<Internal::IFunction> m_Function;
+    std::shared_ptr<Internal::IFunction> m_Function;
     Internal::Types::Scope m_SymTable;
     Internal::MemoryController& m_MC;
     template<typename T>
@@ -24,7 +24,7 @@ class Function
     {
     }
     public:
-    Function(const boost::shared_ptr<Internal::IFunction>& Function, const Internal::Types::Scope& Table, Internal::MemoryController& MC):
+    Function(const std::shared_ptr<Internal::IFunction>& Function, const Internal::Types::Scope& Table, Internal::MemoryController& MC):
         m_Function(Function),
         m_SymTable(Table),
         m_MC(MC)
@@ -76,12 +76,12 @@ namespace Marshal
 template<>
 struct Type<Types::Function>
 {
-    typedef boost::shared_ptr<Internal::IFunction> ToInternal;
+    typedef std::shared_ptr<Internal::IFunction> ToInternal;
 };
 template<>
 struct Value<Types::Function>
 {
-    static Types::Function ConvertOut(const boost::shared_ptr<Internal::IFunction>& Val, Internal::EvaluationContext& EC)
+    static Types::Function ConvertOut(const std::shared_ptr<Internal::IFunction>& Val, Internal::EvaluationContext& EC)
     {
         return Types::Function(Val,EC.Scope(),EC.MC);
     }

@@ -29,11 +29,11 @@ struct PrintTypeVisitor : public boost::static_visitor<std::string>
     {
         return "double";
     }
-    std::string operator()(const boost::shared_ptr<IOperator>& op)const
+    std::string operator()(const std::shared_ptr<IOperator>& op)const
     {
         return "operator";
     }
-    std::string operator()(const boost::shared_ptr<IFunction>& op)const
+    std::string operator()(const std::shared_ptr<IFunction>& op)const
     {
         return "function";
     }
@@ -87,7 +87,7 @@ struct PrintValueVisitor : public boost::static_visitor<std::string>
     {
         return boost::lexical_cast<std::string>(val);
     }
-    std::string operator()(const boost::shared_ptr<IEvaluable>& op)const
+    std::string operator()(const std::shared_ptr<IEvaluable>& op)const
     {
         return op->Representation();
     }
@@ -153,7 +153,7 @@ struct PrintValueNoResolve : public boost::static_visitor<std::string>
     {
         return P.Representation;
     }
-    std::string operator()(const boost::shared_ptr<IEvaluable>& op)const
+    std::string operator()(const std::shared_ptr<IEvaluable>& op)const
     {
         return op->Representation();
     }
@@ -192,11 +192,11 @@ struct GetNumberTokenVisitor : public boost::static_visitor< NumberToken >
     {
         return val;
     }
-    NumberToken operator()(const boost::shared_ptr<IOperator>& op)const
+    NumberToken operator()(const std::shared_ptr<IOperator>& op)const
     {
         throw Exceptions::TypeException("Can't take operators as operands");
     }
-    NumberToken operator()(const boost::shared_ptr<IFunction>& op)const
+    NumberToken operator()(const std::shared_ptr<IFunction>& op)const
     {
         throw Exceptions::TypeException("Can't take functions as operands");
     }

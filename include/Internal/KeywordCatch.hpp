@@ -29,10 +29,10 @@ class CatchBlock: public IFunction
 };
 struct TryCaller : public IEvaluable
 {
-    boost::shared_ptr<Detail::CatchBlock> m_Catch;
+    std::shared_ptr<Detail::CatchBlock> m_Catch;
     TryCaller(const std::string& Arg):
         IEvaluable("","__TRYCALLER__"),
-        m_Catch(boost::make_shared<Detail::CatchBlock>(Arg))
+        m_Catch(std::make_shared<Detail::CatchBlock>(Arg))
     {
     }
     void Eval(EvaluationContext& EC)
@@ -50,7 +50,7 @@ struct TryCaller : public IEvaluable
 };
 struct IsTry : public boost::static_visitor<bool>
 {
-    bool operator()( const boost::shared_ptr<IEvaluable>& Func ) const
+    bool operator()( const std::shared_ptr<IEvaluable>& Func ) const
     {
         return *Func == "__TRYHOLDER__";
     }
@@ -72,7 +72,7 @@ struct HasArg : public boost::static_visitor<std::string>
     {
         throw std::logic_error("Number literals are not allowed in the argument list");
     }
-    std::string operator()(const boost::shared_ptr<IOperator>& Op) const
+    std::string operator()(const std::shared_ptr<IOperator>& Op) const
     {
         if( *m_ParserContext.ClosingBracket() == Op->Representation() )
         {
@@ -115,7 +115,7 @@ void Catch(ParserContext& Context)
     if( Context.InputQueue().empty() )
         throw std::logic_error("Expected input after opening bracket");
     std::string Arg = boost::apply_visitor(Detail::HasArg(Context),Context.InputQueue().front());
-    auto TryCallFunc = boost::make_shared<Detail::TryCaller>(Arg);
+    auto TryCallFunc = std::make_shared<Detail::TryCaller>(Arg);
     if( !Arg.empty() )
         boost::apply_visitor(SwallowOperator(Context,Context.ClosingBracket()),Context.InputQueue().front());
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
