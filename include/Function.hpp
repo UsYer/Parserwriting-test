@@ -1,5 +1,6 @@
 #ifndef FUNCTION_HPP_INCLUDED
 #define FUNCTION_HPP_INCLUDED
+#include "Internal/IFunction.hpp"
 #include "Internal/Marshal.hpp"
 namespace Types
 {

@@ -18,6 +18,10 @@ class NullReference
 
 class MemoryController;
 class CountedReference;
+namespace Types
+{
+    class Table;
+}
 class Reference
 {
     friend class MemoryController;
@@ -45,8 +49,8 @@ public:
 protected:
     void Swap(Reference& Other);
     MemoryController* m_MC;
-    MemoryController::ID m_ID;
-    Reference( MemoryController* MC, MemoryController::ID ID ):
+    unsigned long m_ID;
+    Reference( MemoryController* MC, unsigned long ID ):
         m_MC(MC),
         m_ID(ID)
     {
@@ -80,7 +84,7 @@ public:
         return Reference(m_MC, m_ID);
     }
 private:
-    CountedReference( MemoryController* MC, MemoryController::ID ID ):
+    CountedReference( MemoryController* MC, unsigned long ID ):
         Reference(MC,ID)
     {
     }

@@ -24,7 +24,7 @@
 
 1315228416 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
 
-1298332639 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
+1315346231 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
 
 1308044364 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\exceptions.hpp
 	<stdexcept>
@@ -40,12 +40,9 @@
 	"version.h"
 	"include/MariusParser.hpp"
 
-1315344140 c:\users\marius\desktop\quellcodes\parser\version.h
+1315396776 c:\users\marius\desktop\quellcodes\parser\version.h
 
-1315343783 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
-	"Internal/Parser.hpp"
-	"Internal/Tokenizer.hpp"
-	"Internal/Utilities.hpp"
+1315348117 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Object.hpp"
 	"Function.hpp"
 	"Internal/BindFunc.hpp"
@@ -88,7 +85,7 @@
 	<boost/ptr_container/ptr_set.hpp>
 	"../IToken.hpp"
 
-1315343112 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
+1315347504 c:\users\marius\desktop\quellcodes\parser\include\internal\utilities.hpp
 	<boost/lexical_cast.hpp>
 	"../Exceptions.hpp"
 	"Table.hpp"
@@ -96,6 +93,7 @@
 	"Is.hpp"
 	"Get.hpp"
 	"EvaluationContext.hpp"
+	"IEvaluable.hpp"
 
 1308046624 c:\users\marius\desktop\quellcodes\parser\include\internal\object.hpp
 	"Tokens.hpp"
@@ -103,14 +101,15 @@
 
 1315343112 c:\users\marius\desktop\quellcodes\parser\include\internal\typenames.hpp
 
-1315343112 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
-	"../MemoryManagment/include/Reference.hpp"
+1315347648 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
+	"Internal/Utilities.hpp"
 	"Internal/Marshal.hpp"
 
-1307738918 c:\users\marius\desktop\quellcodes\parser\include\internal\marshal.hpp
+1315346527 c:\users\marius\desktop\quellcodes\parser\include\internal\marshal.hpp
 	<type_traits>
 
-1315343112 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
+1315346087 c:\users\marius\desktop\quellcodes\parser\include\function.hpp
+	"Internal/IFunction.hpp"
 	"Internal/Marshal.hpp"
 
 1315343489 c:\users\marius\desktop\quellcodes\parser\include\internal\bindfunc.hpp

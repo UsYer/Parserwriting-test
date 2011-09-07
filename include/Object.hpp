@@ -1,7 +1,10 @@
 #ifndef OBJECT_HPP_INCLUDED
 #define OBJECT_HPP_INCLUDED
-#include "../MemoryManagment/include/Reference.hpp"
-#include "Internal/Marshal.hpp"
+#include "Internal/Utilities.hpp"
+namespace Internal
+{
+    class EvaluationContext;
+}
 namespace Types
 {
 class Function;
@@ -59,11 +62,7 @@ class Object
             return Object(m_EC, (*m_TableRef)[m_Key]);
         }
         template <typename T>
-        operator T() const
-        {
-            using namespace Internal::Marshal;
-            return Value<T>::ConvertOut(boost::apply_visitor(Internal::Utilities::Get<typename Type<T>::ToInternal>(),(*m_TableRef)[m_Key]),m_EC);
-        }
+        operator T() const;
     };
     public:
         // TODO (Marius#6#): Make Object copyable (EC ref is the problem. Would it hurt to use a pointer instead?)
@@ -83,11 +82,8 @@ class Object
             return boost::apply_visitor(StaticVisitor,m_Value);
         }
         template <typename T>
-        operator T() const
-        {
-            using namespace Internal::Marshal;
-            return Value<T>::ConvertOut(boost::apply_visitor(Internal::Utilities::Get<typename Type<T>::ToInternal>(),m_Value),m_EC);
-        }
+        operator T() const;
+
         template<typename T>
         TableProxy<T> operator[](const T& Key)
         {
@@ -105,6 +101,22 @@ class Object
         Internal::EvaluationContext& m_EC;
 };
 }//ns Types
+
+//Placed the methods that use Marshal here because otherwise we'd be stuck in a cyclic dependency between Object.hpp and Marshal.hpp
+#include "Internal/Marshal.hpp"
+template <typename KeyType>
+template <typename T>
+::Types::Object::TableProxy<KeyType>::operator T() const
+{
+    using namespace Internal::Marshal;
+    return Value<T>::ConvertOut(boost::apply_visitor(Internal::Utilities::Get<typename Type<T>::ToInternal>(),(*m_TableRef)[m_Key]),m_EC);
+}
+template <typename T>
+::Types::Object::operator T() const
+{
+    using namespace Internal::Marshal;
+    return Value<T>::ConvertOut(boost::apply_visitor(Internal::Utilities::Get<typename Type<T>::ToInternal>(),m_Value),m_EC);
+}
 namespace Marshal
 {
 template<>

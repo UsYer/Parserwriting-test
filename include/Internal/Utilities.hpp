@@ -7,6 +7,7 @@
 #include "Is.hpp"
 #include "Get.hpp"
 #include "EvaluationContext.hpp"
+#include "IEvaluable.hpp"
 namespace Internal
 {
 namespace Utilities

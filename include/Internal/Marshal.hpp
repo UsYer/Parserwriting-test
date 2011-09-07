@@ -1,7 +1,10 @@
 #ifndef MARSHAL_HPP_INCLUDED
 #define MARSHAL_HPP_INCLUDED
 #include <type_traits>
-
+namespace Internal
+{
+    struct EvaluationContext;
+}
 namespace Marshal
 {
 template<typename T>
