@@ -170,10 +170,8 @@ struct MariusParser::Impl
         std::cout << "--- Evaluating ---" << std::endl;
     #endif
         QueryPerformanceCounter(&start_ticks);
-    //    m_EC.NewScope(m_EC.GlobalScope,&Q);
         m_EC.SetGlobalScopeInstructions(&Q);
         m_EC.EvalScope();
-    //    m_EC.EndScope();
         QueryPerformanceCounter(&ende_ticks);
 
         Took += "Evaluation took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";

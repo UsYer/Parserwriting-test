@@ -35,12 +35,12 @@
 	"../../include/Exceptions.hpp"
 	"../../include/Internal/Table.hpp"
 
-1314920676 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
+1315437618 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
 	<iostream>
 	"version.h"
 	"include/MariusParser.hpp"
 
-1315396776 c:\users\marius\desktop\quellcodes\parser\version.h
+1315695320 c:\users\marius\desktop\quellcodes\parser\version.h
 
 1315348117 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Object.hpp"
@@ -101,7 +101,7 @@
 
 1315343112 c:\users\marius\desktop\quellcodes\parser\include\internal\typenames.hpp
 
-1315347648 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
+1315397310 c:\users\marius\desktop\quellcodes\parser\include\object.hpp
 	"Internal/Utilities.hpp"
 	"Internal/Marshal.hpp"
 
@@ -133,11 +133,14 @@
 	"../include/Internal/IFunction.hpp"
 	"../include/Internal/Utilities.hpp"
 
-1315343112 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
+1315437007 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
 	<iostream>
 	<windows.h>
 	<boost/lexical_cast.hpp>
 	"../include/MariusParser.hpp"
+	"../include/Internal/Parser.hpp"
+	"../include/Internal/Tokenizer.hpp"
+	"../include/Internal/Utilities.hpp"
 	"../include/Internal/Operators.hpp"
 	"../include/Internal/Functions.hpp"
 	"../include/Internal/Is.hpp"
@@ -148,7 +151,7 @@
 	"../include/Internal/KeywordNull.hpp"
 	"../include/Internal/KeywordReturn.hpp"
 
-1315343391 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
+1316118593 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
 	<cmath>
 	"../IToken.hpp"
 	"../Parsable.hpp"
@@ -202,7 +205,7 @@
 
 1315343112 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordend.hpp
 
-1315343161 source:c:\users\marius\desktop\quellcodes\parser\src\tokenizer.cpp
+1315695308 source:c:\users\marius\desktop\quellcodes\parser\src\tokenizer.cpp
 	<queue>
 	<iostream>
 	<memory>

@@ -85,7 +85,9 @@ int main()
     cout << std::endl;
     cout << "\nlong long size:\t" << sizeof(long long) << " bytes; max:\t" << std::numeric_limits<long long>::max();
     cout << "\nlong size:\t" << sizeof(long) << " bytes; max:\t" << std::numeric_limits<long>::max();
-    cout << "\nint size:\t" << sizeof(int) << " bytes; max:\t" << std::numeric_limits<int>::max() << std::endl;
+    cout << "\nint size:\t" << sizeof(int) << " bytes; max:\t" << std::numeric_limits<int>::max();
+    cout << "\nCountedReference size:\t" << sizeof(Internal::CountedReference) << " bytes";
+    cout << "\nObject size:\t" << sizeof(Internal::Types::Object) << " bytes\n";
     do
     {
         cout << "\nEnter mathematical expression:" << endl;

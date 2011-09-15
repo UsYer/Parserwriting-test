@@ -32,7 +32,7 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
 
     for( auto ch = expression.cbegin(); ch < expression.cend(); /*++ch*/ )//intentionally used less than, because otherwise we'd get some strange results
     {
-        if( std::isalpha(*ch) || '_' == *ch )
+        if( std::isalpha(*ch) || '_' == *ch || '@' == *ch ) //list of characters allowed in an identifier. For std::isalpha see: http://www.cplusplus.com/reference/clibrary/cctype/
         {
             ParseOperator();
             FlushNumBuffer(DecimalNumber);
@@ -41,7 +41,7 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
             {
                 OperatorBuffer += *ch;
                 ++ch;
-            } while( ch != expression.cend() && (std::isalnum(*ch) || *ch == '_'));
+            } while( ch != expression.cend() && (std::isalnum(*ch) || '_' == *ch || '@' == *ch));
             LastChar = LastCharType::Unrecognized;
 #ifdef DEBUG
             std::cout << "Unrecognized: " << OperatorBuffer<< std::endl;

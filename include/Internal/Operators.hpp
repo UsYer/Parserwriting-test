@@ -514,6 +514,15 @@ protected:
         {
             return false;
         }
+        bool operator()(const Reference& R)const
+        {
+            if( !R.IsNull() )
+            { //check whether the table has an @-specialmethod which makes it callable
+                if( (*R).Contains("@Call") )
+                    return boost::apply_visitor(*this, (*R)["@Call"]); //recursivly check whether @Call is a function
+            }
+            return false;
+        }
         bool operator()(const std::shared_ptr<IFunction>& Func) const
         {
             return *Func != "__ALSM__";
@@ -568,7 +577,12 @@ class OpeningBracketFuncCall : public OpeningBracket
             if( R.IsNull() )
                 throw Exceptions::NullReferenceException("Calling a nullreference");
             else
-                throw Exceptions::TypeException("Expected function; Is table");
+            { //check whether the table has an @-specialmethod which makes it callable
+                if( (*R).Contains("@Call") )
+                    boost::apply_visitor(*this, (*R)["@Call"]);//recursivly check whether @Call is a function
+                else
+                    throw Exceptions::TypeException("Expected function; Is table");
+            }
         }
         void operator()(NullReference)const
         {
@@ -692,7 +706,11 @@ class ClosingBracket : public IOperator
             if( R.IsNull() )
                 throw Exceptions::NullReferenceException("Calling a nullreference");
             else
+            {    //check whether the table has an @-specialmethod which makes it callable
+                if( (*R).Contains("@Call") )
+                    return boost::apply_visitor(*this, (*R)["@Call"]); //recursivly check whether @Call is a function
                 throw Exceptions::TypeException("Expected function; Is table");
+            }
         }
         std::shared_ptr<IFunction> operator()(NullReference)const
         {
