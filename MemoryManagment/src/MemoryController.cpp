@@ -62,7 +62,8 @@ CountedReference MemoryController::Save(const Value& Val)
         Id = Internal->LastIdNumber++;
     }
     Internal->Memory.push_back(Val);
-    auto it = Internal->Memory.end()--;
+    auto it = Internal->Memory.end(); //get iterator to the invalid element after the last one
+    --it;//now to the last valid element
 // NOTE (Marius#1#): Is there a better way to get the iterator to the newly inserted element?
 //    std::advance(it, Internal->Memory.size()-1);
     Internal->AddressMap[Id] = it;
