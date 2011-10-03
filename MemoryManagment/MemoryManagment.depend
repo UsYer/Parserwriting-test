@@ -22,15 +22,16 @@
 	"include/Reference.hpp"
 	<vector>
 
-1260226890 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\main.cpp
+1316964200 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\main.cpp
 	<iostream>
+	"../include/Internal/Table.hpp"
 	"include/MemoryController.hpp"
 	"include/Reference.hpp"
 	<vector>
 
 1315228416 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\memorycontroller.hpp
 
-1298332639 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
+1315346231 c:\users\marius\desktop\quellcodes\parser\memorymanagment\include\reference.hpp
 
 1275847059 source:c:\users\marius\desktop\quellcodes\parser\memorymanagment\src\memorycontroller.cpp
 	"../../include/Internal/Table.hpp"
@@ -56,9 +57,9 @@
 	<memory>
 	"Tokens.hpp"
 
-1314727681 c:\users\marius\desktop\quellcodes\parser\include\internal\tokens.hpp
+1315343112 c:\users\marius\desktop\quellcodes\parser\include\internal\tokens.hpp
 	<boost/variant.hpp>
-	<boost/shared_ptr.hpp>
+	<memory>
 	"../../MemoryManagment/include/MemoryController.hpp"
 	"../../MemoryManagment/include/Reference.hpp"
 	"../Parsable.hpp"

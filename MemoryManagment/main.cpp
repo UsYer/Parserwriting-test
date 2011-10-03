@@ -1,4 +1,5 @@
 #include <iostream>
+#include "../include/Internal/Table.hpp"
 #include "include/MemoryController.hpp"
 #include "include/Reference.hpp"
 #include <vector>
@@ -7,18 +8,18 @@ int main()
 {
     MemoryController MC;
     {
-    CountedReference Foo(MC.Save(1ll));
+    CountedReference Foo(MC.Save(Internal::Types::Table()));
     MC.Print();
     std::cin.get();
-    Foo = MC.Save(1ll);
+    Foo = MC.Save(Internal::Types::Table());
     MC.Print();
     std::cin.get();
-    Foo = MC.Save(2ll);
+    Foo = MC.Save(Internal::Types::Table());
     MC.Print();
     std::cin.get();
     }
 
-    std::vector<CountedReference> Refs = {MC.Save(56ll), MC.Save(158ll), MC.Save(333ll)};
+    std::vector<CountedReference> Refs = {MC.Save(Internal::Types::Table()), MC.Save(Internal::Types::Table()), MC.Save(Internal::Types::Table())};
 
     MC.Print();
     //Test if the refcount increases properly:
@@ -48,7 +49,7 @@ int main()
     //Test if the value gets properly decrefed when a WeakRef is assigned to a CountedRef
     std::cout << "Saving a new value and assigning a Weakref to the newly created CountedRef. The refcount of the new value should first be one...\n";
     std::cin.get();
-    CountedReference Ref3 = MC.Save(123ll);
+    CountedReference Ref3 = MC.Save(Internal::Types::Table());
     MC.Print();
     assert(MC.GetRefCount(Ref3) == 1);
     std::cin.get();
@@ -72,10 +73,10 @@ int main()
     std::cin.get();
     std::cout << "Testint assignments:\n";
     MC.Print();
-    CountedReference Ref6 = Ref4 = MC.Save(5ll);
+    CountedReference Ref6 = Ref4 = MC.Save(Internal::Types::Table());
     MC.Print();
     std::cin.get();
-    Ref6 = MC.Save(8ll);
+    Ref6 = MC.Save(Internal::Types::Table());
     MC.Print();
     std::cin.get();
     //*

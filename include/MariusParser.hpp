@@ -8,6 +8,20 @@
 #include "Function.hpp"
 #include "Internal/BindFunc.hpp"
 #include "Exceptions.hpp"
+
+struct BenchData
+{
+    BenchData(unsigned long long TT = 0, unsigned long long TP = 0, unsigned long long TE = 0, unsigned long long TS = 0, unsigned long long Freq = 0):
+        TicksTokenize(TT),
+        TicksParse(TP),
+        TicksEval(TE),
+        TicksSum(TS),
+        Frequency(Freq)
+    {
+    }
+    unsigned long long TicksTokenize, TicksParse, TicksEval, TicksSum, Frequency;
+};
+
 namespace Internal{ namespace Types
 {
         class CallbackFunction;
@@ -39,7 +53,7 @@ public:
     {
         RegisterFunction(Internal::BindFunc(Name,Representation,Func));
     }
-    Types::Object Evaluate(const std::string& Input);
+    Types::Object Evaluate(const std::string& Input, BenchData* BD = 0);
 
     ::Types::Function GetFunction(const std::string& Identifier) const;
     ::Types::Object GlobalScope();

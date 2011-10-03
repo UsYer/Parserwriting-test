@@ -112,7 +112,7 @@ struct MariusParser::Impl
     {
         return ::Types::Object(m_EC,m_GlobalScope);
     }
-    ::Types::Object Evaluate(const std::string& Input)
+    ::Types::Object Evaluate(const std::string& Input, BenchData* BD = 0)
     {
         //Even though all these components will be cleared as needed in the process they are also cleared here.
         //This is neccesary because an exception could be thrown anywhere while parsing and the later clear commands would not be issued
@@ -123,7 +123,7 @@ struct MariusParser::Impl
             //No-op. resetting Evalscope tp global scope
         LARGE_INTEGER start_ticks, ende_ticks, frequenz;
 
-        unsigned long tick_diff = 0;
+        unsigned long tick_sum = 0;
         start_ticks.QuadPart = 0;
         ende_ticks.QuadPart  = 0;
         QueryPerformanceFrequency(&frequenz);
@@ -136,9 +136,9 @@ struct MariusParser::Impl
         m_Tokenizer.Clear();
         QueryPerformanceCounter(&ende_ticks);
 
-        tick_diff = ende_ticks.QuadPart - start_ticks.QuadPart;
-        std::string Took("\nInput: " + Input + "\nTokenizing took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) +
-                         " ticks and " + boost::lexical_cast<std::string>((double)tick_diff / frequenz.QuadPart) + " ms\n");
+        auto tickTokenizing = tick_sum = ende_ticks.QuadPart - start_ticks.QuadPart;
+//        "Tokenizing took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) +
+//                         " ticks and " + boost::lexical_cast<std::string>((double)tick_sum / frequenz.QuadPart) + " ms\n");
     #ifdef DEBUG
         foreach(Internal::UnparsedToken& Tok, UTs)
         {
@@ -155,8 +155,9 @@ struct MariusParser::Impl
         m_Parser.Parse(UTs);
         QueryPerformanceCounter(&ende_ticks);
 
-        Took += "Parsing took:\t\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
-        tick_diff += ende_ticks.QuadPart - start_ticks.QuadPart;
+//        Took += "Parsing took:\t\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
+        auto tickParsing = ende_ticks.QuadPart - start_ticks.QuadPart;
+        tick_sum += tickParsing;
 
         auto Q = m_Parser.GetOutput();
         m_Parser.Clear();
@@ -174,13 +175,24 @@ struct MariusParser::Impl
         m_EC.EvalScope();
         QueryPerformanceCounter(&ende_ticks);
 
-        Took += "Evaluation took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
-        tick_diff += ende_ticks.QuadPart - start_ticks.QuadPart;
+//        Took += "Evaluation took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
+        auto tickEval = ende_ticks.QuadPart - start_ticks.QuadPart;
+        tick_sum += tickEval;
 
-        Took += "All took:\t\t" + boost::lexical_cast<std::string>(tick_diff) + " ticks"
-                " and " + boost::lexical_cast<std::string>((double)tick_diff / frequenz.QuadPart) + " ms\n";
-        std::cout << Took << std::endl;
+//        Took += "All took:\t\t" + boost::lexical_cast<std::string>(tick_sum) + " ticks"
+//                " and " + boost::lexical_cast<std::string>((double)tick_sum / frequenz.QuadPart) + " ms\n";
 
+        std::cout << "\ninput: " << Input << " took:\n";
+        std::cout << "Tokenizing:\t" << tickTokenizing << "\nParsing:\t" << tickParsing
+                  << "\nEval:\t\t" << tickEval << "\nAll:\t\t" << tick_sum << "\n";
+        if( BD )
+        {
+            BD->TicksTokenize = tickTokenizing;
+            BD->TicksParse = tickParsing;
+            BD->TicksEval = tickEval;
+            BD->TicksSum = tick_sum;
+            BD->Frequency = frequenz.QuadPart;
+        }
         if( !m_EC.Stack.Empty() )
         {
             std::cout << "\nResult: " << Internal::Utilities::PrintValueNoThrow(m_EC,m_EC.Stack.Top()) << std::endl;
@@ -235,7 +247,7 @@ void MariusParser::RegisterFunction(const std::string& Name, const std::string& 
 {
     return m_Impl->GlobalScope();
 }
-::Types::Object MariusParser::Evaluate(const std::string& Input)
+::Types::Object MariusParser::Evaluate(const std::string& Input, BenchData* BD)
 {
-    return m_Impl->Evaluate(Input);
+    return m_Impl->Evaluate(Input, BD);
 }
