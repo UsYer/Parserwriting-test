@@ -150,7 +150,7 @@ void IFunction::SuppliedArguments(const Member& Args, int ArgCount)
             */
             auto IndexIt = (*ArgTable).IndexBegin();//passed arguments
             auto KeyIt = m_LocalScope.KeyBegin();//expected parameter
-            for( unsigned i = 0; i < ArgCount; std::advance(KeyIt,1), std::advance(IndexIt,1), i++ )
+            for( int i = 0; i < ArgCount; std::advance(KeyIt,1), std::advance(IndexIt,1), i++ )
             {
                 #ifdef DEBUG
                 std::cout << KeyIt->first << " = " << boost::apply_visitor(Utilities::PrintValueNoResolve(),IndexIt->second) << "\n";
