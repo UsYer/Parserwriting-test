@@ -30,7 +30,7 @@ public:
 //    Reference() = delete;
     ///Default constructor for the creation of a null reference
     Reference():
-        m_MC(0)
+        m_MC(nullptr)
     {
     }
     Reference( const Reference& Other );
@@ -47,14 +47,15 @@ public:
     }
     virtual ~Reference();
 protected:
-    void Swap(Reference& Other);
-    MemoryController* m_MC;
-    unsigned long m_ID;
     Reference( MemoryController* MC, unsigned long ID ):
         m_MC(MC),
         m_ID(ID)
     {
     }
+    void Swap(Reference& Other);
+
+    MemoryController* m_MC;
+    unsigned long m_ID;
 private:
 };
 
@@ -67,14 +68,14 @@ public:
     CountedReference( const CountedReference& Other );
     //Nulled CountedReferences have always be created explicitly:
     CountedReference( NullReference ):
-        Reference(0,0)
+        Reference(nullptr,0)
     {}
     CountedReference& operator=( Reference Other );
     CountedReference& operator=( CountedReference Other );
     CountedReference& operator=( NullReference )
     {
         DecRef();
-        m_MC = 0;
+        m_MC = nullptr;
         return *this;
     }
     virtual ~CountedReference();
