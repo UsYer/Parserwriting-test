@@ -9,7 +9,7 @@ class RuntimeFunc: public IFunction
     RuntimeFunc(const std::string& Name, const std::string& Representation, const std::vector<std::string>& Args, unsigned ReturnCount):
         IFunction(Name, Representation, Args.size(), ReturnCount)
     {
-        foreach( const std::string& Arg, Args )
+        for( const std::string& Arg: Args )
         {
             m_LocalScope[Arg];
         }

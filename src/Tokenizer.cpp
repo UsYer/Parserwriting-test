@@ -4,8 +4,6 @@
 #include <boost/variant.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
-#define foreach BOOST_FOREACH
 #include "../include/Internal/IOperator.hpp"
 //#include "../include/Internal/IToken.hpp"
 #include "../include/Internal/Tokenizer.hpp"
@@ -96,7 +94,7 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
             continue;
         }*/
         else if( std::isspace(*ch) )
-        {   //Ende eines zusammenhängendes Zeichens erreicht
+        {   //Ende eines zusammenhÃ¤ngendes Zeichens erreicht
             ParseOperator();
             FlushNumBuffer(DecimalNumber);
             DecimalNumber = false;
@@ -112,9 +110,9 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
         DecimalNumber = false;
         OperatorBuffer += *ch;
         ++ch;
-        if( LastChar != LastCharType::Start && LastChar != LastCharType::None) //Am Anfang dürfen wir nicht gleich auf Unrecognized schalten, da MinusToken ansonsten nicht rausfinden könnte, ob das Minus am Anfang und somit unär ist
+        if( LastChar != LastCharType::Start && LastChar != LastCharType::None) //Am Anfang dÃ¼rfen wir nicht gleich auf Unrecognized schalten, da MinusToken ansonsten nicht rausfinden kÃ¶nnte, ob das Minus am Anfang und somit unÃ¤r ist
             LastChar = LastCharType::Unrecognized; //The actual char is not yet recognized
-    } //foreach
+    }
     ParseOperator();
     FlushNumBuffer(DecimalNumber);
     return OutputQueue;

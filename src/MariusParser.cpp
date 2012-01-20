@@ -112,15 +112,15 @@ struct MariusParser::Impl
     {
         return ::Types::Object(m_EC,m_GlobalScope);
     }
-    ::Types::Object Evaluate(const std::string& Input, BenchData* BD = 0)
+    ::Types::Object Evaluate(const std::string& Input, BenchData* BD = nullptr)
     {
         //Even though all these components will be cleared as needed in the process they are also cleared here.
-        //This is neccesary because an exception could be thrown anywhere while parsing and the later clear commands would not be issued
+        //This is necessary because an exception could be thrown anywhere while parsing and the later clear commands would not be issued
         m_Tokenizer.Clear();
         m_Parser.Clear();
         m_EC.Stack.Clear();
         while( m_EC.EndScope() );
-            //No-op. resetting Evalscope tp global scope
+            //No-op. resetting Evalscope to global scope
         LARGE_INTEGER start_ticks, ende_ticks, frequenz;
 
         unsigned long tick_sum = 0;
@@ -140,7 +140,7 @@ struct MariusParser::Impl
 //        "Tokenizing took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) +
 //                         " ticks and " + boost::lexical_cast<std::string>((double)tick_sum / frequenz.QuadPart) + " ms\n");
     #ifdef DEBUG
-        foreach(Internal::UnparsedToken& Tok, UTs)
+        for(Internal::UnparsedToken& Tok : UTs)
         {
             std::cout << boost::apply_visitor(Internal::Utilities::PrintValueNoResolve(),Tok) << " ";
         }
@@ -182,9 +182,6 @@ struct MariusParser::Impl
 //        Took += "All took:\t\t" + boost::lexical_cast<std::string>(tick_sum) + " ticks"
 //                " and " + boost::lexical_cast<std::string>((double)tick_sum / frequenz.QuadPart) + " ms\n";
 
-        std::cout << "\ninput: " << Input << " took:\n";
-        std::cout << "Tokenizing:\t" << tickTokenizing << "\nParsing:\t" << tickParsing
-                  << "\nEval:\t\t" << tickEval << "\nAll:\t\t" << tick_sum << "\n";
         if( BD )
         {
             BD->TicksTokenize = tickTokenizing;
@@ -199,13 +196,13 @@ struct MariusParser::Impl
             ::Types::Object Result(m_EC,Internal::Utilities::Resolve(m_EC,m_EC.Stack.Pop()));
             m_EC.Stack.Clear();
             while( m_EC.EndScope() );
-            //No-op. resetting Evalscope tp global scope
+            //No-op. resetting Evalscope to global scope
             return Result;
         }
         else
         {
             while( m_EC.EndScope() );
-            //No-op. resetting Evalscope tp global scope
+            //No-op. resetting Evalscope to global scope
             return ::Types::Object(m_EC,Internal::NullReference());
         }
     }

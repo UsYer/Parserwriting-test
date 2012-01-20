@@ -1,8 +1,6 @@
 #ifndef EVALUATIONCONTEXT_HPP_INCLUDED
 #define EVALUATIONCONTEXT_HPP_INCLUDED
 #include <stack>
-#include <boost/foreach.hpp>
-#define foreach BOOST_FOREACH
 #include "Types.hpp"
 namespace Exceptions
 {

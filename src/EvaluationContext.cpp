@@ -70,7 +70,7 @@ void EvaluationContext::EvalScope()
             return;
         Evaluator Ev(*this);
 
-        foreach(Token& T,*m_ScopeInstructions.back().second)
+        for(Token& T : *m_ScopeInstructions.back().second)
         {
         #ifdef DEBUG
             std::cout << boost::apply_visitor(Utilities::PrintValueNoResolve(),T) << " ";

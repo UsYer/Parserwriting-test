@@ -5,9 +5,7 @@
 #include "../MemoryManagment/include/MemoryController.hpp"
 #include "../MemoryManagment/include/Reference.hpp"
 #include "../include/Internal/Parser.hpp"
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
-#define foreach BOOST_FOREACH
 #include "../include/Internal/FuncCaller.hpp"
 #include "../include/Internal/Get.hpp"
 #include "../include/Internal/Is.hpp"
