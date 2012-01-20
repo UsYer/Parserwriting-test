@@ -103,7 +103,13 @@ int main()
         }
         try
         {
-            MP.Evaluate(Input);
+            BenchData benchData;
+
+            MP.Evaluate(Input,&benchData);
+
+            std::cout << "\ninput: " << Input << " took:\n";
+            std::cout << "Tokenizing:\t" << benchData.TicksTokenize << "\nParsing:\t" << benchData.TicksParse
+                      << "\nEval:\t\t" << benchData.TicksEval << "\nAll:\t\t" << benchData.TicksSum << "\n";
         }
         catch(Exceptions::ParseError& e)
         {

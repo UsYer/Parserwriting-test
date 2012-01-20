@@ -1,9 +1,6 @@
 #ifndef MARIUSPARSER_H
 #define MARIUSPARSER_H
 #define BOOST_VARIANT_LIMIT_TYPES 8
-//#include "Internal/Parser.hpp"
-//#include "Internal/Tokenizer.hpp"
-//#include "Internal/Utilities.hpp"
 #include "Object.hpp"
 #include "Function.hpp"
 #include "Internal/BindFunc.hpp"
@@ -53,7 +50,7 @@ public:
     {
         RegisterFunction(Internal::BindFunc(Name,Representation,Func));
     }
-    Types::Object Evaluate(const std::string& Input, BenchData* BD = 0);
+    Types::Object Evaluate(const std::string& Input, BenchData* BD = nullptr);
 
     ::Types::Function GetFunction(const std::string& Identifier) const;
     ::Types::Object GlobalScope();
