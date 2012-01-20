@@ -102,7 +102,7 @@ struct DoCall
         EC.EvalStack.push_back(Marshal::Value<ReturnType>::ConvertIn(F(A...),EC));
     }
 };
-///specialisation for a function returning void
+///specialization for a function returning void
 template<>
 struct DoCall<void>
 {
@@ -181,10 +181,43 @@ public:
 private:
     T Function;
 };
+template<typename T, typename ReturnType, typename ClassType, typename... Args>
+class UserDefMemberFunction : public IFunction
+{
+public:
+    virtual ~UserDefMemberFunction() {}
+    UserDefMemberFunction(const std::string& Name, const std::string& Representation, T Func):
+        IFunction(Name, Representation, sizeof...(Args), ReturnCounter<ReturnType>::Value),
+        Function(Func)
+    {
+    }
+    void Eval(EvaluationContext& EC)
+    {
+        try
+        {
+            VariadicInvoker<Args...>::Invoke(Function,EC,IFunction::m_LocalScope);
+        }
+        catch( Exceptions::RuntimeException& Ex)
+        {
+            EC.Throw(Ex);
+        }
+        catch(std::logic_error& E)
+        {
+            throw std::logic_error("In function \"" + m_Representation + "\" " + E.what());
+        }
+    }
+private:
+    T Function;
+};
 template<typename T,typename... U>
 std::shared_ptr<IFunction> BindFunc(const std::string& Name, const std::string& Representation, T (*UserFunc)(U...) )
 {
     return std::make_shared<UserDefFunction<T (*)(U...),T,U...>>(Name, Representation,UserFunc);
+}
+template<typename ReturnType, typename ClassType, typename... ArgTypes>
+std::shared_ptr<IFunction> BindMemberFunc(const std::string& Name, const std::string& Representation, ReturnType (ClassType::*UserFunc)(ArgTypes...) )
+{
+    return std::make_shared<UserDefMemberFunction<ReturnType (ClassType::*)(ArgTypes...),ReturnType,ClassType,ArgTypes...>>(Name, Representation,UserFunc);
 }
 }//namespace Internal
 #endif // BINDFUNC_HPP_INCLUDED
