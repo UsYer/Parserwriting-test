@@ -177,10 +177,27 @@
 					<Add library="Winmm" />
 				</Linker>
 			</Target>
+			<Target title="Debug clang 64bit">
+				<Option output="bin\Debug_Clang\Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug_Clang_64\" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-std=c++0x" />
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+					<Add library="Winmm" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add option="-DPLAT_WIN" />
 			<Add directory="$(#boost)" />
 		</Compiler>
 		<Unit filename="MemoryManagment\include\MemoryController.hpp" />
@@ -212,6 +229,7 @@
 		<Unit filename="include\Internal\Operators.hpp" />
 		<Unit filename="include\Internal\ParseUtilities.hpp" />
 		<Unit filename="include\Internal\Parser.hpp" />
+		<Unit filename="include\Internal\Plat_Win\RedirectIO.hpp" />
 		<Unit filename="include\Internal\RuntimeFunc.hpp" />
 		<Unit filename="include\Internal\Stack.hpp" />
 		<Unit filename="include\Internal\StateSaver.hpp" />
@@ -232,6 +250,7 @@
 			<Option target="Release TDM-64 64bit" />
 			<Option target="Debug mingw-w64 4.6 64bit" />
 			<Option target="Release mingw-w64 4.6 64bit" />
+			<Option target="Debug clang 64bit" />
 		</Unit>
 		<Unit filename="src\EvaluationContext.cpp" />
 		<Unit filename="src\Functions.cpp" />
@@ -258,7 +277,7 @@
 			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
 				<comment_style block="0" line="2" />
-				<doxyfile_project project_number="2.1.2393" use_auto_version="1" />
+				<doxyfile_project project_number="2.3.2574" use_auto_version="1" />
 				<doxyfile_build />
 				<doxyfile_warnings />
 				<doxyfile_output />

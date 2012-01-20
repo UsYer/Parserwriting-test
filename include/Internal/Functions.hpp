@@ -1,6 +1,9 @@
 #ifndef FUNCTIONS_HPP_INCLUDED
 #define FUNCTIONS_HPP_INCLUDED
 #include <iostream>
+#ifdef PLAT_WIN
+#include "Plat_Win/RedirectIO.hpp"
+#endif
 namespace Internal
 {
 class TypeFunc : public IFunction
@@ -167,20 +170,11 @@ public:
     }
     void Eval(EvaluationContext& EC)
     {
+        static bool callonce = Platform::RedirectIOToConsole();
         for( unsigned i = 0; i < m_SuppliedArguments; i++ )
         {
-            std::cout << Utilities::PrintValue(EC,Types::Object(IFunction::GetArg(i))) << " ";
+            std::cerr << Utilities::PrintValue(EC,Types::Object(IFunction::GetArg(i))) << " ";
         }
-//        if( m_SuppliedArguments > 1 )
-//        {
-//            const auto& ArgTable = *boost::apply_visitor(Utilities::Get<CountedReference>(),m_LocalScope[0]);
-//            for( auto it = ArgTable.IndexBegin(); it != ArgTable.IndexEnd(); it++)
-//                std::cout << Utilities::PrintValue(EC,Types::Object(it->second)) << " ";
-//        }
-//        else if ( m_SuppliedArguments == 1 )
-//        {
-//            std::cout << Utilities::PrintValue(EC,Types::Object(m_LocalScope[0]));
-//        }
         std::cout << std::endl;
     }
 };
