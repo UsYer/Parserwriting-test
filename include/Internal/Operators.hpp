@@ -456,7 +456,7 @@ class TableOp : public IOperator
             {
                 auto it = (*Ref).Find("__ARGCOUNT__");
                 if( it != (*Ref).KeyEnd() )
-                    boost::get<long long&>((*Ref)["__ARGCOUNT__"]) += 1ll;
+                    boost::get<long long&>(it->second) += 1ll;
                 else
                 {//table declared outside the funccall, treat it as one argument
                     Types::Table Tab;

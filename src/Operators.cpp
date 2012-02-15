@@ -65,7 +65,47 @@ struct DoAssignment : public boost::static_visitor<Member>
         throw Exceptions::NullReferenceException("Assignment to a nullreference");
     }
 };
-
+struct DoNamedAssignment : public boost::static_visitor<Member>
+{
+    EvaluationContext& m_EC;
+    const ResolvedToken& m_RHS;
+    DoNamedAssignment(EvaluationContext& EC, const ResolvedToken& RHS):
+        m_EC(EC),
+        m_RHS(RHS)
+    {
+    }
+    Member operator()(long long val) const
+    {
+        throw std::logic_error("Lhs has to be an Identifier; Is long");
+    }
+    CountedReference operator()(double val)const
+    {
+        throw std::logic_error("Lhs has to be an Identifier; Is double");
+    }
+    Member operator()(const std::string& s)const
+    {
+        Types::Table NamedArgs;
+        Types::Table Args;
+        Args[s] = m_RHS;
+        NamedArgs["__NAMEDARGS__"] = m_EC.MC.Save(Args);
+        return m_EC.MC.Save(NamedArgs);
+    }
+    CountedReference operator()(const std::shared_ptr<IFunction>& op)const
+    {
+        throw std::logic_error("Lhs has to be an Identifier; Is function ");
+    }
+    Member operator()(const CountedReference& Ref)const
+    {
+        if( Ref.IsNull() )
+            throw Exceptions::NullReferenceException("Assignment to a nullreference");
+        throw std::logic_error("Lhs has to be an Identifier; Is table ");
+    }
+    Member operator()(const NullReference&)const
+    {
+        throw Exceptions::NullReferenceException("Assignment to a nullreference");
+    }
+};
+// TODO (Marius#8#): Prevent more than one assignment in a row like "f(arg=result=1)"
 void AssignmentOp::Eval(EvaluationContext& EC)
 {
     Types::Object RHS = EC.EvalStack.back();
@@ -74,5 +114,8 @@ void AssignmentOp::Eval(EvaluationContext& EC)
     EC.EvalStack.pop_back();
     ResolvedToken RHSToken(Utilities::Resolve(EC,RHS));
     EC.This = LHS.This();
-    EC.EvalStack.push_back(Types::Object(LHS.Visit(DoAssignment(EC,RHSToken))));
+    if( EC.Signal(SignalType::FuncCall) )
+        EC.Stack.Push(LHS.Visit(DoNamedAssignment(EC,RHSToken)));
+    else
+        EC.Stack.Push(LHS.Visit(DoAssignment(EC,RHSToken)));
 }
