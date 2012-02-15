@@ -1,10 +1,7 @@
 #include "../MemoryManagment/include/MemoryController.hpp"
 #include "../MemoryManagment/include/Reference.hpp"
-//#include "../include/IFunction.hpp"
 #include "../include/Internal/Table.hpp"
 #include <vector>
-#include <map>
-//#include <sstream>
 using Internal::Member;
 using namespace Internal::Types;
 struct Table::Implementation
@@ -42,7 +39,7 @@ struct Table::Implementation
         else
             return m_IndexData[Index];
     }
-    std::map<std::string,Member> m_AssocData;
+    std::unordered_map<std::string,Member> m_AssocData; // FIXME (Marius#9#): unordered_map doesn't keep them in the order the members were added. Leads to function args that are applied in the wrong order
     std::map<unsigned,Member> m_IndexData;
 };
 
@@ -62,7 +59,7 @@ Table::Table(const Table& Other)
 Table::Table( Table&& Other )
 {
     Impl = Other.Impl;
-    Other.Impl = 0;
+    Other.Impl = nullptr;
 }
 Table& Table::operator=(Table Other)
 {

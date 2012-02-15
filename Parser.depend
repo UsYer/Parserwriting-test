@@ -9,8 +9,9 @@
 	"../include/Exceptions.hpp"
 	<iostream>
 
-1308040764 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
+1327096236 c:\users\marius\desktop\quellcodes\parser\include\internal\table.hpp
 	<map>
+	<unordered_map>
 	<string>
 	<memory>
 	"Tokens.hpp"
@@ -35,14 +36,13 @@
 	"../../include/Exceptions.hpp"
 	"../../include/Internal/Table.hpp"
 
-1317656131 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
+1328375008 source:c:\users\marius\desktop\quellcodes\parser\main.cpp
 	<iostream>
-	"version.h"
 	"include/MariusParser.hpp"
 
-1326665990 c:\users\marius\desktop\quellcodes\parser\version.h
+1328570894 c:\users\marius\desktop\quellcodes\parser\version.h
 
-1326666862 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
+1328374992 c:\users\marius\desktop\quellcodes\parser\include\mariusparser.hpp
 	"Object.hpp"
 	"Function.hpp"
 	"Internal/BindFunc.hpp"
@@ -133,10 +133,12 @@
 	"../include/Internal/IFunction.hpp"
 	"../include/Internal/Utilities.hpp"
 
-1319982113 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
+1328570893 source:c:\users\marius\desktop\quellcodes\parser\src\mariusparser.cpp
 	<iostream>
 	<windows.h>
+	<chrono>
 	<boost/lexical_cast.hpp>
+	"../version.h"
 	"../include/MariusParser.hpp"
 	"../include/Internal/Parser.hpp"
 	"../include/Internal/Tokenizer.hpp"
@@ -151,7 +153,7 @@
 	"../include/Internal/KeywordNull.hpp"
 	"../include/Internal/KeywordReturn.hpp"
 
-1316114993 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
+1327095135 c:\users\marius\desktop\quellcodes\parser\include\internal\operators.hpp
 	<cmath>
 	"../IToken.hpp"
 	"../Parsable.hpp"
@@ -165,7 +167,7 @@
 	<iostream>
 	"Plat_Win/RedirectIO.hpp"
 
-1315339512 source:c:\users\marius\desktop\quellcodes\parser\src\operators.cpp
+1327095164 source:c:\users\marius\desktop\quellcodes\parser\src\operators.cpp
 	<memory>
 	<iostream>
 	"../MemoryManagment/include/MemoryController.hpp"
@@ -216,12 +218,11 @@
 	"../include/Internal/Tokenizer.hpp"
 	"../include/Internal/Types.hpp"
 
-1308040764 source:c:\users\marius\desktop\quellcodes\parser\src\table.cpp
+1327096274 source:c:\users\marius\desktop\quellcodes\parser\src\table.cpp
 	"../MemoryManagment/include/MemoryController.hpp"
 	"../MemoryManagment/include/Reference.hpp"
 	"../include/Internal/Table.hpp"
 	<vector>
-	<map>
 
 1282168937 source:c:\users\marius\parser\memorymanagment\src\memorycontroller.cpp
 	"../../include/Internal/Table.hpp"
@@ -469,7 +470,7 @@
 	"RuntimeFunc.hpp"
 	"ParseUtilities.hpp"
 
-1317656585 c:\users\marius\desktop\quellcodes\parser\include\internal\runtimefunc.hpp
+1327096662 c:\users\marius\desktop\quellcodes\parser\include\internal\runtimefunc.hpp
 
 1315339512 c:\users\marius\desktop\quellcodes\parser\include\internal\keywordtry.hpp
 

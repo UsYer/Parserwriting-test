@@ -1,6 +1,7 @@
 #ifndef TABLE_H
 #define TABLE_H
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <memory>
 #include "Tokens.hpp"
@@ -12,9 +13,9 @@ namespace Types
 class Table
 {
     public:
-        typedef std::map<std::string,Member>::iterator KeyIterator;
+        typedef std::unordered_map<std::string,Member>::iterator KeyIterator;
         typedef std::map<unsigned,Member>::iterator IndexIterator;
-        typedef std::map<std::string,Member>::const_iterator ConstKeyIterator;
+        typedef std::unordered_map<std::string,Member>::const_iterator ConstKeyIterator;
         typedef std::map<unsigned,Member>::const_iterator ConstIndexIterator;
         /** Default constructor */
         Table();

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "version.h"
+//#include "version.h"
 #include "include/MariusParser.hpp"
 /* TODO (Marius#9#): Implement marshaling of userside types to internal types.
 Like extracting the actual value of a userside Object.
@@ -76,7 +76,7 @@ int main()
     MP.RegisterFunction("bla","NBRT",&NotBuiltinReturnType);
     MP.RegisterFunction("","TRM",TesterReturnMarshal);
 
-    cout << "Version: " << AutoVersion::FULLVERSION_STRING;
+    cout << "Version: " << MariusParser::VersionData::FullversionString;
     #if (defined(_WIN64) || defined(WIN64) || defined(__WIN64) || defined(__WIN64__)) && defined(__MINGW64__) && (defined(__x86_64) || defined(__x86_64__) || defined(__amd64) || defined(__amd64__))
     cout << " 64bit";
     #else
