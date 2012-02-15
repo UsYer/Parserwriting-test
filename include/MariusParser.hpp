@@ -28,6 +28,21 @@ class IToken;
 class MariusParser
 {
 public:
+    struct VersionData
+    {
+        static const char* Date;
+        static const char* Month;
+        static const char* Year;
+        //Standard Version Type
+        static const long Major;
+        static const long Minor;
+        static const long Build;
+        static const long Revision;
+
+        //Miscellaneous Version Types
+        static const long BuildsCount;
+        static const char* FullversionString;
+    };
     /** Default constructor */
     MariusParser();
     MariusParser(const MariusParser&) = delete;

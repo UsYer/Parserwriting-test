@@ -1,6 +1,8 @@
 #include <iostream>
 #include <windows.h>
+#include <chrono>
 #include <boost/lexical_cast.hpp>
+#include "../version.h"
 #include "../include/MariusParser.hpp"
 #include "../include/Internal/Parser.hpp"
 #include "../include/Internal/Tokenizer.hpp"
@@ -14,6 +16,19 @@
 #include "../include/Internal/KeywordCatch.hpp"
 #include "../include/Internal/KeywordNull.hpp"
 #include "../include/Internal/KeywordReturn.hpp"
+
+const char* MariusParser::VersionData::Date = AutoVersion::DATE;
+const char* MariusParser::VersionData::Month = AutoVersion::MONTH;
+const char* MariusParser::VersionData::Year = AutoVersion::YEAR;
+	//Standard Version Type
+const long MariusParser::VersionData::Major = AutoVersion::MAJOR;
+const long MariusParser::VersionData::Minor = AutoVersion::MINOR;
+const long MariusParser::VersionData::Build = AutoVersion::BUILD;
+const long MariusParser::VersionData::Revision = AutoVersion::REVISION;
+
+	//Miscellaneous Version Types
+const long MariusParser::VersionData::BuildsCount = AutoVersion::BUILDS_COUNT;
+const char* MariusParser::VersionData::FullversionString = AutoVersion::FULLVERSION_STRING;
 
 struct MariusParser::Impl
 {
@@ -131,14 +146,15 @@ struct MariusParser::Impl
     #ifdef DEBUG
         std::cout << "--- Tokenizing ---" << std::endl;
     #endif
+        auto startTicks = std::chrono::high_resolution_clock::now();
         QueryPerformanceCounter(&start_ticks);
         std::deque<Internal::UnparsedToken> UTs = m_Tokenizer.Tokenize(Input);
         m_Tokenizer.Clear();
         QueryPerformanceCounter(&ende_ticks);
-
+        auto endTicks = std::chrono::high_resolution_clock::now();
+        std::cout << "c++11 high_resolution_clock: " << (endTicks - startTicks).count() << "\n";
         auto tickTokenizing = tick_sum = ende_ticks.QuadPart - start_ticks.QuadPart;
-//        "Tokenizing took:\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) +
-//                         " ticks and " + boost::lexical_cast<std::string>((double)tick_sum / frequenz.QuadPart) + " ms\n");
+
     #ifdef DEBUG
         for(Internal::UnparsedToken& Tok : UTs)
         {
