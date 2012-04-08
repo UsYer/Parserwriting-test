@@ -4,6 +4,8 @@
 #include <vector>
 using Internal::Member;
 using namespace Internal::Types;
+using namespace boost;
+
 struct Table::Implementation
 {
     const Member Null;
@@ -13,18 +15,22 @@ struct Table::Implementation
     }
     ~Implementation()
     {}
-    Member& GetMemberViaIdentifer(const std::string& Identifer)
+    Member& GetMemberViaIdentifer(const std::string& Identifier)
     {
-        auto it = m_AssocData.find(Identifer);
-        if(it == m_AssocData.end())
+        auto& view = get<key>(m_AssocData);
+        auto it = view.find(Identifier);
+//        auto it = m_AssocData.find(Identifier);
+//        if(it == m_AssocData.end())
+        if(it == view.end())
         {
-            CountedReference Null((NullReference()));
-            //m_AssocData[Identifer] = Null;
-            //return Null;
-            return m_AssocData[Identifer] = Null;
+            CountedReference Null = (NullReference());
+//            return m_AssocData[Identifer] = Null;
+            auto result = m_AssocData.insert(Item(Identifier,Null));
+            return result.first->second;//insert returns a pair<iterator,bool> but we disregard the bool type since we already know that there is no conflicting item already present
         }
         else
-            return m_AssocData[Identifer];
+            return it->second;
+//            return m_AssocData[Identifier];
     }
     Member& GetMemberViaIndex(unsigned int Index)
     {
@@ -39,7 +45,8 @@ struct Table::Implementation
         else
             return m_IndexData[Index];
     }
-    std::unordered_map<std::string,Member> m_AssocData; // FIXME (Marius#9#): unordered_map doesn't keep them in the order the members were added. Leads to function args that are applied in the wrong order
+//    std::unordered_map<std::string,Member> m_AssocData; // FIXME (Marius#9#): unordered_map doesn't keep them in the order the members were added. Leads to function args that are applied in the wrong order
+    Table::AssocData m_AssocData;
     std::map<unsigned,Member> m_IndexData;
 };
 
@@ -91,7 +98,8 @@ const Member& Table::operator[](unsigned int Index) const
 }
 Member& Table::Add(const std::pair<std::string,Member>& KeyValue)
 {
-    return Impl->m_AssocData[KeyValue.first] = KeyValue.second;
+//    return Impl->m_AssocData[KeyValue.first] = KeyValue.second;
+    return Add(KeyValue.first,KeyValue.second);
 }
 unsigned int Table::Add(const Member& Value)
 {
@@ -100,15 +108,29 @@ unsigned int Table::Add(const Member& Value)
 }
 Member& Table::Add(const std::string& Key, const Member& Value)
 {
-    return Impl->m_AssocData[Key] = Value;
+//    return Impl->m_AssocData[Key] = Value;
+    auto& view = get<key>(Impl->m_AssocData);
+    auto it = view.find(Key);
+    if(it == view.end())
+    {
+        auto result = Impl->m_AssocData.insert(Item(Key,Value));
+        return result.first->second;
+    }
+    else
+    {
+        return (it->second = Value);
+        /*
+        view.modify(it,[&Value](Item& item){item.second = Value;});
+        */
+    }
 }
-/*inline*/ Table::KeyIterator Table::KeyBegin()
+Table::KeyIterator Table::KeyBegin()
 {
-    return Impl->m_AssocData.begin();
+    return get<key_seq>(Impl->m_AssocData).begin();
 }
-/*inline*/ Table::KeyIterator Table::KeyEnd()
+Table::KeyIterator Table::KeyEnd()
 {
-    return Impl->m_AssocData.end();
+    return get<key_seq>(Impl->m_AssocData).end();
 }
 /*inline*/ Table::IndexIterator Table::IndexBegin()
 {
@@ -120,11 +142,11 @@ Member& Table::Add(const std::string& Key, const Member& Value)
 }
 /*inline*/ Table::ConstKeyIterator Table::KeyBegin() const
 {
-    return Impl->m_AssocData.cbegin();
+    return get<key_seq>(Impl->m_AssocData).cbegin();
 }
 /*inline*/ Table::ConstKeyIterator Table::KeyEnd()const
 {
-    return Impl->m_AssocData.cend();
+    return get<key_seq>(Impl->m_AssocData).cend();
 }
 /*inline*/ Table::ConstIndexIterator Table::IndexBegin()const
 {
@@ -144,8 +166,8 @@ unsigned Table::IndexSize() const
 }
 bool Table::Contains(const std::string& Key) const
 {
-    auto it = Impl->m_AssocData.find(Key);
-    return it != Impl->m_AssocData.end();
+    auto& hashedView = get<key>(Impl->m_AssocData);
+    return hashedView.find(Key) != hashedView.end();
 }
 bool Table::Contains(unsigned int Index) const
 {
@@ -154,11 +176,41 @@ bool Table::Contains(unsigned int Index) const
 }
 Table::KeyIterator Table::Find(const std::string& Key) const
 {
-    return Impl->m_AssocData.find(Key);
+    auto KeyIt = get<key>(Impl->m_AssocData).find(Key);
+    return Impl->m_AssocData.project<key_seq>(KeyIt);
 }
 Table::IndexIterator Table::Find(unsigned int Index) const
 {
     return Impl->m_IndexData.find(Index);
+}
+void Table::ForEachKey(const std::function<void(Item&)>& ModifyFunc)
+{
+    auto& sequencedView = get<key_seq>(Impl->m_AssocData);
+    for( auto it = sequencedView.begin(), endIt = sequencedView.end(); it != endIt; std::advance(it,1) )
+    {
+        sequencedView.modify(it,ModifyFunc);
+    }
+}
+void Table::ForSomeKeys(unsigned HowMany, const std::function<void(Item&)>& ModifyFunc)
+{
+    auto& sequencedView = get<key_seq>(Impl->m_AssocData);
+    auto it = sequencedView.begin(), endIt = sequencedView.end();
+    for( unsigned i = 0; i < HowMany && it != endIt; std::advance(it,1), i++ )
+    {
+        sequencedView.modify(it,ModifyFunc);
+    }
+}
+bool Table::ModifyByKey(const std::string& Key, const std::function<void(Item&)>& ModifyFunc)
+{
+    return ModifyByKey(Find(Key), ModifyFunc);
+}
+bool Table::ModifyByKey(ConstKeyIterator KeyIt, const std::function<void(Item&)>& ModifyFunc)
+{
+    if( KeyIt != KeyEnd() )
+    {
+        return get<key_seq>(Impl->m_AssocData).modify(KeyIt, ModifyFunc);
+    }
+    return false;
 }
 void Table::Clear()
 {

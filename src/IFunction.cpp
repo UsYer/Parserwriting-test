@@ -55,11 +55,16 @@ struct ArgAssigner : public boost::static_visitor<long long>
                 goes on with the next arg
                 */
                 auto IndexIt = (*Ref).IndexBegin();//passed arguments
-                auto KeyIt = m_FuncScope.KeyBegin();//expected parameter
+                Types::Table::KeyIterator KeyIt = m_FuncScope.KeyBegin();//expected parameter
                 for( unsigned i = 0; i < ArgCount; std::advance(KeyIt,1), std::advance(IndexIt,1), i++ )
                 {
                     KeyIt->second = IndexIt->second;
                 }
+//                m_FuncScope.ForSomeKeys(ArgCount, [&IndexIt](Types::Table::Item& item)
+//                            {
+//                                item.second = IndexIt->second;
+//                                std::advance(IndexIt,1);
+//                            });
             }
             return ArgCount;
         }
@@ -83,7 +88,10 @@ struct ArgAssigner : public boost::static_visitor<long long>
         if( m_FuncScope.KeySize() == 0 ) //No named parameters means we have a nativ function, just put it in the Index area
             m_FuncScope[0] = Arg;
         else
-            m_FuncScope.KeyBegin()->second = Arg;
+        {
+          m_FuncScope.KeyBegin()->second = Arg;
+//            m_FuncScope.ForSomeKeys(1,[&Arg](Types::Table::Item& item){ item.second = Arg; });
+        }
     }
 };
 }
@@ -121,6 +129,7 @@ void IFunction::SuppliedArguments(const Member& Args, int ArgCount)
             std::cout << "runtime func, assigning: " << m_LocalScope.KeyBegin()->first << "=" << boost::apply_visitor(Utilities::PrintValueNoResolve(),Args) << "\n";
             #endif
             m_LocalScope.KeyBegin()->second = Args;
+//            m_LocalScope.ForSomeKeys(1,[&Args](Types::Table::Item& item){ item.second = Args; });
         }
     }
     else //more than one arg, read the values from the table inside Args
@@ -157,6 +166,14 @@ void IFunction::SuppliedArguments(const Member& Args, int ArgCount)
                 #endif
                 KeyIt->second = IndexIt->second;
             }
+//            m_LocalScope.ForSomeKeys(ArgCount, [&IndexIt](Types::Table::Item& item)
+//                        {
+//                            #ifdef DEBUG
+//                            std::cout << item.first << " = " << boost::apply_visitor(Utilities::PrintValueNoResolve(),IndexIt->second) << "\n";
+//                            #endif
+//                            item.second = IndexIt->second;
+//                            std::advance(IndexIt,1);
+//                        });
         }
     }
 //    m_SuppliedArguments = ArgCount;
