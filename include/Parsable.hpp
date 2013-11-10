@@ -1,5 +1,6 @@
 #ifndef PARSABLE_HPP_INCLUDED
 #define PARSABLE_HPP_INCLUDED
+#include <functional>
 namespace Internal
 {
     struct ParserContext;

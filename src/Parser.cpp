@@ -200,7 +200,7 @@ struct Parser::Visitor : public boost::static_visitor<>
         m_ParserContext.ThrowIfUnexpected(TokenType::Identifier, "Unexpected identifier");
         m_ParserContext.UnexpectedToken() = TokenType::None;
         if( IsLastTokenValue() )
-            throw std::logic_error("value cannot immediatly follow another value");
+            throw std::logic_error("value cannot immediately follow another value");
         if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
             throw std::logic_error("Unexpected identifier");
         m_ParserContext.OutputQueue().push_back(s);

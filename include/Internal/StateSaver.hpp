@@ -21,6 +21,15 @@ public:
         StateStack.push(NewState);
         return StateStack.top();
     }
+	bool operator == (T rhs) const
+	{
+		return StateStack.top() == rhs;
+
+	}
+	bool operator != (T rhs) const
+	{
+		return !((*this) == rhs);
+	}
     void Restore()
     {
         if( StateStack.size() > 1 ) //Preserve initial state
