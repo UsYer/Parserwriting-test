@@ -7,8 +7,8 @@
 		<Option compiler="gnu_gcc_compiler_tdragon" />
 		<Build>
 			<Target title="Debug TDM-64 32bit">
-				<Option output="bin\Debug_TDM-64\Parser32" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug_TDM-64_32\" />
+				<Option output="bin/Debug_TDM-64/Parser32" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug_TDM-64_32/" />
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
@@ -25,8 +25,8 @@
 				</Linker>
 			</Target>
 			<Target title="Debug TDM-64 64bit">
-				<Option output="bin\Debug_TDM-64\Parser64" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug_TDM-64_64\" />
+				<Option output="bin/Debug_TDM-64/Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug_TDM-64_64/" />
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
@@ -41,8 +41,8 @@
 				</Linker>
 			</Target>
 			<Target title="Release TDM-64 32bit">
-				<Option output="bin\Release_TDM-64\Parser32" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release_TDM-64_32\" />
+				<Option output="bin/Release_TDM-64/Parser32" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release_TDM-64_32/" />
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
@@ -61,8 +61,8 @@
 				</Linker>
 			</Target>
 			<Target title="Release TDM-64 64bit">
-				<Option output="bin\Release_TDM-64\Parser64" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release_TDM-64_64\" />
+				<Option output="bin/Release_TDM-64/Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release_TDM-64_64/" />
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
@@ -80,9 +80,9 @@
 				</Linker>
 			</Target>
 			<Target title="Release Lib TDM-64 32bit">
-				<Option output="bin\ReleaseLib_TDM-64\libParser32" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/ReleaseLib_TDM-64/Parser32" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release Lib_TDM-64_32\" />
+				<Option object_output="obj/Release Lib_TDM-64_32/" />
 				<Option type="2" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
@@ -101,9 +101,9 @@
 				</Linker>
 			</Target>
 			<Target title="Release Lib TDM-64 64bit">
-				<Option output="bin\ReleaseLib_TDM-64\libParser64" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/ReleaseLib_TDM-64/Parser64" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release Lib_TDM-64_64\" />
+				<Option object_output="obj/Release Lib_TDM-64_64/" />
 				<Option type="2" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
@@ -120,8 +120,8 @@
 				</Linker>
 			</Target>
 			<Target title="Debug mingw-w64 4.6 64bit">
-				<Option output="bin\Debug_4_6\Parser64" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug_4_6_64\" />
+				<Option output="bin/Debug_4_6/Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug_4_6_64/" />
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
 				<Compiler>
@@ -138,8 +138,8 @@
 				</Linker>
 			</Target>
 			<Target title="Release mingw-w64 4.6 64bit">
-				<Option output="bin\Release_4_6\Parser64" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release_4_6_64\" />
+				<Option output="bin/Release_4_6/Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release_4_6_64/" />
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
 				<Compiler>
@@ -159,9 +159,9 @@
 				</Linker>
 			</Target>
 			<Target title="Release Lib mingw-w64 4.6 64bit">
-				<Option output="bin\ReleaseLib_4_6\libParser64" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/ReleaseLib_4_6/Parser64" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release Lib_4_6_64\" />
+				<Option object_output="obj/Release Lib_4_6_64/" />
 				<Option type="2" />
 				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
 				<Compiler>
@@ -178,8 +178,8 @@
 				</Linker>
 			</Target>
 			<Target title="Debug clang 64bit">
-				<Option output="bin\Debug_Clang\Parser64" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug_Clang_64\" />
+				<Option output="bin/Debug_Clang/Parser64" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug_Clang_64/" />
 				<Option type="1" />
 				<Option compiler="clang" />
 				<Compiler>
@@ -200,49 +200,49 @@
 			<Add option="-DPLAT_WIN" />
 			<Add directory="$(#boost)" />
 		</Compiler>
-		<Unit filename="MemoryManagment\include\MemoryController.hpp" />
-		<Unit filename="MemoryManagment\include\Reference.hpp" />
-		<Unit filename="MemoryManagment\src\MemoryController.cpp" />
-		<Unit filename="MemoryManagment\src\Reference.cpp" />
-		<Unit filename="include\Exceptions.hpp" />
-		<Unit filename="include\Function.hpp" />
-		<Unit filename="include\IParsable.hpp" />
-		<Unit filename="include\IToken.hpp" />
-		<Unit filename="include\Internal\BindFunc.hpp" />
-		<Unit filename="include\Internal\EvaluationContext.hpp" />
-		<Unit filename="include\Internal\FuncCaller.hpp" />
-		<Unit filename="include\Internal\Functions.hpp" />
-		<Unit filename="include\Internal\Get.hpp" />
-		<Unit filename="include\Internal\IEvaluable.hpp" />
-		<Unit filename="include\Internal\IFunction.hpp" />
-		<Unit filename="include\Internal\IOperator.hpp" />
-		<Unit filename="include\Internal\Is.hpp" />
-		<Unit filename="include\Internal\KeywordCatch.hpp" />
-		<Unit filename="include\Internal\KeywordEnd.hpp" />
-		<Unit filename="include\Internal\KeywordFunc.hpp" />
-		<Unit filename="include\Internal\KeywordNull.hpp" />
-		<Unit filename="include\Internal\KeywordReturn.hpp" />
-		<Unit filename="include\Internal\KeywordThrow.hpp" />
-		<Unit filename="include\Internal\KeywordTry.hpp" />
-		<Unit filename="include\Internal\Marshal.hpp" />
-		<Unit filename="include\Internal\Object.hpp" />
-		<Unit filename="include\Internal\Operators.hpp" />
-		<Unit filename="include\Internal\ParseUtilities.hpp" />
-		<Unit filename="include\Internal\Parser.hpp" />
-		<Unit filename="include\Internal\Plat_Win\RedirectIO.hpp" />
-		<Unit filename="include\Internal\RuntimeFunc.hpp" />
-		<Unit filename="include\Internal\Stack.hpp" />
-		<Unit filename="include\Internal\StateSaver.hpp" />
-		<Unit filename="include\Internal\Table.hpp" />
-		<Unit filename="include\Internal\Tokenizer.hpp" />
-		<Unit filename="include\Internal\Tokens.hpp" />
-		<Unit filename="include\Internal\Typenames.hpp" />
-		<Unit filename="include\Internal\Types.hpp" />
-		<Unit filename="include\Internal\Utilities.hpp" />
-		<Unit filename="include\MariusParser.hpp" />
-		<Unit filename="include\Object.hpp" />
-		<Unit filename="include\Parsable.hpp" />
-		<Unit filename="include\TokenizeContext.hpp" />
+		<Unit filename="MemoryManagment/include/MemoryController.hpp" />
+		<Unit filename="MemoryManagment/include/Reference.hpp" />
+		<Unit filename="MemoryManagment/src/MemoryController.cpp" />
+		<Unit filename="MemoryManagment/src/Reference.cpp" />
+		<Unit filename="include/Exceptions.hpp" />
+		<Unit filename="include/Function.hpp" />
+		<Unit filename="include/IParsable.hpp" />
+		<Unit filename="include/IToken.hpp" />
+		<Unit filename="include/Internal/BindFunc.hpp" />
+		<Unit filename="include/Internal/EvaluationContext.hpp" />
+		<Unit filename="include/Internal/FuncCaller.hpp" />
+		<Unit filename="include/Internal/Functions.hpp" />
+		<Unit filename="include/Internal/Get.hpp" />
+		<Unit filename="include/Internal/IEvaluable.hpp" />
+		<Unit filename="include/Internal/IFunction.hpp" />
+		<Unit filename="include/Internal/IOperator.hpp" />
+		<Unit filename="include/Internal/Is.hpp" />
+		<Unit filename="include/Internal/KeywordCatch.hpp" />
+		<Unit filename="include/Internal/KeywordEnd.hpp" />
+		<Unit filename="include/Internal/KeywordFunc.hpp" />
+		<Unit filename="include/Internal/KeywordNull.hpp" />
+		<Unit filename="include/Internal/KeywordReturn.hpp" />
+		<Unit filename="include/Internal/KeywordThrow.hpp" />
+		<Unit filename="include/Internal/KeywordTry.hpp" />
+		<Unit filename="include/Internal/Marshal.hpp" />
+		<Unit filename="include/Internal/Object.hpp" />
+		<Unit filename="include/Internal/Operators.hpp" />
+		<Unit filename="include/Internal/ParseUtilities.hpp" />
+		<Unit filename="include/Internal/Parser.hpp" />
+		<Unit filename="include/Internal/Plat_Win/RedirectIO.hpp" />
+		<Unit filename="include/Internal/RuntimeFunc.hpp" />
+		<Unit filename="include/Internal/Stack.hpp" />
+		<Unit filename="include/Internal/StateSaver.hpp" />
+		<Unit filename="include/Internal/Table.hpp" />
+		<Unit filename="include/Internal/Tokenizer.hpp" />
+		<Unit filename="include/Internal/Tokens.hpp" />
+		<Unit filename="include/Internal/Typenames.hpp" />
+		<Unit filename="include/Internal/Types.hpp" />
+		<Unit filename="include/Internal/Utilities.hpp" />
+		<Unit filename="include/MariusParser.hpp" />
+		<Unit filename="include/Object.hpp" />
+		<Unit filename="include/Parsable.hpp" />
+		<Unit filename="include/TokenizeContext.hpp" />
 		<Unit filename="main.cpp">
 			<Option target="Debug TDM-64 32bit" />
 			<Option target="Release TDM-64 32bit" />
@@ -252,22 +252,22 @@
 			<Option target="Release mingw-w64 4.6 64bit" />
 			<Option target="Debug clang 64bit" />
 		</Unit>
-		<Unit filename="src\EvaluationContext.cpp" />
-		<Unit filename="src\Functions.cpp" />
-		<Unit filename="src\IEvaluable.cpp" />
-		<Unit filename="src\IFunction.cpp" />
-		<Unit filename="src\MariusParser.cpp" />
-		<Unit filename="src\Operators.cpp" />
-		<Unit filename="src\Parser.cpp" />
-		<Unit filename="src\Table.cpp">
+		<Unit filename="src/EvaluationContext.cpp" />
+		<Unit filename="src/Functions.cpp" />
+		<Unit filename="src/IEvaluable.cpp" />
+		<Unit filename="src/IFunction.cpp" />
+		<Unit filename="src/MariusParser.cpp" />
+		<Unit filename="src/Operators.cpp" />
+		<Unit filename="src/Parser.cpp" />
+		<Unit filename="src/Table.cpp">
 			<Option weight="100" />
 		</Unit>
-		<Unit filename="src\Tokenizer.cpp" />
+		<Unit filename="src/Tokenizer.cpp" />
 		<Unit filename="version.h" />
 		<Extensions>
 			<AutoVersioning>
 				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="5" build_times_to_increment_minor="100" />
-				<Settings autoincrement="1" date_declarations="1" update_manifest="1" do_auto_increment="1" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Settings autoincrement="1" date_declarations="1" use_define="0" update_manifest="1" do_auto_increment="1" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
 				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
