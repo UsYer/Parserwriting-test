@@ -1,9 +1,7 @@
 #ifndef FUNCTIONS_HPP_INCLUDED
 #define FUNCTIONS_HPP_INCLUDED
 #include <iostream>
-#ifdef PLAT_WIN
-#include "Plat_Win/RedirectIO.hpp"
-#endif
+
 namespace Internal
 {
 class TypeFunc : public IFunction
@@ -36,7 +34,7 @@ public:
     {}
     void Eval(EvaluationContext& EC)
     {
-        std::cout << "\n" << boost::apply_visitor(Type(),m_LocalScope[0]) << "\n";
+        ::Platform::Out() << "\n" << boost::apply_visitor(Type(),m_LocalScope[0]) << "\n";
     }
 };
 class MaxFunc : public IFunction
@@ -170,12 +168,11 @@ public:
     }
     void Eval(EvaluationContext& EC)
     {
-        static bool callonce = Platform::RedirectIOToConsole();
         for( unsigned i = 0; i < m_SuppliedArguments; i++ )
         {
-            std::cerr << Utilities::PrintValue(EC,Types::Object(IFunction::GetArg(i))) << " ";
+            ::Platform::Out() << Utilities::PrintValue(EC,Types::Object(IFunction::GetArg(i))) << " ";
         }
-        std::cout << std::endl;
+        ::Platform::Out() << std::endl;
     }
 };
 // TODO (Marius#8#): Finish global catch handler (translation from runtime to native exceptions)

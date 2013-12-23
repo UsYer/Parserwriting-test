@@ -36,6 +36,7 @@ enum struct TokenType : unsigned
     KeywordWithValue = (1u << 10), //Keyword that produces a new value, like function, null ...
     Keyword         = (1u << 11),
     None            = (1u << 12),
+    EOL             = (1u << 13),
     //Composed Tokentypes for convenience:
     Value = Long | Double | KeywordWithValue | Identifier
 };

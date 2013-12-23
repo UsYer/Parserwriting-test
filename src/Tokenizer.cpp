@@ -5,7 +5,6 @@
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 #include "../include/Internal/IOperator.hpp"
-//#include "../include/Internal/IToken.hpp"
 #include "../include/Internal/Tokenizer.hpp"
 #include "../include/Internal/Types.hpp"
 using namespace Internal;
@@ -72,6 +71,30 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
             LastChar = LastCharType::Dot;
             continue;
         }
+        else if( *ch == '"')
+        {
+            ParseOperator();
+            FlushNumBuffer(DecimalNumber);
+            DecimalNumber = false;
+
+            bool stringCorrectlyTerminated = false;
+
+            auto beg = ++ch; // increment to the next character and save it as the beginning of our string.
+            for( ; ch < expression.cend(); ch++ )
+            {
+                if( *ch == '"' && *(ch--) != '\\' )
+                {
+                    stringCorrectlyTerminated = true;
+                }
+            }
+
+            if( !stringCorrectlyTerminated )
+            {
+                throw std::logic_error("SyntaxError: String not properly terminated; hit end of input.")
+            }
+
+            //assign iterators to Utf8String
+        }
         /*
         else if( *ch == '(' )
         {
@@ -94,10 +117,14 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
             continue;
         }*/
         else if( std::isspace(*ch) )
-        {   //Ende eines zusammenhängendes Zeichens erreicht
+        {   //Ende eines zusammenhängendes Zeichens oder Zeilenende erreicht
             ParseOperator();
             FlushNumBuffer(DecimalNumber);
             DecimalNumber = false;
+            if( *ch == '\n' )
+            {
+                OperatorBuffer += '\n'; //newline character is added on the OpBuffer, because otherwise the EOLToken will not be parsed.
+            }
             do
             {
                 ++ch;

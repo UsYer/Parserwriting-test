@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="Parser" InternalType="Console">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
+    </Plugin>
+  </Plugins>
+  <VirtualDirectory Name="MemoryManagment">
+    <VirtualDirectory Name="include">
+      <File Name="../MemoryManagment/include/Exceptions.hpp"/>
+      <File Name="../MemoryManagment/include/MemoryController.hpp"/>
+      <File Name="../MemoryManagment/include/Reference.hpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="src">
+      <File Name="../MemoryManagment/src/Exceptions.cpp"/>
+      <File Name="../MemoryManagment/src/MemoryController.cpp"/>
+      <File Name="../MemoryManagment/src/Reference.cpp"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+    <VirtualDirectory Name="Internal">
+      <File Name="../include/Internal/BindFunc.hpp"/>
+      <File Name="../include/Internal/FuncCaller.hpp"/>
+      <File Name="../include/Internal/Functions.hpp"/>
+      <File Name="../include/Internal/Get.hpp"/>
+      <File Name="../include/Internal/IEvaluable.hpp"/>
+      <File Name="../include/Internal/IFunction.hpp"/>
+      <File Name="../include/Internal/IOperator.hpp"/>
+      <File Name="../include/Internal/Is.hpp"/>
+      <File Name="../include/Internal/IToken.hpp"/>
+      <File Name="../include/Internal/KeywordEnd.hpp"/>
+      <File Name="../include/Internal/KeywordFunction.hpp"/>
+      <File Name="../include/Internal/Marshal.hpp"/>
+      <File Name="../include/Internal/Object.hpp"/>
+      <File Name="../include/Internal/Operators.hpp"/>
+      <File Name="../include/Internal/Parser.hpp"/>
+      <File Name="../include/Internal/Stack.hpp"/>
+      <File Name="../include/Internal/StateSaver.hpp"/>
+      <File Name="../include/Internal/Table.hpp"/>
+      <File Name="../include/Internal/Tokenizer.hpp"/>
+      <File Name="../include/Internal/Tokens.hpp"/>
+      <File Name="../include/Internal/Typenames.hpp"/>
+      <File Name="../include/Internal/Types.hpp"/>
+      <File Name="../include/Internal/Utilities.hpp"/>
+    </VirtualDirectory>
+    <File Name="../include/Exceptions.hpp"/>
+    <File Name="../include/Function.hpp"/>
+    <File Name="../include/MariusParser.hpp"/>
+    <File Name="../include/Object.hpp"/>
+    <File Name="../include/IParsable.hpp"/>
+    <File Name="../include/IToken.hpp"/>
+    <File Name="../include/Parsable.hpp"/>
+    <File Name="../include/TokenizeContext.hpp"/>
+  </VirtualDirectory>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="../src/Functions.cpp"/>
+    <File Name="../src/IEvaluable.cpp"/>
+    <File Name="../src/IFunction.cpp"/>
+    <File Name="../src/MariusParser.cpp"/>
+    <File Name="../src/Operators.cpp"/>
+    <File Name="../src/Parser.cpp"/>
+    <File Name="../src/Table.cpp"/>
+    <File Name="../src/Tokenizer.cpp"/>
+    <File Name="../src/EvaluationContext.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Parser">
+    <File Name="../main.cpp"/>
+    <File Name="../version.h"/>
+  </VirtualDirectory>
+  <Settings Type="Executable">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-pg;-g" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+        <Preprocessor Value="DEBUG"/>
+      </Compiler>
+      <Linker Options="-pg" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-O3;-fexpensive-optimizations" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+        <Preprocessor Value="NDEBUG"/>
+      </Compiler>
+      <Linker Options="-flto;-s;-O3" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <GlobalSettings>
+      <Compiler Options="-std=c++0x">
+        <IncludePath Value="."/>
+        <IncludePath Value="$(Boost)"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+        <Library Value="Winmm"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+  </Settings>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
+</CodeLite_Project>

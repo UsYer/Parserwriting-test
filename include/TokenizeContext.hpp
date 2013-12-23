@@ -13,6 +13,7 @@ enum struct LastCharType : unsigned
     LikeClosingBracket,
     LikeOpeningBracket,
     Identifier,
+    EOL,
     None,
     Unrecognized
 };

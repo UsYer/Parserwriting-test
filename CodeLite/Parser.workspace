@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="Parser" Database="./Parser.tags">
+  <Project Name="Parser" Path="Parser.project" Active="Yes"/>
+  <Project Name="UnitTest" Path="UnitTest/UnitTest.project" Active="No"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
+      <Project Name="Parser" ConfigName="Debug"/>
+      <Project Name="UnitTest" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="no">
+      <Project Name="Parser" ConfigName="Release"/>
+      <Project Name="UnitTest" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

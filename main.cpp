@@ -82,12 +82,12 @@ int main()
     #else
     cout << " 32bit";
     #endif
-    cout << std::endl;
-    cout << "\nlong long size:\t" << sizeof(long long) << " bytes; max:\t" << std::numeric_limits<long long>::max();
-    cout << "\nlong size:\t" << sizeof(long) << " bytes; max:\t" << std::numeric_limits<long>::max();
-    cout << "\nint size:\t" << sizeof(int) << " bytes; max:\t" << std::numeric_limits<int>::max();
-    cout << "\nCountedReference size:\t" << sizeof(Internal::CountedReference) << " bytes";
-    cout << "\nObject size:\t" << sizeof(Internal::Types::Object) << " bytes\n";
+    //cout << std::endl;
+    cout << "\nlong long size:\t" << sizeof(long long) << " bytes; max:\t" << std::numeric_limits<long long>::max() << std::endl;
+    cout << "\nlong size:\t" << sizeof(long) << " bytes; max:\t" << std::numeric_limits<long>::max() << std::endl;
+    cout << "\nint size:\t" << sizeof(int) << " bytes; max:\t" << std::numeric_limits<int>::max() << std::endl;
+    cout << "\nCountedReference size:\t" << sizeof(Internal::CountedReference) << " bytes" << std::endl;
+    cout << "\nObject size:\t" << sizeof(Internal::Types::Object) << " bytes\n" << std::endl;
     do
     {
         cout << "\nEnter mathematical expression:" << endl;
@@ -113,12 +113,12 @@ int main()
         }
         catch(Exceptions::ParseError& e)
         {
-            std::cerr << "\nerror: " << e.what() << std::endl;
+            std::cerr << "\nParseError: " << e.what() << std::endl;
             continue;
         }
         catch(Exceptions::RuntimeException& e)
         {
-            std::cerr << "\n" << e.what() << ": " << e.Name() << std::endl;
+            std::cerr << "\n" << e.Name() << ": " << e.what() << std::endl;
             continue;
         }
         catch(std::logic_error& e)

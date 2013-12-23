@@ -5,6 +5,7 @@
 #include "Function.hpp"
 #include "Internal/BindFunc.hpp"
 #include "Exceptions.hpp"
+#include "Platform.hpp"
 
 struct BenchData
 {
@@ -66,6 +67,12 @@ public:
         RegisterFunction(Internal::BindFunc(Name,Representation,Func));
     }
     Types::Object Evaluate(const std::string& Input, BenchData* BD = nullptr);
+
+
+    /**
+        For interactive and file mode. The Parser will ask for more input if needed.
+    */
+    Types::Object Evaluate(std::istream& Input, BenchData* BD = nullptr);
 
     ::Types::Function GetFunction(const std::string& Identifier) const;
     ::Types::Object GlobalScope();

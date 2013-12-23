@@ -17,6 +17,8 @@
 #include "../include/Internal/KeywordNull.hpp"
 #include "../include/Internal/KeywordReturn.hpp"
 
+#include "../include/Internal/ParseEOL.hpp"
+
 const char* MariusParser::VersionData::Date = AutoVersion::DATE;
 const char* MariusParser::VersionData::Month = AutoVersion::MONTH;
 const char* MariusParser::VersionData::Year = AutoVersion::YEAR;
@@ -52,6 +54,7 @@ struct MariusParser::Impl
         m_Tokenizer.RegisterToken(new OperatorToken<GreaterOp>);
         m_Tokenizer.RegisterToken(new OperatorToken<NotOp>);
         m_Tokenizer.RegisterToken(new OperatorToken<ThrowOp>);
+        m_Tokenizer.RegisterToken(new EOLToken);
 
         m_Tokenizer.RegisterToken(new KeywordToken("func",&Keyword::Function));
         m_Tokenizer.RegisterToken(new KeywordToken("end",&Keyword::End));
@@ -168,7 +171,20 @@ struct MariusParser::Impl
         std::cout << "--- Parsing ---" << std::endl;
     #endif
         QueryPerformanceCounter(&start_ticks);
+        // ParserState parser_state = ParserState::NeedsMoreInput
+        // do
+        // {
+        //     if (std::getline(stream, string))
+        //     {
+        //      std::deque<Internal::UnparsedToken> UTs = m_Tokenizer.Tokenize(string);
         m_Parser.Parse(UTs);
+        //     }
+        // }
+        // while ( parser_state == ParserState::NeedsMoreInput );
+        //
+        //
+        //
+
         QueryPerformanceCounter(&ende_ticks);
 
 //        Took += "Parsing took:\t\t" + boost::lexical_cast<std::string>(ende_ticks.QuadPart - start_ticks.QuadPart) + " ticks\n";
@@ -221,6 +237,25 @@ struct MariusParser::Impl
             //No-op. resetting Evalscope to global scope
             return ::Types::Object(m_EC,Internal::NullReference());
         }
+    }
+
+    ::Types::Object Evaluate(const std::istream& Input, BenchData* BD = nullptr)
+    {
+
+        // ParserState parser_state = ParserState::NeedsMoreInput
+        // do
+        // {
+        //     if (std::getline(Input, string))
+        //     {
+        //      std::deque<Internal::UnparsedToken> UTs = m_Tokenizer.Tokenize(string);
+        // m_Parser.Parse(UTs);
+        //     }
+        // }
+        // while ( parser_state == ParserState::NeedsMoreInput );
+        //
+        //
+        //
+
     }
     Internal::Tokenizer m_Tokenizer;
     Internal::Parser m_Parser;

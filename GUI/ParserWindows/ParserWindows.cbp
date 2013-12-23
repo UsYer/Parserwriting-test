@@ -7,17 +7,28 @@
 		<Option compiler="gnu_gcc_compiler_tdragon_64" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin\Debug\ParserWindows" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option output="bin/Debug/ParserWindows" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="0" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Option parameters="bin\Debug\test.script" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DPLAT_WIN" />
+					<Add option="-DWIN32" />
+					<Add option="-DDEBUG" />
+					<Add directory="../../include" />
+					<Add directory="$(#boost)" />
+					<Add directory="../../libs/nowide_standalone" />
 				</Compiler>
+				<Linker>
+					<Add library="..\..\bin\DebugLib_TDM-64\libParser64.a" />
+					<Add library="..\..\libs\nowide_standalone\bin\Debug\lib\libnowide.a" />
+				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin\Release\ParserWindows" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option output="bin/Release/ParserWindows" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
 				<Option type="0" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
@@ -26,19 +37,21 @@
 					<Add option="-fuse-linker-plugin" />
 					<Add option="-DPLAT_WIN" />
 					<Add option="-DNDEBUG" />
-					<Add directory="..\..\include" />
+					<Add directory="../../include" />
 					<Add directory="$(#boost)" />
+					<Add directory="../../libs/nowide_standalone" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add option="-flto" />
 					<Add option="-Wl,-allow-multiple-definition" />
 					<Add library="..\..\bin\ReleaseLib_TDM-64\libParser64.a" />
+					<Add library="..\..\libs\nowide_standalone\bin\Release\lib\libnowide.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-std=c++0x" />
+			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 		</Compiler>
 		<Linker>

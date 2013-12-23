@@ -30,7 +30,7 @@
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
-					<Add option="-std=c++0x" />
+					<Add option="-std=c++11" />
 					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
@@ -38,6 +38,7 @@
 				<Linker>
 					<Add option="-pg -lgmon" />
 					<Add library="Winmm" />
+					<Add library="libs\nowide_standalone\bin\Debug\lib\libnowide.a" />
 				</Linker>
 			</Target>
 			<Target title="Release TDM-64 32bit">
@@ -66,17 +67,32 @@
 				<Option type="1" />
 				<Option compiler="gnu_gcc_compiler_tdragon_64" />
 				<Compiler>
-					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
-					<Add option="-std=c++0x" />
+					<Add option="-std=c++11" />
 					<Add option="-flto" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add option="-flto" />
-					<Add option="-Wl,-allow-multiple-definition" />
 					<Add library="Winmm" />
+					<Add library="libs\nowide_standalone\bin\Release\lib\libnowide.a" />
+				</Linker>
+			</Target>
+			<Target title="Debug Lib TDM-64 64bit">
+				<Option output="bin/DebugLib_TDM-64/Parser64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/DebugLib_TDM-64_64/" />
+				<Option type="2" />
+				<Option compiler="gnu_gcc_compiler_tdragon_64" />
+				<Compiler>
+					<Add option="-std=c++11" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add library="Winmm" />
+					<Add library="libs\nowide_standalone\bin\Release\lib\libnowide.a" />
 				</Linker>
 			</Target>
 			<Target title="Release Lib TDM-64 32bit">
@@ -98,6 +114,7 @@
 					<Add option="-m32" />
 					<Add option="-flto" />
 					<Add library="Winmm" />
+					<Add library="libs\nowide_standalone\bin\Release\lib\libnowide.a" />
 				</Linker>
 			</Target>
 			<Target title="Release Lib TDM-64 64bit">
@@ -117,6 +134,7 @@
 					<Add option="-s" />
 					<Add option="-flto" />
 					<Add library="Winmm" />
+					<Add library="libs\nowide_standalone\bin\Release\lib\libnowide.a" />
 				</Linker>
 			</Target>
 			<Target title="Debug mingw-w64 4.6 64bit">
@@ -177,28 +195,12 @@
 					<Add library="Winmm" />
 				</Linker>
 			</Target>
-			<Target title="Debug clang 64bit">
-				<Option output="bin/Debug_Clang/Parser64" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Debug_Clang_64/" />
-				<Option type="1" />
-				<Option compiler="clang" />
-				<Compiler>
-					<Add option="-std=c++0x" />
-					<Add option="-pg" />
-					<Add option="-g" />
-					<Add option="-DDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg -lgmon" />
-					<Add library="Winmm" />
-				</Linker>
-			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-fexceptions" />
 			<Add option="-DPLAT_WIN" />
 			<Add directory="$(#boost)" />
+			<Add directory="libs/nowide_standalone" />
 		</Compiler>
 		<Unit filename="MemoryManagment/include/MemoryController.hpp" />
 		<Unit filename="MemoryManagment/include/Reference.hpp" />
@@ -227,6 +229,7 @@
 		<Unit filename="include/Internal/Marshal.hpp" />
 		<Unit filename="include/Internal/Object.hpp" />
 		<Unit filename="include/Internal/Operators.hpp" />
+		<Unit filename="include/Internal/ParseEOL.hpp" />
 		<Unit filename="include/Internal/ParseUtilities.hpp" />
 		<Unit filename="include/Internal/Parser.hpp" />
 		<Unit filename="include/Internal/Plat_Win/RedirectIO.hpp" />
@@ -242,6 +245,7 @@
 		<Unit filename="include/MariusParser.hpp" />
 		<Unit filename="include/Object.hpp" />
 		<Unit filename="include/Parsable.hpp" />
+		<Unit filename="include/Platform.hpp" />
 		<Unit filename="include/TokenizeContext.hpp" />
 		<Unit filename="main.cpp">
 			<Option target="Debug TDM-64 32bit" />
@@ -250,7 +254,6 @@
 			<Option target="Release TDM-64 64bit" />
 			<Option target="Debug mingw-w64 4.6 64bit" />
 			<Option target="Release mingw-w64 4.6 64bit" />
-			<Option target="Debug clang 64bit" />
 		</Unit>
 		<Unit filename="src/EvaluationContext.cpp" />
 		<Unit filename="src/Functions.cpp" />
@@ -259,6 +262,7 @@
 		<Unit filename="src/MariusParser.cpp" />
 		<Unit filename="src/Operators.cpp" />
 		<Unit filename="src/Parser.cpp" />
+		<Unit filename="src/Platform.cpp" />
 		<Unit filename="src/Table.cpp">
 			<Option weight="100" />
 		</Unit>
