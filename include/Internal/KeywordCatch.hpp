@@ -98,8 +98,9 @@ struct HasArg : public boost::static_visitor<std::string>
     }
     std::string operator()(const std::string& Identifier) const
     {
+		std::string copy_identifier = Identifier;
         m_ParserContext.InputQueue().pop_front();
-        return Identifier;
+		return copy_identifier;
     }
     private:
     const ParserContext& m_ParserContext;

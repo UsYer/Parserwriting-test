@@ -87,13 +87,15 @@ public:
         RuntimeException(What, "NullReferenceException", 4)
     {
     }
-    virtual ~NullReferenceException() throw()
-    {
-    }
 };
-// FIXME (Marius#9#): Just a temporary helper to convienently get the Exception name based on the TypeId.
-//   When strings are implemented this shouldn't be neccesary anymore
-static const char* ExceptionNames[] = { "DummyFor1-basedAcces", "RuntimeException", "TypeException", "NameException", "NullReferenceException" };
+class SyntaxException : public RuntimeException
+{
+    public:
+		SyntaxException(const std::string& Message) :
+        RuntimeException(Message, "SyntaxEception", 5)
+    {}
+};
+
 }//ns Exceptions
 /*
 namespace Marshal

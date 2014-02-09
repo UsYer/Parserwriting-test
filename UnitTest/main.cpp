@@ -230,6 +230,7 @@ TEST(ReturnMarshal)
 #include "FunctionDefTests.hpp"
 #include "FunctionCallTests.hpp"
 #include "SpecialMethodTests.hpp"
+#include "StringTests.hpp"
 int main()
 {
     return UnitTest::RunAllTests();

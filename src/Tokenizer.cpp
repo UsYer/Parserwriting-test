@@ -80,20 +80,31 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
             bool stringCorrectlyTerminated = false;
 
             auto beg = ++ch; // increment to the next character and save it as the beginning of our string.
+            utf8::ustring str;
             for( ; ch < expression.cend(); ch++ )
             {
-                if( *ch == '"' && *(ch--) != '\\' )
+                if( *ch == '"' && *(ch - 1) != '\\' ) // not escaped quote means the strings end is reached
                 {
                     stringCorrectlyTerminated = true;
+                    break;
+                }
+                else if( *ch == '"' && *(ch - 1) == '\\' ) // handle escaped quotes
+                {
+                    str.append(beg,ch-1);
+                    beg = ch; // continue from after the escape character
                 }
             }
 
             if( !stringCorrectlyTerminated )
             {
-                throw std::logic_error("SyntaxError: String not properly terminated; hit end of input.")
+				throw std::logic_error("SyntaxError: String not properly terminated; hit end of input.");
             }
 
             //assign iterators to Utf8String
+            str.append(beg,ch);
+            OutputQueue.push_back(str);
+            ++ch; // skip the last quote
+            continue;
         }
         /*
         else if( *ch == '(' )

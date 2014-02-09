@@ -49,16 +49,66 @@ Parser::Parser():
 struct Parser::Visitor : public boost::static_visitor<>
 {
 
+//    struct LiteralVisitor : public boost::static_visitor<>
+//    {
+//        ParserContext m_ParserContext;
+//		LiteralVisitor(ParserContext& p) :m_ParserContext(p)
+//        {
+//        }
+//        void operator()(long long val)
+//        {
+//            m_ParserContext.ThrowIfUnexpected(TokenType::Long, "Unexpected number literal");
+//            m_ParserContext.UnexpectedToken() = TokenType::None;
+//            //Check if the last token was any of the value tokens
+//			if (m_ParserContext.IsLastTokenValue())
+//                throw std::logic_error("value cannot immediately follow another value");
+//            if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
+//                throw std::logic_error("Unexpected number literal");
+//            m_ParserContext.OutputQueue().push_back(val);
+//            m_ParserContext.LastToken() = TokenType::Long;
+//        }
+//        void operator()(double val)
+//        {
+//            m_ParserContext.ThrowIfUnexpected(TokenType::Double, "Unexpected number literal");
+//            m_ParserContext.UnexpectedToken() = TokenType::None;
+//            //Check if the last token was any of the value tokens
+//			if (m_ParserContext.IsLastTokenValue())
+//                throw std::logic_error("value cannot immediatly follow another value");
+//            if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
+//                throw std::logic_error("Unexpected number literal");
+//            m_ParserContext.OutputQueue().push_back(val);
+//            m_ParserContext.LastToken() = TokenType::Double;
+//        }
+//        void operator()(utf8::ustring val)
+//        {
+//            m_ParserContext.ThrowIfUnexpected(TokenType::String, "Unexpected string literal");
+//            m_ParserContext.UnexpectedToken() = TokenType::None;
+//            //Check if the last token was any of the value tokens
+//			if (m_ParserContext.IsLastTokenValue())
+//                throw std::logic_error("string literal cannot immediately follow another literal");
+//            if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
+//                throw std::logic_error("Unexpected string literal");
+//            m_ParserContext.OutputQueue().push_back(val);
+//            m_ParserContext.LastToken() = TokenType::String;
+//        }
+//    };
+
     Visitor(ParserContext& p):m_ParserContext(p)
     {
     }
+
+//    void operator()(const LiteralToken& literal)
+//    {
+//        LiteralVisitor lv(m_ParserContext);
+//        boost::apply_visitor(lv,literal);
+//    }
     void operator()(long long val)
     {
         m_ParserContext.ThrowIfUnexpected(TokenType::Long, "Unexpected number literal");
         m_ParserContext.UnexpectedToken() = TokenType::None;
         //Check if the last token was any of the value tokens
-        if( IsLastTokenValue() )
-            throw std::logic_error("value cannot immediatly follow another value");
+        if (m_ParserContext.IsLastTokenValue())
+            throw std::logic_error("value cannot immediately follow another value");
         if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
             throw std::logic_error("Unexpected number literal");
         m_ParserContext.OutputQueue().push_back(val);
@@ -69,12 +119,24 @@ struct Parser::Visitor : public boost::static_visitor<>
         m_ParserContext.ThrowIfUnexpected(TokenType::Double, "Unexpected number literal");
         m_ParserContext.UnexpectedToken() = TokenType::None;
         //Check if the last token was any of the value tokens
-        if( IsLastTokenValue() )
+        if (m_ParserContext.IsLastTokenValue())
             throw std::logic_error("value cannot immediatly follow another value");
         if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
             throw std::logic_error("Unexpected number literal");
         m_ParserContext.OutputQueue().push_back(val);
         m_ParserContext.LastToken() = TokenType::Double;
+    }
+    void operator()(utf8::ustring val)
+    {
+        m_ParserContext.ThrowIfUnexpected(TokenType::String, "Unexpected string literal");
+        m_ParserContext.UnexpectedToken() = TokenType::None;
+        //Check if the last token was any of the value tokens
+        if (m_ParserContext.IsLastTokenValue())
+            throw std::logic_error("string literal cannot immediately follow another literal");
+        if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
+            throw std::logic_error("Unexpected string literal");
+        m_ParserContext.OutputQueue().push_back(val);
+        m_ParserContext.LastToken() = TokenType::String;
     }
     void operator()(const std::shared_ptr<IOperator>& op)
     {
@@ -199,7 +261,7 @@ struct Parser::Visitor : public boost::static_visitor<>
     {
         m_ParserContext.ThrowIfUnexpected(TokenType::Identifier, "Unexpected identifier");
         m_ParserContext.UnexpectedToken() = TokenType::None;
-        if( IsLastTokenValue() )
+		if (m_ParserContext.IsLastTokenValue())
             throw std::logic_error("value cannot immediately follow another value");
         if( m_ParserContext.LastToken() == TokenType::ClosingBracket || m_ParserContext.LastToken() == TokenType::OpUnaryPostfix )
             throw std::logic_error("Unexpected identifier");
@@ -296,10 +358,6 @@ private:
         PopHigherPrecedenceOperators(Op);
         m_ParserContext.OperatorStack().push(Op);
         m_ParserContext.LastToken() = TokenType::OpBinary;
-    }
-    bool IsLastTokenValue() const
-    {
-        return (TokenType::Value & m_ParserContext.LastToken()) == m_ParserContext.LastToken();
     }
 };
 

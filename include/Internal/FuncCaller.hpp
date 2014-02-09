@@ -17,26 +17,30 @@ class FuncCaller : public IOperator
         }
         std::shared_ptr<IFunction> operator()(long long ) const
         {
-            throw std::logic_error("Expected function; Is long");
+            throw Exceptions::TypeException("Expected function; Is long");
         }
         std::shared_ptr<IFunction> operator()(double )const
         {
-            throw std::logic_error("Expected function; Is double");
+            throw Exceptions::TypeException("Expected function; Is double");
+        }
+        std::shared_ptr<IFunction> operator()(utf8::ustring )const
+        {
+            throw Exceptions::TypeException("Expected function; Is string");
         }
         std::shared_ptr<IFunction> operator()(const std::shared_ptr<IOperator>& op)const
         {
-            throw std::logic_error("Expected function; Is operator " + op->Representation());
+            throw Exceptions::TypeException("Expected function; Is operator " + op->Representation());
         }
         std::shared_ptr<IFunction> operator()(const Reference& R)const
         {
             if( R.IsNull() )
-                throw std::logic_error("Calling a nullreference");
+                throw Exceptions::NullReferenceException("Calling a nullreference");
             else
-                throw std::logic_error("Expected function; Is table");
+                throw Exceptions::TypeException("Expected function; Is table");
         }
         std::shared_ptr<IFunction> operator()(NullReference)const
         {
-            throw std::logic_error("Calling a nullreference");
+            throw Exceptions::TypeException("Calling a nullreference");
         }
         std::shared_ptr<IFunction> operator()(const std::shared_ptr<IFunction>& op)const
         {

@@ -8,19 +8,48 @@ struct Evaluator : public boost::static_visitor<>
 {
 private:
     EvaluationContext& m_EC;
+
+//    struct LiteralVisitor : public boost::static_visitor<>
+//    {
+//        EvaluationContext& m_EC;
+//        LiteralVisitor(EvaluationContext& EC):m_EC(EC)
+//        {}
+//        void operator()(long long val)
+//        {
+//            m_EC.Stack.Push(val);
+//        }
+//        void operator()(double val)
+//        {
+//            m_EC.Stack.Push(val);
+//        }
+//        void operator()(utf8::ustring val)const
+//        {
+//            m_EC.Stack.Push(val);
+//        }
+//    };
+
 public:
     Evaluator(EvaluationContext& EC):
         m_EC(EC)
     {}
-    void operator()(long long val)
+//    void operator()(const LiteralToken& lt)
+//    {
+//        LiteralVisitor lv(m_EC);
+//        boost::apply_visitor(lv,lt);
+//    }
+	void operator()(long long val) const
     {
         m_EC.Stack.Push(val);
     }
-    void operator()(double val)
+    void operator()(double val) const
     {
         m_EC.Stack.Push(val);
     }
-    void operator()(const std::shared_ptr<IEvaluable>& Evaluable)
+    void operator()(utf8::ustring val)const
+    {
+        m_EC.Stack.Push(val);
+    }
+	void operator()(const std::shared_ptr<IEvaluable>& Evaluable) const
     {
         try
         { //Make sure native exceptions are properly transformed to internal exceptions
@@ -32,15 +61,15 @@ public:
             m_EC.EndScope();
         }
     }
-    void operator()(const std::string& s)
+	void operator()(const std::string& s) const
     {
         m_EC.Stack.Push(s);
     }
-    void operator()(const Reference& Ref)
+	void operator()(const Reference& Ref) const
     {
         m_EC.Stack.Push(Ref);
     }
-    void operator()(const NullReference& Ref)
+	void operator()(const NullReference& Ref) const
     {
         m_EC.Stack.Push(Ref);
     }
@@ -115,6 +144,8 @@ void EvaluationContext::Throw(const Exceptions::RuntimeException& Ex)
         Types::Table ExceptionTable;
         ExceptionTable["TypeId"] = Ex.TypeId();
         ExceptionTable["ScopeDepth"] = ScopeDepth; // 0 shall be the global scope
+        ExceptionTable["Message"] = Ex.what();
+		ExceptionTable["Name"] = Ex.Name();
         CatchBlock->SuppliedArguments(MC.Save(ExceptionTable));
     }
     else
@@ -138,44 +169,58 @@ void EvaluationContext::Throw(const CountedReference& Ex)
         throw std::logic_error("Catch handler expects too many arguments");
     CatchBlock->Eval(*this);
 }
-struct ArgCounter : public boost::static_visitor<unsigned>
+//struct ArgCounter : public boost::static_visitor<unsigned>
+//{
+//    ArgCounter()
+//    {}
+//    template <typename T>
+//    unsigned operator()(const T& ) const
+//    {
+//        return 1;
+//    }
+//    unsigned operator()(const CountedReference& Ref) const
+//    {
+//        auto it = (*Ref).Find("__ARGCOUNT__");
+//        if( it != (*Ref).KeyEnd() )
+//            return boost::apply_visitor(Utilities::Get<long long>("ArgCount field of the argument table has to be an integer"),it->second);
+//        else
+//            return 1;
+//    }
+//    unsigned operator()(const std::shared_ptr<IFunction>& Func) const
+//    {
+//        if( *Func == "__ALSM__" )
+//            return 0;
+//        else
+//            return 1;
+//    }
+//};
+void EvaluationContext::Call(const Internal::Types::Object& Callable, const ResolvedToken& Args)
 {
-    ArgCounter()
-    {}
-    template <typename T>
-    unsigned operator()(const T& ) const
-    {
-        return 1;
-    }
-    unsigned operator()(const CountedReference& Ref) const
-    {
-        auto it = (*Ref).Find("__ARGCOUNT__");
-        if( it != (*Ref).KeyEnd() )
-            return boost::apply_visitor(Utilities::Get<long long>("ArgCount field of the argument table has to be an integer"),it->second);
-        else
-            return 1;
-    }
-    unsigned operator()(const std::shared_ptr<IFunction>& Func) const
-    {
-        if( *Func == "__ALSM__" )
-            return 0;
-        else
-            return 1;
-    }
-};
-void EvaluationContext::Call(const Types::Object& FuncObj, const ResolvedToken& Args)
+	ResolvedToken FuncToken = Utilities::Resolve(*this, Callable);
+    const Types::Function& Func = boost::apply_visitor(Utilities::GetFunc(*this),FuncToken);
+	Call(Func, Args, Callable.This());
+}
+void EvaluationContext::Call(const Internal::Types::Object& Callable, const ResolvedToken& Args, int NumOfArgs)
 {
-    ResolvedToken FuncToken(Utilities::Resolve(*this,FuncObj));
-    const std::shared_ptr<IFunction>& Func(boost::apply_visitor(Utilities::Get<Types::Function>(),FuncToken));
-    Call(Func,Args,FuncObj.This());
+	ResolvedToken FuncToken = Utilities::Resolve(*this, Callable);
+	const std::shared_ptr<IFunction>& Func = boost::apply_visitor(Utilities::GetFunc(*this), FuncToken);
+	Call(Func, Args, NumOfArgs, Callable.This());
 }
 void EvaluationContext::Call(const Types::Function& Func, const ResolvedToken& Args, const Types::Scope& ThisScope)
 {
-    Func->SuppliedArguments(Args,boost::apply_visitor(ArgCounter(),Args));
+	Call(Func, Args, boost::apply_visitor(Utilities::ArgCounter(*this), Args), ThisScope);
+}
+void EvaluationContext::Call(const Types::Function& Func, const ResolvedToken& Args, int NumOfArgs, const Types::Scope& ThisScope)
+{
+    Func->SuppliedArguments(Args,NumOfArgs);
     Func->This(ThisScope);
     try
     { //Make sure native exceptions are properly transformed to internal exceptions
         Func->Eval(*this);
+        if( Func->ReturnCount() == 0 )
+        {
+            EvalStack.push_back(ValueToken(NullReference())); // A function always returns something, which is null when not returning anything by definition
+        }
     }
     catch( Exceptions::RuntimeException& e )
     {
@@ -184,7 +229,7 @@ void EvaluationContext::Call(const Types::Function& Func, const ResolvedToken& A
         EndScope();
     }
     Func->This(NullReference()); //Very Important! Reset the this-ref to prevent a crash on shutdown. The MC gets deleted before the functions
-                                //who would still hold a ref to their this-scopes. When  funcs get deleted the and the ref does it's decref, the MC is already gone -> Crash!
+                                //who would still hold a ref to their this-scopes. When funcs get deleted the and the ref does its decref, the MC is already gone -> Crash!
 
 }
 

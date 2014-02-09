@@ -2,8 +2,6 @@
 #include "nowide/args.hpp"
 #include "nowide/fstream.hpp"
 #include "nowide/iostream.hpp"
-#include <io.h>
-#include <fcntl.h>
 #include "MariusParser.hpp"
 
 int WINAPI WinMain (HINSTANCE hThisInstance,
@@ -56,12 +54,12 @@ int WINAPI WinMain (HINSTANCE hThisInstance,
             }
             catch(Exceptions::ParseError& e)
             {
-                Platform::Out() << "\nerror: " << e.what() << std::endl;
+                Platform::Out() << "\nParseError: " << e.what() << std::endl;
                 continue;
             }
             catch(Exceptions::RuntimeException& e)
             {
-                Platform::Out() << "\n" << e.what() << ": " << e.Name() << std::endl;
+				Platform::Out() << "\n" << e.Name() << ": " << e.what() << std::endl;
                 continue;
             }
             catch(std::logic_error& e)

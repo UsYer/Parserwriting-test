@@ -5,7 +5,7 @@
 #include "Get.hpp"
 namespace Internal
 {
-class EvaluationContext;
+struct EvaluationContext;
 typedef std::function<void(EvaluationContext&)> CallbackFunction;
 enum ArgCount : short
 {

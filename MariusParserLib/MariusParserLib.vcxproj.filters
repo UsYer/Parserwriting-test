@@ -147,6 +147,9 @@
     <ClInclude Include="..\MemoryManagment\include\Reference.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\libs\ustring\ustring.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\MemoryManagment\src\Exceptions.cpp">
@@ -183,6 +186,15 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Tokenizer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ustring\ustring.cc">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\nowide_standalone\src\iostream.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Platform.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

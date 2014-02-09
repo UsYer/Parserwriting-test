@@ -85,12 +85,16 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>PLAT_WIN;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>K:\boost_1_52_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>K:\boost_1_55_0;%(AdditionalIncludeDirectories);M:\Dropbox\Dropbox\Meine_Projekte\Parser\libs\nowide_standalone</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>K:\boost_1_55_0\stage\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libboost_locale-vc120-mt-gd-1_55.lib;libboost_system-vc120-mt-gd-1_55.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -116,7 +120,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>PLAT_WIN;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>K:\boost_1_52_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>K:\boost_1_55_0;%(AdditionalIncludeDirectories);M:\Dropbox\Dropbox\Meine_Projekte\Parser\libs\nowide_standalone</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -124,6 +128,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>K:\boost_1_55_0\stage\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libboost_locale-vc120-mt-1_55.lib;libboost_system-vc120-mt-1_55.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -168,12 +176,15 @@
     <ClInclude Include="..\include\Parsable.hpp" />
     <ClInclude Include="..\include\String.hpp" />
     <ClInclude Include="..\include\TokenizeContext.hpp" />
+    <ClInclude Include="..\libs\ustring\ustring.h" />
     <ClInclude Include="..\MemoryManagment\include\Exceptions.hpp" />
     <ClInclude Include="..\MemoryManagment\include\MemoryController.hpp" />
     <ClInclude Include="..\MemoryManagment\include\Reference.hpp" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\libs\nowide_standalone\src\iostream.cpp" />
+    <ClCompile Include="..\libs\ustring\ustring.cc" />
     <ClCompile Include="..\MemoryManagment\src\Exceptions.cpp" />
     <ClCompile Include="..\MemoryManagment\src\MemoryController.cpp" />
     <ClCompile Include="..\MemoryManagment\src\Reference.cpp" />
@@ -184,6 +195,7 @@
     <ClCompile Include="..\src\MariusParser.cpp" />
     <ClCompile Include="..\src\Operators.cpp" />
     <ClCompile Include="..\src\Parser.cpp" />
+    <ClCompile Include="..\src\Platform.cpp" />
     <ClCompile Include="..\src\Table.cpp" />
     <ClCompile Include="..\src\Tokenizer.cpp" />
   </ItemGroup>

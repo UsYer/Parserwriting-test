@@ -27,8 +27,9 @@ struct ParseFuncBeginning : public boost::static_visitor<std::string>
     }
     std::string operator()(const std::string& Identifier ) const
     {
+		std::string copy_identifier = Identifier;// copy Identifier before pop_front, because that deletes the content of Identifier on MSVC
         m_Context.InputQueue().pop_front();
-        return Identifier;
+        return copy_identifier;
     }
     std::string operator()(const std::shared_ptr<IOperator>& Op ) const
     {

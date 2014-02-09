@@ -17,7 +17,7 @@ struct EvaluationContext
 {
     struct StackWrapper
     {
-        friend class EvaluationContext;
+		friend struct EvaluationContext;
         void Push(const Types::Object& Obj) const
         {
             m_EvalStack.push_back(Obj);
@@ -108,8 +108,10 @@ struct EvaluationContext
         return true;
     }
     //function specific:
+	void Call(const Types::Object& Callable, const ResolvedToken& Args, int NumOfArgs);
     void Call(const Types::Object& Callable, const ResolvedToken& Args);
-    void Call(const Types::Function& Callable, const ResolvedToken& Args, const Types::Scope& ThisScope = NullReference());
+	void Call(const Types::Function& Callable, const ResolvedToken& Args, const Types::Scope& ThisScope = NullReference());
+	void Call(const Types::Function& Callable, const ResolvedToken& Args, int NumOfArgs, const Types::Scope& ThisScope = NullReference());
     void Return(const Types::Object& RetVal);
     //--Exception specific:
     void Throw(const Exceptions::RuntimeException& Ex);

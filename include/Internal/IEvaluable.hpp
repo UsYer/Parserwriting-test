@@ -7,7 +7,7 @@ namespace Internal
 {
 class MemoryController;
 class Reference;
-class EvaluationContext;
+struct EvaluationContext;
 class IEvaluable
 {
 public:

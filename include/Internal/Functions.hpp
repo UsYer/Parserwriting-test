@@ -16,6 +16,10 @@ class TypeFunc : public IFunction
         {
             return "double";
         }
+        std::string operator()(utf8::ustring)const
+        {
+            return "string";
+        }
         std::string operator()(const std::shared_ptr<IEvaluable>& op)const
         {
             return "function";
@@ -187,7 +191,9 @@ public:
     {
         const auto& Exception = IFunction::GetArg<CountedReference>(0);
         auto TypeId = boost::apply_visitor(Utilities::Get<long long>(),(*Exception)["TypeId"]);
-        throw Exceptions::RuntimeException("Unhandled runtime exception",Exceptions::ExceptionNames[TypeId],TypeId);
+        auto message = boost::apply_visitor(Utilities::Get<utf8::ustring>(),(*Exception)["Message"]);
+		auto name = boost::apply_visitor(Utilities::Get<utf8::ustring>(), (*Exception)["Name"]);
+		throw Exceptions::RuntimeException(message, name, TypeId);
     }
 };
 
@@ -196,7 +202,7 @@ class CreateExceptionFunc : public IFunction
     long long m_Id;
     public:
     CreateExceptionFunc(const std::string& Name, long long Id):
-        IFunction("",Name,0,1),
+        IFunction("",Name,-1,1),
         m_Id(Id)
     {}
     virtual void Eval( EvaluationContext& EC )
@@ -204,6 +210,13 @@ class CreateExceptionFunc : public IFunction
         Types::Table ExceptionTable;
         ExceptionTable["__EXCEPTION__"] = 1LL;
         ExceptionTable["TypeId"] = m_Id;
+		ExceptionTable["Name"] = IEvaluable::Name();
+        utf8::ustring message = IEvaluable::Name() + ": ";
+        for( unsigned i = 0; i < m_SuppliedArguments; i++ )
+        {
+            message += Utilities::PrintValue(EC,Types::Object(IFunction::GetArg(i))) + " ";
+        }
+        ExceptionTable["Message"] = message; //// TODO (Marius#1#): Add possibility to add exception message when creating exception at runtime.
         EC.Stack.Push(EC.MC.Save(ExceptionTable));
     }
 };

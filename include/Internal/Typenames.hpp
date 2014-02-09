@@ -1,5 +1,10 @@
 #ifndef TYPENAMES_HPP_INCLUDED
 #define TYPENAMES_HPP_INCLUDED
+//namespace utf8
+//{
+//    class ustring;
+//}
+
 namespace Internal
 {
 template<typename T>
@@ -48,6 +53,14 @@ struct Type<std::string>
     static const char* Name()
     {
         return "identifier";
+    }
+};
+template<>
+struct Type<utf8::ustring>
+{
+    static const char* Name()
+    {
+        return "string";
     }
 };
 template<>

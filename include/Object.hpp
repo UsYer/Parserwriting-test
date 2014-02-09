@@ -3,7 +3,7 @@
 #include "Internal/Utilities.hpp"
 namespace Internal
 {
-    class EvaluationContext;
+    struct EvaluationContext;
 }
 namespace Types
 {

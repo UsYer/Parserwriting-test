@@ -37,8 +37,9 @@ enum struct TokenType : unsigned
     Keyword         = (1u << 11),
     None            = (1u << 12),
     EOL             = (1u << 13),
+    String          = (1u << 14),
     //Composed Tokentypes for convenience:
-    Value = Long | Double | KeywordWithValue | Identifier
+    Value = Long | Double | KeywordWithValue | Identifier | String
 };
 
 inline TokenType operator|(TokenType Lhs, TokenType Rhs)
@@ -70,6 +71,7 @@ struct ParserContext
     inline StateSaver<ParserState>& State() const;
     inline TokenType& LastToken() const;
     inline TokenType& UnexpectedToken() const;
+	inline bool IsLastTokenValue() const;
     private:
     Parser& m_Parser;
     std::deque<UnparsedToken>* m_InputQueue;
@@ -231,5 +233,10 @@ inline TokenType& ParserContext::UnexpectedToken() const
 {
     return m_Parser.m_UnexpectedToken.top();
 }
+inline bool ParserContext::IsLastTokenValue() const
+{
+	return (TokenType::Value & LastToken()) == LastToken();
+}
+
 }//ns Internal
 #endif // PARSER_H

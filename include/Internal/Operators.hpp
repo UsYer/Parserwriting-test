@@ -19,22 +19,42 @@ inline void ParseAssignment(ParserContext& PC)
 {// TODO (Marius#6#): Add recognition of funccall to support named parameter
     //The parser would let some tokens through, which don't make sense in an assignment. Other Tokens like faulty placed operators will be correctly handled
     //by the Parser
-    if( PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double || PC.LastToken() == TokenType::KeywordWithValue )
-        throw std::logic_error("Can't assign to a number literal");
-    PC.Parse(std::make_shared<AssignmentOp>());
+    if( PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double || PC.LastToken() == TokenType::KeywordWithValue || PC.LastToken() == TokenType::String)
+        throw std::logic_error("Can't assign to a literal");
+    PC.Parse(UnparsedToken(std::make_shared<AssignmentOp>()));
     PC.LastToken() = TokenType::Assignment;
     PC.State() = ParserState::Assignment;
 };
 class PlusOp : public IOperator
 {
     class Add
-        : public boost::static_visitor<NumberToken >
+        : public boost::static_visitor<ResolvedToken >
     {
     public:
-        template <typename T, typename U>
-        auto operator()( T lhs, U rhs) -> decltype(lhs + rhs) const
+        ResolvedToken operator()(long long lhs, long long rhs) const
         {
             return lhs + rhs;
+        }
+        ResolvedToken operator()(long long lhs, double rhs) const
+        {
+            return lhs + rhs;
+        }
+        ResolvedToken operator()(double lhs, long long rhs) const
+        {
+            return lhs + rhs;
+        }
+        ResolvedToken operator()(double lhs, double rhs) const
+        {
+            return lhs + rhs;
+        }
+        ResolvedToken operator()(const utf8::ustring& lhs, const utf8::ustring& rhs) const
+        {
+            return lhs + rhs;
+        }
+        template <typename T, typename U>
+        ResolvedToken operator()( T lhs, U rhs)const
+        {
+            throw Exceptions::TypeException("operator + is not supported on operands with types " + utf8::ustring(Type<T>::Name()) + " and " + Type<U>::Name() );
         }
     };
 
@@ -43,9 +63,11 @@ public:
     {}
     void Eval(EvaluationContext& EC)
     {
-        NumberToken rhs = Utilities::GetNumberToken(EC, EC.EvalStack.back());
+        //NumberToken rhs = Utilities::GetNumberToken(EC, EC.EvalStack.back());
+        ResolvedToken rhs = Utilities::Resolve(EC,EC.EvalStack.back());
         EC.EvalStack.pop_back();
-        NumberToken lhs = Utilities::GetNumberToken(EC, EC.EvalStack.back());
+        //NumberToken lhs = Utilities::GetNumberToken(EC, EC.EvalStack.back());
+        ResolvedToken lhs = Utilities::Resolve(EC,EC.EvalStack.back());
         EC.EvalStack.pop_back();
         Add A; //Created a lvalue here because otherwise the compiler would complain about discarding qualifiers in the function call below
         EC.EvalStack.push_back(Types::Object(boost::apply_visitor(A,lhs,rhs)));
@@ -384,12 +406,16 @@ public:
     {
         if( EC.EvalStack.size() < 2 )
             throw std::logic_error("Missing input near '['");
-        long long Index = Utilities::GetWithResolve<long long>(EC,EC.EvalStack.back(),"Index is not an integer");
-        EC.EvalStack.pop_back();
-        Types::Object O(Index);
-        O.This(Utilities::GetWithResolve<CountedReference>(EC,EC.EvalStack.back(),"Expected table left of operator '[]'"));
-        EC.EvalStack.pop_back();
-        EC.EvalStack.push_back(O);
+        long long index;
+        utf8::ustring key;
+        Types::Object index_or_key = EC.Stack.Pop();
+
+        if( !Utilities::ResolvesToAndGet<long long>(EC, index_or_key, index) && !Utilities::ResolvesToAndGet<utf8::ustring>(EC,index_or_key, key) )
+        {
+            throw Exceptions::TypeException("operator '[]' expects integer or string type");
+        }
+        index_or_key.This(Utilities::GetWithResolve<CountedReference>(EC,EC.Stack.Pop(),"Expected table left of operator '[]'"));
+        EC.Stack.Push(index_or_key);
     }
 };
 
@@ -572,14 +598,18 @@ class OpeningBracketFuncCall : public OpeningBracket
         {
             throw Exceptions::TypeException("Expected function; Is operator " + op->Representation());
         }
+        void operator()(const utf8::ustring& str)const
+        {
+            throw Exceptions::TypeException("Expected function; Is string");
+        }
         void operator()(const Reference& R)const
         {
             if( R.IsNull() )
                 throw Exceptions::NullReferenceException("Calling a nullreference");
             else
             { //check whether the table has an @-specialmethod which makes it callable
-                if( (*R).Contains("@Call") )
-                    boost::apply_visitor(*this, (*R)["@Call"]);//recursivly check whether @Call is a function
+                if( (*R).Contains("@call") )
+                    boost::apply_visitor(*this, (*R)["@call"]);//recursivly check whether @Call is a function
                 else
                     throw Exceptions::TypeException("Expected function; Is table");
             }
@@ -681,73 +711,6 @@ class ClosingBracket : public IOperator
             return *Func == "__ALSM__";
         }
     };
-    struct GetFunc: public boost::static_visitor<std::shared_ptr<IFunction>>
-    {
-        EvaluationContext& m_EC;
-        GetFunc(EvaluationContext& EC):
-            m_EC(EC)
-        {
-
-        }
-        std::shared_ptr<IFunction> operator()(long long ) const
-        {
-            throw Exceptions::TypeException("Expected function; Is long");
-        }
-        std::shared_ptr<IFunction> operator()(double )const
-        {
-            throw Exceptions::TypeException("Expected function; Is double");
-        }
-        std::shared_ptr<IFunction> operator()(const std::shared_ptr<IOperator>& op)const
-        {
-            throw Exceptions::TypeException("Expected function; Is operator " + op->Representation());
-        }
-        std::shared_ptr<IFunction> operator()(const Reference& R)const
-        {
-            if( R.IsNull() )
-                throw Exceptions::NullReferenceException("Calling a nullreference");
-            else
-            {    //check whether the table has an @-specialmethod which makes it callable
-                if( (*R).Contains("@Call") )
-                    return boost::apply_visitor(*this, (*R)["@Call"]); //recursivly check whether @Call is a function
-                throw Exceptions::TypeException("Expected function; Is table");
-            }
-        }
-        std::shared_ptr<IFunction> operator()(NullReference)const
-        {
-            throw Exceptions::NullReferenceException("Calling a nullreference");
-        }
-        std::shared_ptr<IFunction> operator()(const std::shared_ptr<IFunction>& op)const
-        {
-            return op;
-        }
-    };
-    struct ArgCounter : public boost::static_visitor<unsigned>
-    {
-        EvaluationContext& m_EC;
-        ArgCounter(EvaluationContext& EC):
-            m_EC(EC)
-        {}
-        template <typename T>
-        unsigned operator()(const T& ) const
-        {
-            return 1;
-        }
-        unsigned operator()(const CountedReference& Ref) const
-        {
-            auto it = (*Ref).Find("__ARGCOUNT__");
-            if( it != (*Ref).KeyEnd() )
-                return boost::apply_visitor(Utilities::Get<long long>("ArgCount field of the argument table has to be an integer"),it->second);
-            else
-                return 1;
-        }
-        unsigned operator()(const std::shared_ptr<IFunction>& Func) const
-        {
-            if( *Func == "__ALSM__" )
-                return 0;
-            else
-                return 1;
-        }
-    };
 public:
     ClosingBracket():IOperator("Closing Bracket",")",-100,ArityType::UnaryPostfix,AssociativityType::None)
     {}
@@ -756,9 +719,9 @@ public:
         if( EC.Signal(SignalType::FuncCall) )
         {
             EC.DropSignal(); //We're not in a FuncCall anymore if the body of the func gets evaluated
-            ResolvedToken Args(Utilities::Resolve(EC,EC.Stack.Pop()));
-            //Check, whether there are arguments. If there's immediatly an argliststartmarker then there are no args
-            long long ArgCount = boost::apply_visitor(ArgCounter(EC),Args);
+            ResolvedToken Args = Utilities::Resolve(EC,EC.Stack.Pop());
+            //Check, whether there are arguments. If there's immediately an argliststartmarker then there are no args
+            long long ArgCount = boost::apply_visitor(Utilities::ArgCounter(EC),Args);
             #ifdef DEBUG
             std::cout << "No. of provided Args for funccall: " << ArgCount << std::endl;
             #endif
@@ -770,24 +733,25 @@ public:
                 }
                 EC.Stack.Pop();
             }
-            const Types::Object& FuncObj(EC.Stack.Pop());
-            ResolvedToken FuncToken(Utilities::Resolve(EC,FuncObj));
-            const std::shared_ptr<IFunction>& Func(boost::apply_visitor(GetFunc(EC),FuncToken));
-
-            Func->SuppliedArguments(Args,ArgCount);
-            Func->This(FuncObj.This());
-            try
-            { //Make sure native exceptions are properly transformed to internal exceptions
-                Func->Eval(EC);
-            }
-            catch( Exceptions::RuntimeException& e )
-            {
-                Func->This(NullReference());
-                EC.Throw(e);
-                EC.EndScope();
-            }
-            Func->This(NullReference()); //Very Important! Reset the this-ref to prevent a crash on shutdown. The MC gets deleted before the functions
-                                        //who would still hold a ref to their this-scopes. When  funcs get deleted the and the ref does it's decref, the MC is already gone -> Crash!
+            const Types::Object& FuncObj = EC.Stack.Pop();
+            EC.Call(FuncObj, Args, ArgCount);
+//            ResolvedToken FuncToken = Utilities::Resolve(EC,FuncObj);
+//            const std::shared_ptr<IFunction>& Func = boost::apply_visitor(Utilities::GetFunc(EC),FuncToken);
+//
+//            Func->SuppliedArguments(Args,ArgCount);
+//            Func->This(FuncObj.This());
+//            try
+//            { //Make sure native exceptions are properly transformed to internal exceptions
+//                Func->Eval(EC);
+//            }
+//            catch( Exceptions::RuntimeException& e )
+//            {
+//                Func->This(NullReference());
+//                EC.Throw(e);
+//                EC.EndScope();
+//            }
+//            Func->This(NullReference()); //Very Important! Reset the this-ref to prevent a crash on shutdown. The MC gets deleted before the functions
+//                                        //who would still hold a ref to their this-scopes. When  funcs get deleted the and the ref does it's decref, the MC is already gone -> Crash!
         }
         else
             EC.DropSignal();
