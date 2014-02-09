@@ -68,11 +68,13 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-flto" />
-					<Add option="-Wl,-allow-multiple-definition" />
 					<Add library="libUnitTest++64.a" />
 					<Add library="..\bin\ReleaseLib_TDM-64\libParser64.a" />
+					<Add library="libboost_locale-mgw48-mt-1_55.a" />
+					<Add library="libboost_system-mgw48-mt-1_55.a" />
+					<Add library="..\libs\nowide_standalone\bin\libnowide.a" />
 					<Add directory="$(#unittest.lib)" />
+					<Add directory="$(#boost.lib)" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="$exe_output" />
@@ -139,6 +141,7 @@
 		<Unit filename="FunctionCallTests.hpp" />
 		<Unit filename="FunctionDefTests.hpp" />
 		<Unit filename="SpecialMethodTests.hpp" />
+		<Unit filename="StringTests.hpp" />
 		<Unit filename="TableTests.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>

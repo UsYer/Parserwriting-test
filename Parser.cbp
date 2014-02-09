@@ -39,6 +39,8 @@
 					<Add option="-pg -lgmon" />
 					<Add library="Winmm" />
 					<Add library="libs\nowide_standalone\bin\Debug\lib\libnowide.a" />
+					<Add library="libboost_locale-mgw48-mt-d-1_55.a" />
+					<Add library="libboost_system-mgw48-mt-d-1_55.a" />
 				</Linker>
 			</Target>
 			<Target title="Release TDM-64 32bit">
@@ -69,14 +71,14 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-std=c++11" />
-					<Add option="-flto" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-flto" />
 					<Add library="Winmm" />
 					<Add library="libs\nowide_standalone\bin\Release\lib\libnowide.a" />
+					<Add library="libboost_locale-mgw48-mt-1_55.a" />
+					<Add library="libboost_system-mgw48-mt-1_55.a" />
 				</Linker>
 			</Target>
 			<Target title="Debug Lib TDM-64 64bit">
@@ -93,6 +95,8 @@
 				<Linker>
 					<Add library="Winmm" />
 					<Add library="libs\nowide_standalone\bin\Release\lib\libnowide.a" />
+					<Add library="libboost_locale-mgw48-mt-d-1_55.a" />
+					<Add library="libboost_system-mgw48-mt-d-1_55.a" />
 				</Linker>
 			</Target>
 			<Target title="Release Lib TDM-64 32bit">
@@ -127,72 +131,15 @@
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
 					<Add option="-std=c++0x" />
-					<Add option="-flto" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-flto" />
+					<Add option="-Wl,--whole-archive -lboost_locale-mgw48-mt-1_55 -lboost_system-mgw48-mt-1_55 -Wl,--no-whole-archive" />
 					<Add library="Winmm" />
 					<Add library="libs\nowide_standalone\bin\Release\lib\libnowide.a" />
-				</Linker>
-			</Target>
-			<Target title="Debug mingw-w64 4.6 64bit">
-				<Option output="bin/Debug_4_6/Parser64" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Debug_4_6_64/" />
-				<Option type="1" />
-				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
-				<Compiler>
-					<Add option="-std=c++0x" />
-					<Add option="-pg" />
-					<Add option="-g" />
-					<Add option="-DDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-pg -lgmon" />
-					<Add option="-static-libgcc" />
-					<Add option="-static-libstdc++" />
-					<Add library="Winmm" />
-				</Linker>
-			</Target>
-			<Target title="Release mingw-w64 4.6 64bit">
-				<Option output="bin/Release_4_6/Parser64" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Release_4_6_64/" />
-				<Option type="1" />
-				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
-				<Compiler>
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add option="-std=c++0x" />
-					<Add option="-flto" />
-					<Add option="-DNDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-					<Add option="-flto" />
-					<Add option="-Wl,-allow-multiple-definition" />
-					<Add option="-static-libgcc" />
-					<Add option="-static-libstdc++" />
-					<Add library="Winmm" />
-				</Linker>
-			</Target>
-			<Target title="Release Lib mingw-w64 4.6 64bit">
-				<Option output="bin/ReleaseLib_4_6/Parser64" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
-				<Option object_output="obj/Release Lib_4_6_64/" />
-				<Option type="2" />
-				<Option compiler="gnu_gcc_compiler_mingww64_rubenvb_x64" />
-				<Compiler>
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-O3" />
-					<Add option="-std=c++0x" />
-					<Add option="-flto" />
-					<Add option="-DNDEBUG" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-					<Add option="-flto" />
-					<Add library="Winmm" />
+					<Add library="libboost_locale-mgw48-mt-1_55.a" />
+					<Add library="libboost_system-mgw48-mt-1_55.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -202,6 +149,9 @@
 			<Add directory="$(#boost)" />
 			<Add directory="libs/nowide_standalone" />
 		</Compiler>
+		<Linker>
+			<Add directory="$(#boost.lib)" />
+		</Linker>
 		<Unit filename="MemoryManagment/include/MemoryController.hpp" />
 		<Unit filename="MemoryManagment/include/Reference.hpp" />
 		<Unit filename="MemoryManagment/src/MemoryController.cpp" />
@@ -247,13 +197,13 @@
 		<Unit filename="include/Parsable.hpp" />
 		<Unit filename="include/Platform.hpp" />
 		<Unit filename="include/TokenizeContext.hpp" />
+		<Unit filename="libs/ustring/ustring.cc" />
+		<Unit filename="libs/ustring/ustring.h" />
 		<Unit filename="main.cpp">
 			<Option target="Debug TDM-64 32bit" />
 			<Option target="Release TDM-64 32bit" />
 			<Option target="Debug TDM-64 64bit" />
 			<Option target="Release TDM-64 64bit" />
-			<Option target="Debug mingw-w64 4.6 64bit" />
-			<Option target="Release mingw-w64 4.6 64bit" />
 		</Unit>
 		<Unit filename="src/EvaluationContext.cpp" />
 		<Unit filename="src/Functions.cpp" />
