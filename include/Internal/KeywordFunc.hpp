@@ -111,7 +111,7 @@ void Function(ParserContext& Context)
             std::cout << ArgListParser.m_Args[i] + ", ";
         }
     #endif
-    auto RTFunc = std::make_shared<RuntimeFunc>("",Identifier,ArgListParser.m_Args,0);
+    auto RTFunc = std::make_shared<RuntimeFunc>("",Identifier,ArgListParser.m_Args,1);
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
     if( Identifier.empty() )
         Context.OutputQueue().push_back(std::make_shared<ValueHolder>(RTFunc));

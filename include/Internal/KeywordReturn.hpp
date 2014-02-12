@@ -17,10 +17,11 @@ class Returner: public IOperator
     }
     virtual void Eval(EvaluationContext& EC)
     {
-        if(m_HasArg)
-            EC.Return(EC.Stack.Pop());
-        else
-            EC.EndScope();
+		if (m_HasArg)
+			EC.Return(EC.Stack.Pop());
+		else
+			EC.Return(Types::Object(NullReference{}));
+			//EC.EndScope();
     }
 };
 }//ns Detail
