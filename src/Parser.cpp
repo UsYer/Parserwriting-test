@@ -147,7 +147,7 @@ struct Parser::Visitor : public boost::static_visitor<>
             m_ParserContext.ThrowIfUnexpected(TokenType::OpeningBracket, "Unexpected opening bracket");
             m_ParserContext.UnexpectedToken() = TokenType::None;
             //check if there is an operator missing. Something like that: 5(5+5), which should read 5*(5+5) for example
-            if( m_ParserContext.LastToken() == TokenType::Long || m_ParserContext.LastToken() == TokenType::Double )
+			if (m_ParserContext.LastToken() == TokenType::Long || m_ParserContext.LastToken() == TokenType::Double || m_ParserContext.LastToken() == TokenType::String)
             {
                 throw std::logic_error("An operator is missing before '" + op->Representation() + "'\n");
             }
@@ -313,7 +313,7 @@ private:
         #endif
         while( !m_ParserContext.OperatorStack().empty() ) //While there are items on the stack
         {
-            auto StackOperator = m_ParserContext.OperatorStack().top();;
+            auto StackOperator = m_ParserContext.OperatorStack().top();
             if( *StackOperator == *m_ParserContext.OpeningBracket() )
                 break;
             //there's nothing to do if the current object on top of the stack is a paranthese

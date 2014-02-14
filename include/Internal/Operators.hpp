@@ -506,7 +506,7 @@ public:
         EC.EvalStack.pop_back();
         ResolvedToken LHS = Utilities::Resolve(EC, EC.EvalStack.back());
         EC.EvalStack.pop_back();
-        CountedReference Table(boost::apply_visitor(GetTable(EC),LHS));
+        CountedReference Table{boost::apply_visitor(GetTable(EC),LHS)};
         (*Table).Add(RHS);
         EC.EvalStack.push_back(Types::Object(Table));
     }
@@ -545,7 +545,7 @@ protected:
             if( !R.IsNull() )
             { //check whether the table has an @-specialmethod which makes it callable
                 if( (*R).Contains("@Call") )
-                    return boost::apply_visitor(*this, (*R)["@Call"]); //recursivly check whether @Call is a function
+                    return boost::apply_visitor(*this, (*R)["@Call"]); //recursively check whether @Call is a function
             }
             return false;
         }
@@ -672,6 +672,15 @@ inline void ParseOpeningBracket(ParserContext& PC)
         std::cout << "OpeningBracketNoFuncCall\n";
         #endif
     }
+//    else if(PC.LastToken() == TokenType::OpeningBracket )
+//    {
+//        auto OB = std::make_shared<OpeningBracket>();
+//        PC.Parse(OB);
+//        //PC.OutputQueue().push_back(OB);
+//#ifdef DEBUG
+//        std::cout << "OpeningBracket\n";
+//#endif
+//    }
     else
     {
         auto OB = std::make_shared<OpeningBracket>();

@@ -52,6 +52,13 @@ TEST(ReadTableByIndexComplex)
     long long result = MP.GlobalScope()["result"];
     CHECK_EQUAL(3,result);
 }
+TEST(NestedTablesInAssignment)
+{
+	long long value = MP.Evaluate("table = ((1, 2), 2, 3)\n"
+				"nested_table = table[0]\n"
+				"nested_table[0]");
+	CHECK_EQUAL(1, value);
+}
 TEST(CalculationWithTableAccesByIndex)
 {
     std::cout << "CalculationWithTableAccesByIndex\n";
@@ -110,4 +117,12 @@ TEST(MemberAccesOnTempTable)
     MP.Evaluate("Table().Id=1");
 }
 
+// interaction between string <-> table
+TEST(StringAsTableKey)
+{
+	utf8::ustring key_one =  MP.Evaluate("table_key = Table()\n"
+											"table_key[\"one\"] = \"value_one\"\n"
+											"table_key[\"one\"]");
+	CHECK_EQUAL("value_one", key_one);
+}
 #endif // TABLETESTS_HPP_INCLUDED

@@ -125,7 +125,7 @@ private:
     std::stack<TokenType> m_LastToken;
     std::stack<TokenType> m_UnexpectedToken;
     std::stack<StateSaver<ParserState>> m_State;
-    //Keeps track of the expected brackets. If there are still brackets after completly parsing the input at least one closing bracket is missing
+    //Keeps track of the expected brackets. If there are still brackets after completely parsing the input at least one closing bracket is missing
     std::stack<Types::Operator/*Closingbracket*/> m_ExpectedBracket;
     ParserContext m_Context;
     void ResetStates()
