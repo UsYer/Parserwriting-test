@@ -6,10 +6,10 @@ namespace Keyword
 {
     void Null(ParserContext& PC)
     {
-        PC.ThrowIfUnexpected(TokenType::KeywordWithValue, "Unexpected \"null\"");
-        PC.UnexpectedToken() = TokenType::None;
+		PC.ThrowIfUnexpected(TokenTypeOld::KeywordWithValue, "Unexpected \"null\"");
+		PC.UnexpectedToken() = TokenTypeOld::None;
         PC.OutputQueue().push_back(std::make_shared<ValueHolder>(NullReference()));
-        PC.LastToken() = TokenType::KeywordWithValue;
+		PC.LastToken() = TokenTypeOld::KeywordWithValue;
     }
 }//ns Keyword
 }//ns Internal

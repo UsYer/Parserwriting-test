@@ -1,4 +1,5 @@
-#include "../include/Internal/Types.hpp"
+#include "../include/Internal/EvaluationContext.hpp"
+#include "../include/Internal/Object.hpp"
 #include "../include/Internal/IFunction.hpp"
 #include "../include/Internal/Utilities.hpp"
 #include "../include/Exceptions.hpp"
@@ -75,6 +76,73 @@ public:
     }
 };
 }//ns
+
+void EvaluationContext::StackWrapper::Push(const Types::Object& Obj) const
+{
+	m_EvalStack.push_back(Obj);
+}
+void EvaluationContext::StackWrapper::Push(const ValueToken& Obj) const
+{
+	m_EvalStack.push_back(Types::Object(Obj));
+}
+Types::Object EvaluationContext::StackWrapper::Pop() const
+{
+	auto Obj = m_EvalStack.back();
+	m_EvalStack.pop_back();
+	return Obj;
+}
+///Gets a reference to an item on the stack indexed by their position. Enumerated from top (0) to bottom
+Types::Object& EvaluationContext::StackWrapper::Get(unsigned Pos) const
+{
+	return m_EvalStack.at(m_EvalStack.size() - 1 - Pos);
+}
+Types::Object& EvaluationContext::StackWrapper::Top() const
+{
+	return m_EvalStack.back();
+}
+void EvaluationContext::StackWrapper::Clear()
+{
+	m_EvalStack.clear();
+}
+bool EvaluationContext::StackWrapper::Empty() const
+{
+	return m_EvalStack.empty();
+}
+size_t EvaluationContext::StackWrapper::Size() const
+{
+	return m_EvalStack.size();
+}
+EvaluationContext::StackWrapper::StackWrapper(Types::Stack& EvalStack) :
+m_EvalStack(EvalStack)
+{}
+
+CountedReference EvaluationContext::NewScope(const Types::Table& LocalScope, std::deque<ParsedToken>* Instructions)
+{
+	m_ScopeInstructions.push_back(std::make_pair(MC.Save(LocalScope), Instructions));
+	return m_ScopeInstructions.back().first;
+}
+
+CountedReference EvaluationContext::NewScope(const Types::Scope& LocalScope, std::deque<ParsedToken>* Instructions)
+{
+	m_ScopeInstructions.push_back(std::make_pair(LocalScope, Instructions));
+	return m_ScopeInstructions.back().first;
+}
+
+void EvaluationContext::SetGlobalScopeInstructions(std::deque<ParsedToken>* Instructions)
+{
+	m_ScopeInstructions[0].second = Instructions;
+}
+
+const CountedReference& EvaluationContext::Scope() const
+{
+	return m_ScopeInstructions.back().first;
+}
+
+CountedReference& EvaluationContext::Scope()
+{
+	return m_ScopeInstructions.back().first;
+}
+
 void EvaluationContext::EvalScope()
 {
     //We don't need another Evaluator for each new scope, because the new instructions will be pushed on top of the scopeinstructions stack and will therefore
@@ -99,7 +167,7 @@ void EvaluationContext::EvalScope()
             return;
         Evaluator Ev(*this);
 
-        for(Token& T : *m_ScopeInstructions.back().second)
+		for (ParsedToken& T : *m_ScopeInstructions.back().second)
         {
         #ifdef DEBUG
             std::cout << boost::apply_visitor(Utilities::PrintValueNoResolve(),T) << " ";
@@ -108,6 +176,15 @@ void EvaluationContext::EvalScope()
         }
     //}
 }
+
+bool EvaluationContext::EndScope()
+{
+	if (m_ScopeInstructions.size() <= 1) //preserve global scope
+		return false;
+	m_ScopeInstructions.pop_back();
+	return true;
+}
+
 Types::Function GetCatchBlock(EvaluationContext& EC)
 {
     auto it = (*EC.Scope()).Find("__CATCH__");

@@ -100,7 +100,7 @@ void Function(ParserContext& Context)
         boost::apply_visitor(ArgListParser,Context.InputQueue().front());
         Context.InputQueue().pop_front();
     }
-    if( ArgListParser.m_Expected != TokenType::None )
+    if( ArgListParser.m_Expected != TokenTypeOld::None )
         throw std::logic_error("Missung input in argument list; expected closing bracket\n");
 
     #ifdef DEBUG
@@ -117,7 +117,7 @@ void Function(ParserContext& Context)
         Context.OutputQueue().push_back(std::make_shared<ValueHolder>(RTFunc));
     else
         Context.OutputQueue().push_back(std::make_shared<Detail::FuncRegistrar>(RTFunc));
-    Context.LastToken() = TokenType::KeywordWithValue;
+    Context.LastToken() = TokenTypeOld::KeywordWithValue;
     Context.SetUpNewScope(&RTFunc->m_FuncInstructions);
     Context.State() = ParserState::FuncDef;
 }

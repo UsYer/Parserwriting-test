@@ -21,7 +21,7 @@ enum struct ParserState
     None = ~(FunctionCall | BracketPairWithinFunctionCall)
 };
 
-enum struct TokenType : unsigned
+enum struct TokenTypeOld : unsigned
 {
     Long            = (1u << 0),
     Double          = (1u << 1),
@@ -42,23 +42,23 @@ enum struct TokenType : unsigned
     Value = Long | Double | KeywordWithValue | Identifier | String
 };
 
-inline TokenType operator|(TokenType Lhs, TokenType Rhs)
+inline TokenTypeOld operator|(TokenTypeOld Lhs, TokenTypeOld Rhs)
 {
-    return static_cast<TokenType>(static_cast<unsigned>(Lhs) | static_cast<unsigned>(Rhs));
+    return static_cast<TokenTypeOld>(static_cast<unsigned>(Lhs) | static_cast<unsigned>(Rhs));
 }
-inline TokenType operator&(TokenType Lhs, TokenType Rhs)
+inline TokenTypeOld operator&(TokenTypeOld Lhs, TokenTypeOld Rhs)
 {
-    return static_cast<TokenType>(static_cast<unsigned>(Lhs) & static_cast<unsigned>(Rhs));
+	return static_cast<TokenTypeOld>(static_cast<unsigned>(Lhs)& static_cast<unsigned>(Rhs));
 }
 class Parser;
 struct ParserContext
 {
     inline ParserContext(Parser& P, std::deque<UnparsedToken>* InputQueue = 0);
     ///Provide a pointer to a new Outputqueue if you want to redirect the parsed tokens to somewhere else as the standard outputqueue
-    inline void SetUpNewScope(std::deque<Token>* NewOutputQueue = 0);
+	inline void SetUpNewScope(std::deque<ParsedToken>* NewOutputQueue = 0);
     inline bool EndScope();
     void Parse(const UnparsedToken&) const; //defined in the cpp-file
-    inline void ThrowIfUnexpected(TokenType TType, const std::string& ErrMessage = "Unexpected Token") const;
+    inline void ThrowIfUnexpected(TokenTypeOld TType, const std::string& ErrMessage = "Unexpected Token") const;
     inline const Types::Operator& OpeningBracket() const;
     inline const Types::Operator& ClosingBracket() const;
     inline std::stack<Types::Operator>& ExpectedBracket() const;
@@ -67,15 +67,15 @@ struct ParserContext
     inline std::stack<Types::Operator>& OperatorStack() const;
     inline std::deque<UnparsedToken>& InputQueue() const;
     inline void InputQueue(std::deque<UnparsedToken>* NewInputQueue);
-    inline std::deque<Token>& OutputQueue() const;
+	inline std::deque<ParsedToken>& OutputQueue() const;
     inline StateSaver<ParserState>& State() const;
-    inline TokenType& LastToken() const;
-    inline TokenType& UnexpectedToken() const;
+    inline TokenTypeOld& LastToken() const;
+    inline TokenTypeOld& UnexpectedToken() const;
 	inline bool IsLastTokenValue() const;
     private:
     Parser& m_Parser;
     std::deque<UnparsedToken>* m_InputQueue;
-    std::stack<std::deque<Token>*> m_OutputQueues;
+	std::stack<std::deque<ParsedToken>*> m_OutputQueues;
     std::stack<bool> m_PopOutputQueue;
 };
 /**
@@ -91,7 +91,7 @@ public:
 
     void Parse( std::deque<UnparsedToken> TokExpr );
 
-    std::deque<Token> GetOutput() const
+	std::deque<ParsedToken> GetOutput() const
     {
         return m_OutputQueue;
     }
@@ -113,7 +113,7 @@ protected:
 private:
     //Fields for parsed Tokens:
     std::stack<std::stack<Types::Operator>> m_OperatorStack;
-    std::deque<Token> m_OutputQueue;
+	std::deque<ParsedToken> m_OutputQueue;
     Types::Operator m_OpeningBracket;
     Types::Operator m_ClosingBracket;
     Types::Operator m_ArgumentSeperator;
@@ -122,8 +122,8 @@ private:
     friend struct Visitor;
     struct Visitor;
 
-    std::stack<TokenType> m_LastToken;
-    std::stack<TokenType> m_UnexpectedToken;
+    std::stack<TokenTypeOld> m_LastToken;
+    std::stack<TokenTypeOld> m_UnexpectedToken;
     std::stack<StateSaver<ParserState>> m_State;
     //Keeps track of the expected brackets. If there are still brackets after completely parsing the input at least one closing bracket is missing
     std::stack<Types::Operator/*Closingbracket*/> m_ExpectedBracket;
@@ -143,7 +143,7 @@ inline ParserContext::ParserContext(Parser& P, std::deque<UnparsedToken>* InputQ
     m_OutputQueues.push(&m_Parser.m_OutputQueue);
     m_PopOutputQueue.push(false);
 }
-inline void ParserContext::SetUpNewScope(std::deque<Token>* NewOutputQueue)
+inline void ParserContext::SetUpNewScope(std::deque<ParsedToken>* NewOutputQueue)
 {
     if( NewOutputQueue )
     {
@@ -153,8 +153,8 @@ inline void ParserContext::SetUpNewScope(std::deque<Token>* NewOutputQueue)
     else
         m_PopOutputQueue.push(false);
     m_Parser.m_OperatorStack.push(std::stack<Types::Operator>());
-    m_Parser.m_LastToken.push(TokenType::None);
-    m_Parser.m_UnexpectedToken.push(TokenType::None);
+    m_Parser.m_LastToken.push(TokenTypeOld::None);
+    m_Parser.m_UnexpectedToken.push(TokenTypeOld::None);
     m_Parser.m_State.push(ParserState::None);
 }
 inline bool ParserContext::EndScope()
@@ -174,11 +174,11 @@ inline bool ParserContext::EndScope()
     m_Parser.m_State.pop();
     return true;
 }
-void ParserContext::ThrowIfUnexpected(TokenType TType, const std::string& ErrMessage) const
+void ParserContext::ThrowIfUnexpected(TokenTypeOld TType, const std::string& ErrMessage) const
 {
     if( (m_Parser.m_UnexpectedToken.top() & TType) == TType )
     {
-        m_Parser.m_UnexpectedToken.top() = TokenType::None;
+        m_Parser.m_UnexpectedToken.top() = TokenTypeOld::None;
         throw std::logic_error(ErrMessage);
     }
 }
@@ -216,7 +216,7 @@ inline void ParserContext::InputQueue(std::deque<UnparsedToken>* NewInputQueue)
     assert(NewInputQueue);
     m_InputQueue = NewInputQueue;
 }
-inline std::deque<Token>& ParserContext::OutputQueue() const
+inline std::deque<ParsedToken>& ParserContext::OutputQueue() const
 {
     assert(!m_OutputQueues.empty());
     return *m_OutputQueues.top();
@@ -225,17 +225,17 @@ inline StateSaver<ParserState>& ParserContext::State() const
 {
     return m_Parser.m_State.top();
 }
-inline TokenType& ParserContext::LastToken() const
+inline TokenTypeOld& ParserContext::LastToken() const
 {
     return m_Parser.m_LastToken.top();
 }
-inline TokenType& ParserContext::UnexpectedToken() const
+inline TokenTypeOld& ParserContext::UnexpectedToken() const
 {
     return m_Parser.m_UnexpectedToken.top();
 }
 inline bool ParserContext::IsLastTokenValue() const
 {
-	return (TokenType::Value & LastToken()) == LastToken();
+	return (TokenTypeOld::Value & LastToken()) == LastToken();
 }
 
 }//ns Internal

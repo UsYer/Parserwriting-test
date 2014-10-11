@@ -2,6 +2,7 @@
 #define FUNCTION_HPP_INCLUDED
 #include "Internal/IFunction.hpp"
 #include "Internal/Marshal.hpp"
+#include "Internal/EvaluationContext.hpp"
 namespace Types
 {
 class Object;

@@ -19,7 +19,7 @@ struct ScopeEnder : public IFunction
 }//ns Detail
 void End(ParserContext& Context)
 {
-    if( Context.LastToken() == TokenType::OpUnaryPrefix || Context.LastToken() == TokenType::OpBinary )
+	if (Context.LastToken() == TokenTypeOld::OpUnaryPrefix || Context.LastToken() == TokenTypeOld::OpBinary)
         throw std::logic_error("missing argument after operator");
     //End of parsing a scope, so pop the remaining operators on the Outqueue to not miss them
     while( !Context.OperatorStack().empty() )

@@ -1,5 +1,7 @@
 #ifndef TOKENIZECONTEXT_HPP_INCLUDED
 #define TOKENIZECONTEXT_HPP_INCLUDED
+#include "Internal/Token.hpp"
+
 
 enum struct LastCharType : unsigned
 {
@@ -47,7 +49,7 @@ public:
 }//ns Internal
 struct TokenizeContext
 {
-    TokenizeContext(Internal::LastCharProxy& LastChar, std::deque<Internal::UnparsedToken>& OutputQueue):
+	TokenizeContext(Internal::LastCharProxy& LastChar, std::deque<Internal::Token>& OutputQueue) :
         m_LastChar(LastChar),
         m_OutputQueue(OutputQueue)
     {}
@@ -55,12 +57,12 @@ struct TokenizeContext
     {
         return m_LastChar;
     }
-    std::deque<Internal::UnparsedToken>& OutputQueue() const
+    std::deque<Internal::Token>& OutputQueue() const
     {
         return m_OutputQueue;
     }
     private:
     Internal::LastCharProxy& m_LastChar;
-    std::deque<Internal::UnparsedToken>& m_OutputQueue;
+	std::deque<Internal::Token>& m_OutputQueue;
 };
 #endif // TOKENIZECONTEXT_HPP_INCLUDED

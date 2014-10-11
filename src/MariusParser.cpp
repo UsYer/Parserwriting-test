@@ -16,6 +16,8 @@
 #include "../include/Internal/KeywordCatch.hpp"
 #include "../include/Internal/KeywordNull.hpp"
 #include "../include/Internal/KeywordReturn.hpp"
+#include "../include/Internal/RDParser.hpp"
+#include "../include/Internal/AST/Node.hpp"
 
 #include "../include/Internal/ParseEOL.hpp"
 
@@ -65,7 +67,7 @@ struct MariusParser::Impl
 
         m_Tokenizer.RegisterToken(new OpeningBracketToken);
         m_Tokenizer.RegisterToken(new ClosingBracketToken);
-        m_Parser.RegisterBracketOperator(std::make_shared<OpeningBracket>(), std::make_shared<ClosingBracket>());
+        m_Parser.RegisterBracketOperator(std::make_shared<class OpeningBracket>(), std::make_shared<class ClosingBracket>());
     /*
         auto IOB = new GenericOpeningBracketToken<IndexOpeningBracket>;
         auto ICB = new GenericClosingBracketToken<IndexClosingBracket>;
@@ -74,10 +76,10 @@ struct MariusParser::Impl
         m_Parser.RegisterBracketOperator(IOB->GetOp(), ICB->GetOp());
     //*/
     //*
-        auto ICB = new GenericClosingBracketToken<IndexClosingBracket>;
+        /*auto ICB = new GenericClosingBracketToken<IndexClosingBracket>;
         m_Tokenizer.RegisterToken(new IndexOpeningBracketToken);
         m_Tokenizer.RegisterToken(ICB);
-        m_Parser.RegisterBracketOperator(std::make_shared<IndexOpeningBracket>(), ICB->GetOp());
+        m_Parser.RegisterBracketOperator(std::make_shared<IndexOpeningBracket>(), ICB->GetOp());*/
     //*/
         RegisterFunction(std::make_shared<TypeFunc>());
 
@@ -151,7 +153,7 @@ struct MariusParser::Impl
     #endif
         auto startTicks = std::chrono::high_resolution_clock::now();
         QueryPerformanceCounter(&start_ticks);
-        std::deque<Internal::UnparsedToken> UTs = m_Tokenizer.Tokenize(Input);
+        std::deque<Internal::Token> UTs = m_Tokenizer.Tokenize(Input);
         m_Tokenizer.Clear();
         QueryPerformanceCounter(&ende_ticks);
         auto endTicks = std::chrono::high_resolution_clock::now();
@@ -159,9 +161,9 @@ struct MariusParser::Impl
         auto tickTokenizing = tick_sum = ende_ticks.QuadPart - start_ticks.QuadPart;
 
     #ifdef DEBUG
-        for(Internal::UnparsedToken& Tok : UTs)
+        for(Internal::Token& Tok : UTs)
         {
-            std::cout << boost::apply_visitor(Internal::Utilities::PrintValueNoResolve(),Tok) << " ";
+            std::cout << boost::apply_visitor(Internal::Utilities::PrintValueNoResolve(),Tok.getValue()) << " ";
         }
         std::cout << std::endl;
     #endif
@@ -171,13 +173,22 @@ struct MariusParser::Impl
         std::cout << "--- Parsing ---" << std::endl;
     #endif
         QueryPerformanceCounter(&start_ticks);
+		std::deque<Internal::UnparsedToken> unparsed_tokens;
+		std::transform(std::begin(UTs), std::end(UTs), std::back_inserter(unparsed_tokens), [](const Internal::Token& tok){ return tok.getValue(); });
         // ParserState parser_state = ParserState::NeedsMoreInput
         // do
         // {
         //     if (std::getline(stream, string))
         //     {
         //      std::deque<Internal::UnparsedToken> UTs = m_Tokenizer.Tokenize(string);
-        m_Parser.Parse(UTs);
+
+		Internal::RDParser parser;
+		std::deque<Internal::Token> tokens = { Internal::Token{ Internal::TokenType::Integer, 5ll }, Internal::Token{ Internal::TokenType::OpBinary, std::make_shared<Internal::PlusOp>() }, 
+			Internal::Token{ Internal::TokenType::Integer, 5ll }, Internal::Token{ Internal::TokenType::OpBinary, std::make_shared<Internal::MultiOp>() }, Internal::Token{ Internal::TokenType::Integer, 5ll } };
+		
+		std::unique_ptr<Internal::AST::Block> ast = parser.parse(tokens);
+		
+		m_Parser.Parse(unparsed_tokens);
         //     }
         // }
         // while ( parser_state == ParserState::NeedsMoreInput );

@@ -1,0 +1,37 @@
+
+ident_list = ident {"," ident} .
+
+ named_func_def = "func" ident funcbody .
+ 
+ func_def = "func" funcbody .
+
+ funcbody = "(" [ident_list] ")" block "end" .
+
+ block = {statement} [return_statement] .
+ 
+ return_statement = "return" expression .
+ 
+ statement =
+     ident "=" expression
+     | named_func_def
+     | "if" condition "then" statement 
+     | "while" condition "do" statement 
+     | "throw" expression .
+ 
+ condition =
+     expression ("=="|"<"|"<="|">"|">=") expression .
+ 
+ expression = ["+"|"-"] term {("+"|"-") term} .
+ 
+ term = factor {("*"|"/") factor} .
+ 
+ factor =
+     ident
+     | number
+     | "(" expression ")" .
+     
+binop = "+" | "-" | "*" | "/" | "^" | "%" |  
+		 "<" | "<=" | ">" | ">=" | "==" | "!=" | 
+		 "and" | "or" .
+
+unop = "-" | "!" .

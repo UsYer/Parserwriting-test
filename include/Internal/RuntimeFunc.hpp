@@ -1,11 +1,12 @@
 #ifndef RUNTIMEFUNC_HPP_INCLUDED
 #define RUNTIMEFUNC_HPP_INCLUDED
+#include "EvaluationContext.hpp"
 namespace Internal
 {
 class RuntimeFunc: public IFunction
 {
     public:
-    std::deque<Token> m_FuncInstructions;
+    std::deque<ParsedToken> m_FuncInstructions;
     RuntimeFunc(const std::string& Name, const std::string& Representation, const std::vector<std::string>& Args, unsigned ReturnCount):
         IFunction(Name, Representation, Args.size(), ReturnCount)
     {
@@ -14,7 +15,7 @@ class RuntimeFunc: public IFunction
             m_LocalScope[Arg];
         }
     }
-    virtual void Eval(EvaluationContext& EC)
+    virtual void Eval(EvaluationContext& EC) override
     {
         auto LocalScopeRef = EC.MC.Save(m_LocalScope);
         (*LocalScopeRef)["__PARENT__"] = EC.Scope(); //Save the actual parentscope before setting up the new scope because otherwise it would point to this scope: infinite recursion

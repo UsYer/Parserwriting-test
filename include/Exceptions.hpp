@@ -9,12 +9,12 @@ class ParseError : public std::exception
 public:
     struct Location
     {
-        Location(const std::string& F, unsigned L):
+        Location(const std::string& F, long long L):
             File(F),
             Line(L)
         {}
         std::string File;
-        unsigned Line;
+		long long Line;
     };
     ParseError(const std::string& Message, const Location& Loc):
         std::exception(),
@@ -29,7 +29,7 @@ public:
     {
         return m_Message.c_str();
     }
-    unsigned Line() const
+	long long Line() const
     {
         return m_Location.Line;
     }

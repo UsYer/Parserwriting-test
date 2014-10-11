@@ -98,22 +98,22 @@ struct SwallowOpeningBracket : public boost::static_visitor<>
     }
 };*/
 ///See enum struct TokenType in Parser.hpp
-const char* Expected(TokenType Type)
+const char* Expected(TokenTypeOld Type)
 {
     switch(Type)
     {
-        case TokenType::OpUnaryPrefix:
-        case TokenType::OpUnaryPostfix:
-        case TokenType::OpBinary:
+        case TokenTypeOld::OpUnaryPrefix:
+        case TokenTypeOld::OpUnaryPostfix:
+        case TokenTypeOld::OpBinary:
             return "operator";
         break;
-        case TokenType::Identifier:
+        case TokenTypeOld::Identifier:
             return "identifier";
         break;
-        case TokenType::ArgSeperator:
+        case TokenTypeOld::ArgSeperator:
             return "argument seperator";
         break;
-        case TokenType::None:
+        case TokenTypeOld::None:
             return "none";
         break;
         default:
@@ -124,7 +124,7 @@ const char* Expected(TokenType Type)
 struct ParseArgumentList : public boost::static_visitor<void>
 {
     ParseArgumentList(const ParserContext& ParserContext):
-        m_Expected(TokenType::None),
+        m_Expected(TokenTypeOld::None),
         m_Finished(false),
         m_ParserContext(ParserContext)
     {
@@ -145,7 +145,7 @@ struct ParseArgumentList : public boost::static_visitor<void>
     }
     void operator()(const std::string& Identifier)
     {
-        if( m_Expected != TokenType::Identifier && m_Expected != TokenType::None ) //TokenType::None means we just started so we can't throw then
+        if( m_Expected != TokenTypeOld::Identifier && m_Expected != TokenTypeOld::None ) //TokenTypeOld::None means we just started so we can't throw then
                 throw std::logic_error(std::string("Expected ") + Expected(m_Expected) + " before Identifier \"" + Identifier + "\"");
         //check for duplicate argumentnames
         auto it = std::find(m_Args.begin(),m_Args.end(),Identifier);
@@ -153,10 +153,10 @@ struct ParseArgumentList : public boost::static_visitor<void>
             throw std::logic_error("Duplicate argument \"" + Identifier + "\" in argument list");
 
         m_Args.push_back(Identifier);
-        m_Expected = TokenType::ArgSeperator;
+        m_Expected = TokenTypeOld::ArgSeperator;
     }
 
-    TokenType m_Expected;
+    TokenTypeOld m_Expected;
     std::vector<std::string> m_Args;
     bool m_Finished;
     private:
@@ -165,20 +165,20 @@ struct ParseArgumentList : public boost::static_visitor<void>
     {
         if( *m_ParserContext.ClosingBracket() == Rep )
         {
-            if( m_Expected == TokenType::Identifier)
+            if( m_Expected == TokenTypeOld::Identifier)
                 throw std::logic_error(std::string("Expected Identifier; got closing bracket"));
             //the arg list is finished with the occurences of a closing bracket
-            m_Expected = TokenType::None;
+            m_Expected = TokenTypeOld::None;
             m_Finished = true;
             return;
         }
         else if( *m_ParserContext.ArgumentSeperator() == Rep )
         {
-            if( m_Expected != TokenType::ArgSeperator )
+            if( m_Expected != TokenTypeOld::ArgSeperator )
                 throw std::logic_error(std::string("Expected ") + Expected(m_Expected) + "; got argument seperator");
 
             //Argsep is expected so we swallow it and expect a new identifier
-            m_Expected = TokenType::Identifier;
+            m_Expected = TokenTypeOld::Identifier;
         }
         else
         {

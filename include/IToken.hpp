@@ -59,18 +59,26 @@ class OperatorToken : public IToken
     }
     virtual LastCharType Tokenize(TokenizeContext& TC) const
     {
-        TC.OutputQueue().push_back(m_Operator);
-        switch( m_Operator->Arity() )// TODO (Marius#5#): Ugly, IOperator::Arity() should somehow be assignable to TokenizeContext::LastChar()
-        {
-        case Internal::IOperator::ArityType::UnaryPostfix:
-            return LastCharType::UnaryPostfixOp;
+		LastCharType last_char;
+		Internal::TokenType token_type;
+		switch (m_Operator->Arity())// TODO (Marius#5#): Ugly, IOperator::Arity() should somehow be assignable to TokenizeContext::LastChar()
+		{
+		case Internal::IOperator::ArityType::UnaryPostfix:
+			last_char = LastCharType::UnaryPostfixOp;
+			token_type = Internal::TokenType::OpUnaryPostfix;
+			break;
+		case Internal::IOperator::ArityType::UnaryPrefix:
+			last_char = LastCharType::UnaryPrefixOp;
+			token_type = Internal::TokenType::OpUnaryPrefix;
+			break;
+		default: //Internal::IOperator::ArityType::Binary:
+			last_char = LastCharType::BinaryOp;
+			token_type = Internal::TokenType::OpBinary;
+			break;
+		}
 
-        case Internal::IOperator::ArityType::UnaryPrefix:
-            return LastCharType::UnaryPrefixOp;
-
-        default: //Internal::IOperator::ArityType::Binary:
-            return LastCharType::BinaryOp;
-        }
+		TC.OutputQueue().push_back(Internal::Token{ token_type, m_Operator });
+		return last_char;
     }
     std::shared_ptr<Internal::IOperator> GetOp() const
     {
@@ -100,24 +108,32 @@ class ParsedOperatorToken : public IToken
     }
     virtual LastCharType Tokenize(TokenizeContext& TC) const
     {
-        TC.OutputQueue().push_back(m_ParseFunc);
+		LastCharType last_char;
+		Internal::TokenType token_type;
         switch( m_Arity )// TODO (Marius#5#): Ugly, IOperator::Arity() should somehow be assignable to TokenizeContext::LastChar()
         {
         case Internal::IOperator::ArityType::UnaryPostfix:
-            return LastCharType::UnaryPostfixOp;
-
+			last_char = LastCharType::UnaryPostfixOp;
+			token_type = Internal::TokenType::OpUnaryPostfix;
+			break;
         case Internal::IOperator::ArityType::UnaryPrefix:
-            return LastCharType::UnaryPrefixOp;
-
+			last_char = LastCharType::UnaryPrefixOp;
+			token_type = Internal::TokenType::OpUnaryPrefix;
+			break;
         default: //Internal::IOperator::ArityType::Binary:
-            return LastCharType::BinaryOp;
+			last_char = LastCharType::BinaryOp;
+			token_type = Internal::TokenType::OpBinary;
+			break;
         }
+
+		TC.OutputQueue().push_back(Internal::Token{ token_type, m_ParseFunc });
+		return last_char;
     }
     private:
     Internal::IOperator::ArityType m_Arity;
     Parsable m_ParseFunc;
 };
-
+/*
 template <typename T>
 class GenericOpeningBracketToken : public OperatorToken<T>
 {
@@ -144,7 +160,7 @@ class GenericClosingBracketToken : public OperatorToken<T>
         return LastCharType::LikeClosingBracket;
     }
 };
-
+*/
 class KeywordToken : public IToken
 {
     Parsable m_Keyword;
@@ -157,7 +173,7 @@ public:
     }
     virtual LastCharType Tokenize(TokenizeContext& TC) const
     {
-        TC.OutputQueue().push_back(m_Keyword);
+		TC.OutputQueue().push_back(Internal::Token{ Internal::TokenType::Identifier, m_Keyword });
         return LastCharType::Identifier;// TODO (Marius#7#): Add Keyword to LastCharType
     }
 };

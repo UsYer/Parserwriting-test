@@ -54,9 +54,6 @@
     <ClInclude Include="..\include\Internal\EvaluationContext.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Internal\FuncCaller.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Internal\Functions.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -150,6 +147,18 @@
     <ClInclude Include="..\libs\ustring\ustring.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Internal\Token.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Internal\RDParser.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Internal\AST\Node.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Internal\Value.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\MemoryManagment\src\Exceptions.cpp">
@@ -197,5 +206,20 @@
     <ClCompile Include="..\src\Platform.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Token.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RDParser.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Node.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utilities.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\grammar_lua_based.ebnf" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include "../include/Internal/IOperator.hpp"
 #include "../include/Internal/Tokenizer.hpp"
 #include "../include/Internal/Types.hpp"
+#include "../include/Internal/Token.hpp"
 using namespace Internal;
 
 bool SetOrdering::operator()(const IToken& lhs, const IToken& rhs) const
@@ -17,12 +18,15 @@ void Tokenizer::RegisterToken(IToken* Token) //not const because ptr_set require
 {
     Operators.insert(Token);
 }
-std::deque<UnparsedToken> Tokenizer::Tokenize(const std::string& expression)
+std::deque<Token> Tokenizer::Tokenize(const std::string& expression)
 {
     return TokenizeGreedy(expression);
 }
-
-std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expression)
+Tokenizer::Tokenizer() :
+    LastChar(LastCharType::Start),
+    m_Context(LastChar, OutputQueue)
+{}
+std::deque<Token> Tokenizer::TokenizeGreedy(const std::string& expression)
 {
     std::string UnrecognizedBuffer; //Will be used for identifiers and such
     bool DecimalNumber = false;
@@ -97,12 +101,12 @@ std::deque<UnparsedToken> Tokenizer::TokenizeGreedy(const std::string& expressio
 
             if( !stringCorrectlyTerminated )
             {
-				throw std::logic_error("SyntaxError: String not properly terminated; hit end of input.");
+                throw std::logic_error("SyntaxError: String not properly terminated; hit end of input.");
             }
 
             //assign iterators to Utf8String
             str.append(beg,ch);
-            OutputQueue.push_back(str);
+			OutputQueue.push_back(Token{ TokenType::String, str });
             ++ch; // skip the last quote
             continue;
         }
@@ -183,7 +187,7 @@ bool Tokenizer::ParseOperator()
                 //Walk down to the left of the operator
                 ParseOperator(Identifier);//Make sure, that there're no shadowed operators in the Identifier left of the operator
                 if( !Identifier.empty() )
-                    OutputQueue.push_back(Identifier);
+					OutputQueue.push_back(Token{ TokenType::Identifier, Identifier });
             }
             OperatorBuffer.erase(0,found + Rep.length());//Erase the identifier in front of the operator, if there was one, and the operator itself
             LastChar = it->Tokenize(m_Context);
@@ -202,7 +206,7 @@ bool Tokenizer::ParseOperator()
 #ifdef DEBUG
     std::cout << "Identifier: " << Identifier << "\n";
 #endif
-    OutputQueue.push_back(Identifier);//clean the OpBuffer and push the Identifier
+	OutputQueue.push_back(Token{ TokenType::Identifier, Identifier }); // clean the OpBuffer and push the Identifier
     LastChar = LastCharType::Identifier;
     return false;
 }
@@ -235,7 +239,7 @@ bool Tokenizer::ParseOperator(std::string& Expr)
                 //Make sure, that there're no shadowed operators in the Identifier. E.g.: searching for '++': )++ ')' would be shadowed
                 ParseOperator(Identifier);
                 if( !Identifier.empty() )
-                    OutputQueue.push_back(Identifier);
+					OutputQueue.push_back(Token{ TokenType::Identifier, Identifier });
             }
             Expr.erase(0,found + Rep.length());//Erase the identifier in front of the operator, if there was one, and the operator itself
             LastChar = it->Tokenize(m_Context);
@@ -260,9 +264,9 @@ void Tokenizer::FlushNumBuffer(bool DecimalNumber)
         try
         {
             if( DecimalNumber )
-                OutputQueue.push_back(boost::lexical_cast<double>(m_NumberBuffer));
+				OutputQueue.push_back(Token{ TokenType::Double, boost::lexical_cast<double>(m_NumberBuffer) });
             else
-                OutputQueue.push_back(boost::lexical_cast<long long>(m_NumberBuffer));
+				OutputQueue.push_back(Token{ TokenType::Integer, boost::lexical_cast<long long>(m_NumberBuffer) });
         }
         catch(boost::bad_lexical_cast& e)
         {
@@ -270,4 +274,12 @@ void Tokenizer::FlushNumBuffer(bool DecimalNumber)
         }
         m_NumberBuffer.clear();
     }
+}
+
+void Tokenizer::Clear()
+{
+    LastChar = LastCharType::Start;
+    m_NumberBuffer.clear();
+    OperatorBuffer.clear();
+    OutputQueue.clear();
 }

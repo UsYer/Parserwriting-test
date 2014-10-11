@@ -25,17 +25,14 @@ class Tokenizer
 public:
     friend struct TokenizeContext;
     /** Default constructor */
-    Tokenizer():
-        LastChar(LastCharType::Start),
-        m_Context(LastChar,OutputQueue)
-    {}
+	Tokenizer();
     /** \brief Tokenizes the given expression and returns the result
      *
      * \param expression The expression to be parsed
-     * \return std::deque<UnparsedToken>
+     * \return std::deque<Token>
      *
      */
-    std::deque<UnparsedToken> Tokenize(const std::string& expression);
+    std::deque<Token> Tokenize(const std::string& expression);
     /**
      * \brief Registers the provided operator within the Tokenizer so it will be recognized in a string while tokenizing
      * \param p Operator to register
@@ -47,13 +44,7 @@ public:
      * \return void
      *
      */
-    void Clear()
-    {
-        LastChar = LastCharType::Start;
-        m_NumberBuffer.clear();
-        OperatorBuffer.clear();
-        OutputQueue.clear();
-    }
+	void Clear();
 
 
 protected:
@@ -65,13 +56,13 @@ private:
     bool ParseOperator();
     void FlushNumBuffer(bool DecimalNumber);
     bool ParseOperator(std::string& Expr);
-    std::deque<UnparsedToken> TokenizeGreedy(const std::string& expression);
+	std::deque<Token> TokenizeGreedy(const std::string& expression);
 
     LastCharProxy LastChar;
     std::string m_NumberBuffer;
     std::string OperatorBuffer;
     boost::ptr_set< IToken,SetOrdering > Operators;
-    std::deque<UnparsedToken> OutputQueue;
+	std::deque<Token> OutputQueue;
     TokenizeContext m_Context;
 };
 

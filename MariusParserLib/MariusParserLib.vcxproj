@@ -139,9 +139,9 @@
   <ItemGroup>
     <ClInclude Include="..\include\Exceptions.hpp" />
     <ClInclude Include="..\include\Function.hpp" />
+    <ClInclude Include="..\include\Internal\AST\Node.hpp" />
     <ClInclude Include="..\include\Internal\BindFunc.hpp" />
     <ClInclude Include="..\include\Internal\EvaluationContext.hpp" />
-    <ClInclude Include="..\include\Internal\FuncCaller.hpp" />
     <ClInclude Include="..\include\Internal\Functions.hpp" />
     <ClInclude Include="..\include\Internal\Get.hpp" />
     <ClInclude Include="..\include\Internal\IEvaluable.hpp" />
@@ -160,15 +160,18 @@
     <ClInclude Include="..\include\Internal\Operators.hpp" />
     <ClInclude Include="..\include\Internal\Parser.hpp" />
     <ClInclude Include="..\include\Internal\ParseUtilities.hpp" />
+    <ClInclude Include="..\include\Internal\RDParser.hpp" />
     <ClInclude Include="..\include\Internal\RuntimeFunc.hpp" />
     <ClInclude Include="..\include\Internal\Stack.hpp" />
     <ClInclude Include="..\include\Internal\StateSaver.hpp" />
     <ClInclude Include="..\include\Internal\Table.hpp" />
+    <ClInclude Include="..\include\Internal\Token.hpp" />
     <ClInclude Include="..\include\Internal\Tokenizer.hpp" />
     <ClInclude Include="..\include\Internal\Tokens.hpp" />
     <ClInclude Include="..\include\Internal\Typenames.hpp" />
     <ClInclude Include="..\include\Internal\Types.hpp" />
     <ClInclude Include="..\include\Internal\Utilities.hpp" />
+    <ClInclude Include="..\include\Internal\Value.hpp" />
     <ClInclude Include="..\include\IParsable.hpp" />
     <ClInclude Include="..\include\IToken.hpp" />
     <ClInclude Include="..\include\MariusParser.hpp" />
@@ -193,11 +196,18 @@
     <ClCompile Include="..\src\IEvaluable.cpp" />
     <ClCompile Include="..\src\IFunction.cpp" />
     <ClCompile Include="..\src\MariusParser.cpp" />
+    <ClCompile Include="..\src\Node.cpp" />
     <ClCompile Include="..\src\Operators.cpp" />
     <ClCompile Include="..\src\Parser.cpp" />
     <ClCompile Include="..\src\Platform.cpp" />
+    <ClCompile Include="..\src\RDParser.cpp" />
     <ClCompile Include="..\src\Table.cpp" />
+    <ClCompile Include="..\src\Token.cpp" />
     <ClCompile Include="..\src\Tokenizer.cpp" />
+    <ClCompile Include="..\src\Utilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\grammar_lua_based.ebnf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

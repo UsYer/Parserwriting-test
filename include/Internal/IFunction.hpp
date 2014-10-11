@@ -3,6 +3,7 @@
 #include "IEvaluable.hpp"
 #include "Table.hpp"
 #include "Get.hpp"
+#include "Types.hpp"
 namespace Internal
 {
 struct EvaluationContext;

@@ -9,7 +9,7 @@ namespace Detail
 class TryBlock: public IFunction
 {
     public:
-    std::deque<Token> m_FuncInstructions;
+    std::deque<ParsedToken> m_FuncInstructions;
     TryBlock():
         IFunction("", "__TRY__", 1, 0)
     {
@@ -37,7 +37,7 @@ void Try(ParserContext& Context)
     auto TryFunc = std::make_shared<Detail::TryBlock>();
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
     Context.OutputQueue().push_back(std::make_shared<ValueHolder>(TryFunc, "__TRYHOLDER__"));
-    Context.LastToken() = TokenType::KeywordWithValue;
+	Context.LastToken() = TokenTypeOld::KeywordWithValue;
     Context.SetUpNewScope(&TryFunc->m_FuncInstructions);
 }
 }//ns Keyword

@@ -11,7 +11,7 @@ class CatchBlock: public IFunction
 {
     const std::string m_Arg;
     public:
-    std::deque<Token> m_FuncInstructions;
+    std::deque<ParsedToken> m_FuncInstructions;
     Types::Scope m_CatchScope; //Uses different scope from localscope because we have to preserve the scope where the catch block was created. Will be set from TryCaller
     CatchBlock(const std::string& Arg):
         IFunction("", "__CATCH__", Arg.empty()? 0 : 1, 0),
@@ -110,7 +110,7 @@ void Catch(ParserContext& Context)
 {
     if( Context.InputQueue().empty() )
         throw std::logic_error("Missing input after \"catch\"");
-    if( Context.LastToken() != TokenType::KeywordWithValue || !boost::apply_visitor(Detail::IsTry(), Context.OutputQueue().back()) )
+	if (Context.LastToken() != TokenTypeOld::KeywordWithValue || !boost::apply_visitor(Detail::IsTry(), Context.OutputQueue().back()))
         throw std::logic_error("Missing \"try\" block before \"catch\"");
     boost::apply_visitor(SwallowOperator(Context,Context.OpeningBracket(),"Expected openingbracket after \"catch\""),Context.InputQueue().front());
     if( Context.InputQueue().empty() )
@@ -121,7 +121,7 @@ void Catch(ParserContext& Context)
         boost::apply_visitor(SwallowOperator(Context,Context.ClosingBracket()),Context.InputQueue().front());
     //Push the func !before! setting up the new scope, because it would be otherwise registered in the new scope, which is the func itself. Weird :D
     Context.OutputQueue().push_back(TryCallFunc);
-    Context.LastToken() = TokenType::KeywordWithValue;
+	Context.LastToken() = TokenTypeOld::KeywordWithValue;
     Context.SetUpNewScope(&TryCallFunc->m_Catch->m_FuncInstructions);
 }
 }//ns Keyword

@@ -4,9 +4,9 @@ namespace Internal
 {
 inline void ParseEOL(ParserContext& PC)
 {
-    PC.ThrowIfUnexpected(TokenType::EOL);
+	PC.ThrowIfUnexpected(TokenTypeOld::EOL);
     //if the last operator is a prefix or a binary signal an error, because it always needs more input to evaluate
-    if( PC.LastToken() == TokenType::OpUnaryPrefix || PC.LastToken() == TokenType::OpBinary )
+	if (PC.LastToken() == TokenTypeOld::OpUnaryPrefix || PC.LastToken() == TokenTypeOld::OpBinary)
         throw std::logic_error("Missing input after operator");
     //Check if there are closing brackets missing
     if( !PC.ExpectedBracket().empty() )
@@ -17,7 +17,7 @@ inline void ParseEOL(ParserContext& PC)
         PC.OutputQueue().push_back(PC.OperatorStack().top());
         PC.OperatorStack().pop();
     }
-    PC.LastToken() = TokenType::EOL;
+	PC.LastToken() = TokenTypeOld::EOL;
 }
 class EOLToken : public IToken
 {
@@ -29,7 +29,7 @@ public:
     }
     virtual LastCharType Tokenize(TokenizeContext& TC) const
     {
-        TC.OutputQueue().push_back(Parsable("\n", &ParseEOL));
+        TC.OutputQueue().push_back(Token{ TokenType::EOL, Parsable{ "\n", &ParseEOL } });
         return LastCharType::EOL;
     }
 };

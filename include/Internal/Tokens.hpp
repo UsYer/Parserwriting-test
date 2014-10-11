@@ -18,7 +18,7 @@ typedef boost::variant<long long, double, utf8::ustring,std::shared_ptr<IOperato
 struct FuncCallerTag
     {};
 // Token after Parsing:
-typedef boost::variant<long long, double, utf8::ustring,std::shared_ptr<IEvaluable>,std::string> Token;
+typedef boost::variant<long long, double, utf8::ustring,std::shared_ptr<IEvaluable>,std::string> ParsedToken;
 
 // Token produced after parsing, used at runtime:
 typedef boost::variant<long long, double, utf8::ustring,std::string,CountedReference, NullReference, std::shared_ptr<IFunction>> ValueToken; //Has to remain an IFunction because otherwise the funccaller couldn't operate on it
