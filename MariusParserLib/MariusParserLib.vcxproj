@@ -198,6 +198,7 @@
     <ClCompile Include="..\src\Platform.cpp" />
     <ClCompile Include="..\src\Table.cpp" />
     <ClCompile Include="..\src\Tokenizer.cpp" />
+    <ClCompile Include="..\src\Utilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
