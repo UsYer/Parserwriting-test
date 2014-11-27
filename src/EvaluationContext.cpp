@@ -116,19 +116,19 @@ EvaluationContext::StackWrapper::StackWrapper(Types::Stack& EvalStack) :
 m_EvalStack(EvalStack)
 {}
 
-CountedReference EvaluationContext::NewScope(const Types::Table& LocalScope, std::deque<ParsedToken>* Instructions)
+CountedReference EvaluationContext::NewScope(const Types::Table& LocalScope, std::deque<Token>* Instructions)
 {
 	m_ScopeInstructions.push_back(std::make_pair(MC.Save(LocalScope), Instructions));
 	return m_ScopeInstructions.back().first;
 }
 
-CountedReference EvaluationContext::NewScope(const Types::Scope& LocalScope, std::deque<ParsedToken>* Instructions)
+CountedReference EvaluationContext::NewScope(const Types::Scope& LocalScope, std::deque<Token>* Instructions)
 {
 	m_ScopeInstructions.push_back(std::make_pair(LocalScope, Instructions));
 	return m_ScopeInstructions.back().first;
 }
 
-void EvaluationContext::SetGlobalScopeInstructions(std::deque<ParsedToken>* Instructions)
+void EvaluationContext::SetGlobalScopeInstructions(std::deque<Token>* Instructions)
 {
 	m_ScopeInstructions[0].second = Instructions;
 }
@@ -167,7 +167,7 @@ void EvaluationContext::EvalScope()
             return;
         Evaluator Ev(*this);
 
-		for (ParsedToken& T : *m_ScopeInstructions.back().second)
+		for (Token& T : *m_ScopeInstructions.back().second)
         {
         #ifdef DEBUG
             std::cout << boost::apply_visitor(Utilities::PrintValueNoResolve(),T) << " ";
@@ -277,7 +277,7 @@ void EvaluationContext::Call(const Internal::Types::Object& Callable, const Reso
     const Types::Function& Func = boost::apply_visitor(Utilities::GetFunc(*this),FuncToken);
 	Call(Func, Args, Callable.This());
 }
-void EvaluationContext::Call(const Internal::Types::Object& Callable, const ResolvedToken& Args, int NumOfArgs)
+void EvaluationContext::Call(const Internal::Types::Object& Callable, const ResolvedToken& Args, long long NumOfArgs)
 {
 	ResolvedToken FuncToken = Utilities::Resolve(*this, Callable);
 	const std::shared_ptr<IFunction>& Func = boost::apply_visitor(Utilities::GetFunc(*this), FuncToken);
@@ -287,7 +287,7 @@ void EvaluationContext::Call(const Types::Function& Func, const ResolvedToken& A
 {
 	Call(Func, Args, boost::apply_visitor(Utilities::ArgCounter(*this), Args), ThisScope);
 }
-void EvaluationContext::Call(const Types::Function& Func, const ResolvedToken& Args, int NumOfArgs, const Types::Scope& ThisScope)
+void EvaluationContext::Call(const Types::Function& Func, const ResolvedToken& Args, long long NumOfArgs, const Types::Scope& ThisScope)
 {
     Func->SuppliedArguments(Args,NumOfArgs);
     Func->This(ThisScope);

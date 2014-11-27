@@ -154,7 +154,7 @@ public:
     {}
     void Eval(EvaluationContext&) override
     {
-        //throw std::logic_error("Bracket missmatch");
+        //throw std::logic_error("Bracket mismatch");
     }
 };
 
@@ -196,7 +196,7 @@ public:
 	void Eval(EvaluationContext& EC) override;
 };
 
-void ParseOpeningBracket(ParserContext& PC);
+static void ParseOpeningBracket(ParserContext& PC);
 
 class OpeningBracketToken : public IToken
 {
@@ -215,7 +215,8 @@ public:
     {}
 	void Eval(EvaluationContext& EC) override;
 };
-void ParseClosingBracket(ParserContext& PC);
+
+static void ParseClosingBracket(ParserContext& PC);
 
 class ClosingBracketToken : public IToken
 {

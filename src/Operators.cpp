@@ -385,12 +385,12 @@ void Internal::ParseAssignment(ParserContext& PC)
 {// TODO (Marius#6#): Add recognition of funccall to support named parameter
 	//The parser would let some tokens through, which don't make sense in an assignment. Other Tokens like faulty placed operators will be correctly handled
 	//by the Parser
-	if (PC.LastToken() == TokenTypeOld::Long || PC.LastToken() == TokenTypeOld::Double || PC.LastToken() == TokenTypeOld::KeywordWithValue || PC.LastToken() == TokenTypeOld::String)
+	if (PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double || PC.LastToken() == TokenType::KeywordWithValue || PC.LastToken() == TokenType::String)
 		throw std::logic_error("Can't assign to a literal");
 	PC.Parse(UnparsedToken(std::make_shared<AssignmentOp>()));
-	PC.LastToken() = TokenTypeOld::Assignment;
+	PC.LastToken() = TokenType::Assignment;
 	PC.State() = ParserState::Assignment;
-}
+};
 
 // TODO (Marius#8#): Prevent more than one assignment in a row like "f(arg=result=1)"
 void AssignmentOp::Eval(EvaluationContext& EC)
@@ -440,10 +440,10 @@ void UnaryMinusOp::Eval(EvaluationContext& EC)
 LastCharType MinusToken::Tokenize(TokenizeContext& TC) const
 {
 	if (QualifiesForUnary(TC.LastChar()) || (TC.LastChar() == LastCharType::None && QualifiesForUnary(TC.LastChar().Before()))) {
-		TC.OutputQueue().push_back(Token{ TokenType::OpUnaryPrefix, std::make_shared<UnaryMinusOp>() });
+		TC.OutputQueue().push_back(std::make_shared<UnaryMinusOp>());
 		return LastCharType::UnaryPrefixOp;
 	} else {
-		TC.OutputQueue().push_back(Token{ TokenType::OpBinary, std::make_shared<BinaryMinusOp>() });
+		TC.OutputQueue().push_back(std::make_shared<BinaryMinusOp>());
 		return LastCharType::BinaryOp;
 	}
 }
@@ -551,20 +551,19 @@ void IndexOpeningBracket::Eval(EvaluationContext& EC)
 
 void Internal::ParseIndexOpeningBracket(ParserContext& PC)
 {
-	PC.ThrowIfUnexpected(TokenTypeOld::OpeningBracket);
+	PC.ThrowIfUnexpected(TokenType::OpeningBracket);
 	//the generic parsing would allow nothing before an openingbracket. E.g.: (5+5)*2
 	//But this wouldn't make any sense for our index-bracket
-	if (PC.LastToken() == TokenTypeOld::None)
+	if (PC.LastToken() == TokenType::None)
 		throw std::logic_error("Missing input before '['");
-	else if (PC.LastToken() == TokenTypeOld::OpBinary || PC.LastToken() == TokenTypeOld::OpUnaryPrefix)
+	else if (PC.LastToken() == TokenType::OpBinary || PC.LastToken() == TokenType::OpUnaryPrefix)
 		throw std::logic_error("Unexpected operator before '['");
 	PC.Parse(std::make_shared<IndexOpeningBracket>());
-
 }
 
 LastCharType IndexOpeningBracketToken::Tokenize(TokenizeContext& TC) const
 {
-	TC.OutputQueue().push_back(Token{ TokenType::OpeningBracket, Parsable{ "[", &ParseIndexOpeningBracket } });
+	TC.OutputQueue().push_back(Parsable("[", &ParseIndexOpeningBracket));
 	return LastCharType::LikeOpeningBracket;
 }
 
@@ -584,9 +583,9 @@ void TableOp::Eval(EvaluationContext& EC)
 void Internal::ParseTableOp(ParserContext& PC)
 {
 	PC.Parse(std::make_shared<TableOp>());
-	PC.LastToken() = TokenTypeOld::ArgSeperator;
+	PC.LastToken() = TokenType::ArgSeperator;
 	//The table-op doesn't accept everything a anormal binary-op would accept
-	PC.UnexpectedToken() = (TokenTypeOld::OpeningBracket /*| TokenType::Value*/); // FIXME (Marius#8#): OR-ing a TokenType with a composed TokenType doesn't work
+	PC.UnexpectedToken() = (TokenType::OpeningBracket /*| TokenType::Value*/); // FIXME (Marius#8#): OR-ing a TokenType with a composed TokenType doesn't work
 }
 
 void OpeningBracket::Eval(EvaluationContext& EC)
@@ -625,55 +624,48 @@ void OpeningBracketNoFuncCall::Eval(EvaluationContext& EC)
 
 }
 
-//void ParseOpeningBracket(ParserContext& PC)
-//{
-//	PC.ThrowIfUnexpected(TokenType::OpeningBracket);
-//	// Compare with openingbracket parsing in the parser
-//	if (PC.LastToken() == TokenType::Identifier) {   //the generic bracket parsing algorithm will take care of the Bracket, nothing more to do for us here
-//		auto OB = std::make_shared<OpeningBracketFuncCall>();
-//		PC.Parse(OB);
-//		PC.OutputQueue().push_back(OB);
-//#ifdef DEBUG
-//		std::cout << "OpeningBracketFuncCall\n";
-//#endif
-//		//PC.OperatorStack().pop();
-//	} else if (PC.LastToken() == TokenType::Assignment || PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double) {
-//		PC.Parse(std::make_shared<OpeningBracketNoFuncCall>());
-//		//PC.OutputQueue().push_back(OB);
-//#ifdef DEBUG
-//		std::cout << "OpeningBracketNoFuncCall\n";
-//#endif
-//	}
-//	//    else if(PC.LastToken() == TokenType::OpeningBracket )
-//	//    {
-//	//        auto OB = std::make_shared<OpeningBracket>();
-//	//        PC.Parse(OB);
-//	//        //PC.OutputQueue().push_back(OB);
-//	//#ifdef DEBUG
-//	//        std::cout << "OpeningBracket\n";
-//	//#endif
-//	//    }
-//	else {
-//		auto OB = std::make_shared<class OpeningBracket>();
-//		PC.Parse(OB);
-//		PC.OutputQueue().push_back(OB);
-//#ifdef DEBUG
-//		std::cout << "OpeningBracket\n";
-//#endif
-//	}
-//}
-//
-//LastCharType OpeningBracketToken::Tokenize(TokenizeContext& TC) const
-//{
-//	TC.OutputQueue().push_back(Token{ TokenType::OpeningParenthese, Parsable{ "(", &ParseOpeningBracket } });
-//	//        TC.OutputQueue().push_back(&ParseOpeningBracket);
-//	return LastCharType::LikeOpeningBracket;
-//}
+void Internal::ParseOpeningBracket(ParserContext& PC)
+{
+	PC.ThrowIfUnexpected(TokenType::OpeningBracket);
+	// Compare with openingbracket parsing in the parser
+	if (PC.LastToken() == TokenType::Identifier) {   //the generic bracket parsing algorithm will take care of the Bracket, nothing more to do for us here
+		auto OB = std::make_shared<OpeningBracketFuncCall>();
+		PC.Parse(OB);
+		PC.OutputQueue().push_back(OB);
+#ifdef DEBUG
+		std::cout << "OpeningBracketFuncCall\n";
+#endif
+		//PC.OperatorStack().pop();
+	} else if (PC.LastToken() == TokenType::Assignment || PC.LastToken() == TokenType::Long || PC.LastToken() == TokenType::Double) {
+		PC.Parse(std::make_shared<OpeningBracketNoFuncCall>());
+		//PC.OutputQueue().push_back(OB);
+#ifdef DEBUG
+		std::cout << "OpeningBracketNoFuncCall\n";
+#endif
+	}
+	//    else if(PC.LastToken() == TokenType::OpeningBracket )
+	//    {
+	//        auto OB = std::make_shared<OpeningBracket>();
+	//        PC.Parse(OB);
+	//        //PC.OutputQueue().push_back(OB);
+	//#ifdef DEBUG
+	//        std::cout << "OpeningBracket\n";
+	//#endif
+	//    }
+	else {
+		auto OB = std::make_shared<class OpeningBracket>();
+		PC.Parse(OB);
+		PC.OutputQueue().push_back(OB);
+#ifdef DEBUG
+		std::cout << "OpeningBracket\n";
+#endif
+	}
+}
 
 LastCharType OpeningBracketToken::Tokenize(TokenizeContext& TC) const
 {
-	TC.OutputQueue().push_back(Token{ TokenType::OpeningParenthese, std::make_shared<class OpeningBracket>() });
-
+	TC.OutputQueue().push_back(Parsable("(", &ParseOpeningBracket));
+	//        TC.OutputQueue().push_back(&ParseOpeningBracket);
 	return LastCharType::LikeOpeningBracket;
 }
 
@@ -717,47 +709,42 @@ void ClosingBracket::Eval(EvaluationContext& EC)
 		EC.DropSignal();
 }
 
-//void ParseClosingBracket(ParserContext& PC)
-//{
-//	//All the parsing has to be done here, because we have to pop the Openingbracket from stack but
-//	//not on the outputqueue
-//	PC.ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
-//	if (PC.ExpectedBracket().empty()) //Closingbracket but no bracket expected? Definitely a bracket mismatch
-//		throw std::logic_error("No closing bracket expected");
-//	else if (*PC.ExpectedBracket().top() != ")")
-//		throw std::logic_error("Expected '" + PC.ExpectedBracket().top()->Representation() + "'");
-//	else
-//		PC.ExpectedBracket().pop();
-//	if (PC.LastToken() == TokenType::ArgSeperator)
-//		throw std::logic_error("Expected an expression between ',' and ')'");
-//
-//	while (!PC.OperatorStack().empty()) {
-//		auto Temp = PC.OperatorStack().top();
-//		if (*Temp == *PC.OpeningBracket()) {
-//			//it's the opening bracket, we're done
-//			//Pop the left parenthesis from the stack, but not onto the output queue.
-//			PC.OperatorStack().pop();
-//			PC.State().Restore();
-//			PC.LastToken() = TokenType::ClosingBracket;
-//			PC.OutputQueue().push_back(std::make_shared<class ClosingBracket>());
-//			return;
-//		} else {
-//			PC.OutputQueue().push_back(Temp);
-//			PC.OperatorStack().pop();
-//		}
-//	}
-//	//if it reaches here, there is a bracket mismatch
-//	throw std::logic_error("bracket mismatch");//If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
-//}
-//
-//LastCharType ClosingBracketToken::Tokenize(TokenizeContext& TC) const
-//{
-//	TC.OutputQueue().push_back(Token{ TokenType::ClosingParenthese, Parsable{ ")", &ParseClosingBracket } });
-//	return LastCharType::LikeClosingBracket;
-//}
+void Internal::ParseClosingBracket(ParserContext& PC)
+{
+	//All the parsing has to be done here, because we have to pop the Openingbracket from stack but
+	//not on the outputqueue
+	PC.ThrowIfUnexpected(TokenType::ClosingBracket, "Unexpected closing bracket");
+	if (PC.ExpectedBracket().empty()) //Closingbracket but no bracket expected? Definitely a bracket mismatch
+		throw std::logic_error("No closing bracket expected");
+	else if (*PC.ExpectedBracket().top() != ")")
+		throw std::logic_error("Expected '" + PC.ExpectedBracket().top()->Representation() + "'");
+	else
+		PC.ExpectedBracket().pop();
+	if (PC.LastToken() == TokenType::ArgSeperator)
+		throw std::logic_error("Expected an expression between ',' and ')'");
+
+	while (!PC.OperatorStack().empty()) {
+		auto Temp = PC.OperatorStack().top();
+		if (*Temp == *PC.OpeningBracket()) {
+			//it's the opening bracket, we're done
+			//Pop the left parenthesis from the stack, but not onto the output queue.
+			PC.OperatorStack().pop();
+			PC.State().Restore();
+			PC.LastToken() = TokenType::ClosingBracket;
+			PC.OutputQueue().push_back(std::make_shared<class ClosingBracket>());
+			return;
+		} else {
+			PC.OutputQueue().push_back(Temp);
+			PC.OperatorStack().pop();
+		}
+	}
+	//if it reaches here, there is a bracket mismatch
+	throw std::logic_error("bracket mismatch");//If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
+}
+
 LastCharType ClosingBracketToken::Tokenize(TokenizeContext& TC) const
 {
-	TC.OutputQueue().push_back(Token{ TokenType::ClosingParenthese, std::make_shared<class ClosingBracket>() });
+	TC.OutputQueue().push_back(Parsable(")", &ParseClosingBracket));
 	return LastCharType::LikeClosingBracket;
 }
 

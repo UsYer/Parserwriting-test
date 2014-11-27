@@ -1,6 +1,7 @@
 #ifndef MARSHAL_HPP_INCLUDED
 #define MARSHAL_HPP_INCLUDED
 #include <type_traits>
+#include "Object.hpp"
 namespace Internal
 {
     struct EvaluationContext;

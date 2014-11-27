@@ -8,7 +8,7 @@
 using namespace Internal;
 namespace
 {
-struct ArgAssigner : public boost::static_visitor<long long>
+struct ArgAssigner : public boost::static_visitor<unsigned long long>
 {
     Types::Table& m_FuncScope;
     IFunction& m_Func;
@@ -17,17 +17,17 @@ struct ArgAssigner : public boost::static_visitor<long long>
         m_Func(Func)
     {}
     template <typename T>
-    long long operator()(const T& Arg) const
+	unsigned long long operator()(const T& Arg) const
     {
         AssignOneArg(Arg);
         return 1;
     }
-    long long operator()(const CountedReference& Ref) const
+	unsigned long long operator()(const CountedReference& Ref) const
     {
         auto it = (*Ref).Find("__ARGCOUNT__");
         if( it != (*Ref).KeyEnd() )
         {
-            long long ArgCount = boost::apply_visitor(Utilities::Get<long long>("ArgCount field of the argument table has to be an integer"),it->second);
+			auto ArgCount = boost::apply_visitor(Utilities::Get<unsigned long long>("ArgCount field of the argument table has to be an integer"), it->second);
             if( m_Func.ArgCount() != /*ArgCount::Variable*/-1 )
             {
                 if( ArgCount > m_Func.ArgCount() )

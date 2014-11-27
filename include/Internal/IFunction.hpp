@@ -3,6 +3,7 @@
 #include "IEvaluable.hpp"
 #include "Table.hpp"
 #include "Get.hpp"
+#include "Types.hpp"
 namespace Internal
 {
 struct EvaluationContext;
@@ -57,7 +58,7 @@ protected:
             return Args[ArgIdx];
         }
     }
-    unsigned m_SuppliedArguments;///< No. of supplied arguments when the function is called. Only necessary to check when m_ArgCount == Variable
+	unsigned long long m_SuppliedArguments;///< No. of supplied arguments when the function is called. Only necessary to check when m_ArgCount == Variable
     Types::Table m_LocalScope;
     Types::Scope m_This;
 

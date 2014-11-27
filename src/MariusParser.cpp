@@ -141,7 +141,7 @@ struct MariusParser::Impl
             //No-op. resetting Evalscope to global scope
         LARGE_INTEGER start_ticks, ende_ticks, frequenz;
 
-        unsigned long tick_sum = 0;
+        unsigned long long tick_sum = 0;
         start_ticks.QuadPart = 0;
         ende_ticks.QuadPart  = 0;
         QueryPerformanceFrequency(&frequenz);
