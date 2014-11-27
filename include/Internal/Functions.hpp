@@ -1,104 +1,37 @@
 #ifndef FUNCTIONS_HPP_INCLUDED
 #define FUNCTIONS_HPP_INCLUDED
 #include <iostream>
+#include "IFunction.hpp"
 
 namespace Internal
 {
+	struct EvaluationContext;
 class TypeFunc : public IFunction
 {
-    struct Type : public boost::static_visitor<std::string>
-    {
-        std::string operator()(long long val)const
-        {
-            return "long";
-        }
-        std::string operator()(double val)const
-        {
-            return "double";
-        }
-        std::string operator()(utf8::ustring)const
-        {
-            return "string";
-        }
-        std::string operator()(const std::shared_ptr<IEvaluable>& op)const
-        {
-            return "function";
-        }
-        std::string operator()(const Reference& ref)const
-        {
-            return "reference -> table";
-        }
-        std::string operator()(const NullReference&)const
-        {
-            return "NullReference";
-        }
-    };
+    
 public:
     TypeFunc():IFunction("Typefunction","Type",1,0)
     {}
-    void Eval(EvaluationContext& EC)
-    {
-        ::Platform::Out() << "\n" << boost::apply_visitor(Type(),m_LocalScope[0]) << "\n";
-    }
+	void Eval(EvaluationContext& EC) override;
 };
 class MaxFunc : public IFunction
 {
-    struct Max : public boost::static_visitor<NumberToken>
-    {
-        template<typename T, typename U>
-        auto operator()(T lhs, U rhs) -> decltype(lhs > rhs ? lhs : rhs)
-        {
-            return lhs > rhs ? lhs : rhs;
-        }
-    };
+    
 public:
     MaxFunc():
         IFunction("Maxfunction","Max", /*ArgCount::Variable*/-1,1)
     {}
-    void Eval(EvaluationContext& EC)
-    {
-        if( m_SuppliedArguments == 0 )
-        {
-            EC.Stack.Push(NullReference());
-            return;
-        }
-        NumberToken One, Two;
-        Max Maximum;
-        if( m_SuppliedArguments == 1 )
-            One = Utilities::GetNumberToken(IFunction::GetArg(0));
-        else
-        {
-            One = Utilities::GetNumberToken(IFunction::GetArg(0));
-            for( unsigned i = 1; i < m_SuppliedArguments; i++)
-            {
-                Two = Utilities::GetNumberToken(IFunction::GetArg(i));
-                One = boost::apply_visitor(Maximum,One,Two);
-            }
-        }
-        EC.Stack.Push(One);
-    }
+	void Eval(EvaluationContext& EC) override;
 
 };
 class SqrtFunc : public IFunction
 {
-    struct Sqrt : boost::static_visitor<NumberToken>
-    {
-        template<typename T>
-        NumberToken operator()(T Arg) const
-        {
-            return std::sqrt(Arg);
-        }
-    };
     public:
     SqrtFunc():
         IFunction("Returns the square root","Sqrt",1,1)
     {
     }
-    void Eval(EvaluationContext& EC)
-    {
-        NumberToken Arg(Utilities::GetNumberToken(IFunction::GetArg(0)));
-        EC.Stack.Push(boost::apply_visitor(Sqrt(),Arg));
-    }
+	void Eval(EvaluationContext& EC) override;
 };
 class CreateTableFunc : public IFunction
 {
@@ -107,19 +40,7 @@ public:
         IFunction("CreateTableFunction","Table",/*ArgCount::Variable*/-1,1)
     {
     }
-    void Eval(EvaluationContext& EC)
-    {
-        if( m_SuppliedArguments > 1 ) //More than one arg means the arg table itself will be returned
-            EC.Stack.Push(m_LocalScope[0]);
-        else if ( m_SuppliedArguments == 1 )
-        {
-            Types::Table Tab;
-            Tab[0] = IFunction::GetArg(0);
-            EC.Stack.Push(EC.MC.Save(Tab));
-        }
-        else //0 args
-            EC.Stack.Push(EC.MC.Save(Types::Table()));
-    }
+	void Eval(EvaluationContext& EC) override;
 };
 
 class CreateNullFunc : public IFunction
@@ -129,10 +50,7 @@ public:
         IFunction("CreateNullFunction","Null",0,1)
     {
     }
-    void Eval(EvaluationContext& EC)
-    {
-        EC.Stack.Push(NullReference());
-    }
+	void Eval(EvaluationContext& EC) override;
 };
 class GetRefCountFunc : public IFunction
 {
@@ -140,17 +58,7 @@ public:
     GetRefCountFunc():IFunction("Gets the refcount of a reference","GetRefCount",1,1)
     {
     }
-    virtual void Eval(EvaluationContext& EC)
-    {
-        Reference WeakRef;
-        {
-//            Member Ref = boost::apply_visitor(Utilities::ResolveVisitor(EC),m_LocalScope[0]);
-            WeakRef = IFunction::GetArg<CountedReference>(0).GetWeakReference();
-            m_LocalScope.ClearIndexValues();
-        }
-        long long Refcount = EC.MC.GetRefCount(WeakRef);
-        EC.Stack.Push(Refcount);
-    }
+	virtual void Eval(EvaluationContext& EC) override;
 };
 class GetMCSizeFunc : public IFunction
 {
@@ -158,10 +66,7 @@ public:
     GetMCSizeFunc():IFunction("Gets the amount of refs managed by the MC","ItemCount",0,1)
     {
     }
-    virtual void Eval(EvaluationContext& EC)
-    {
-        EC.Stack.Push((long long)EC.MC.Size());
-    }
+	virtual void Eval(EvaluationContext& EC) override;
 };
 class PrintFunc : public IFunction
 {
@@ -170,14 +75,7 @@ public:
         IFunction("","Print",/*ArgCount::Variable*/-1,0)
     {
     }
-    void Eval(EvaluationContext& EC)
-    {
-        for( unsigned i = 0; i < m_SuppliedArguments; i++ )
-        {
-            ::Platform::Out() << Utilities::PrintValue(EC,Types::Object(IFunction::GetArg(i))) << " ";
-        }
-        ::Platform::Out() << std::endl;
-    }
+	void Eval(EvaluationContext& EC) override;
 };
 // TODO (Marius#8#): Finish global catch handler (translation from runtime to native exceptions)
 class GlobalExceptionHandleFunc : public IFunction
@@ -187,14 +85,7 @@ public:
         IFunction("","__GLOBALCATCH__",1,0)
     {
     }
-    virtual void Eval( EvaluationContext& EC )
-    {
-        const auto& Exception = IFunction::GetArg<CountedReference>(0);
-        auto TypeId = boost::apply_visitor(Utilities::Get<long long>(),(*Exception)["TypeId"]);
-        auto message = boost::apply_visitor(Utilities::Get<utf8::ustring>(),(*Exception)["Message"]);
-		auto name = boost::apply_visitor(Utilities::Get<utf8::ustring>(), (*Exception)["Name"]);
-		throw Exceptions::RuntimeException(message, name, TypeId);
-    }
+	virtual void Eval(EvaluationContext& EC) override;
 };
 
 class CreateExceptionFunc : public IFunction
@@ -205,20 +96,7 @@ class CreateExceptionFunc : public IFunction
         IFunction("",Name,-1,1),
         m_Id(Id)
     {}
-    virtual void Eval( EvaluationContext& EC )
-    {
-        Types::Table ExceptionTable;
-        ExceptionTable["__EXCEPTION__"] = 1LL;
-        ExceptionTable["TypeId"] = m_Id;
-		ExceptionTable["Name"] = IEvaluable::Name();
-        utf8::ustring message = IEvaluable::Name() + ": ";
-        for( unsigned i = 0; i < m_SuppliedArguments; i++ )
-        {
-            message += Utilities::PrintValue(EC,Types::Object(IFunction::GetArg(i))) + " ";
-        }
-        ExceptionTable["Message"] = message; //// TODO (Marius#1#): Add possibility to add exception message when creating exception at runtime.
-        EC.Stack.Push(EC.MC.Save(ExceptionTable));
-    }
+	virtual void Eval(EvaluationContext& EC) override;
 };
 }//ns Internal
 #endif // FUNCTIONS_HPP_INCLUDED

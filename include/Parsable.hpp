@@ -13,8 +13,8 @@ public:
         Parse(ParseFunc)
     {}
     ~Parsable(){}
-    const std::string Representation;
-    const std::function<void(Internal::ParserContext&)> Parse;
+    std::string Representation;
+    std::function<void(Internal::ParserContext&)> Parse;
 };
 
 #endif // PARSABLE_HPP_INCLUDED
