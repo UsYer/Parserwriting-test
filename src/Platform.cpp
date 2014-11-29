@@ -4,23 +4,25 @@
 #ifdef PLAT_WIN
 #include "../include/Internal/Plat_Win/RedirectIO.hpp"
 #endif
+namespace Marius
+{
+	namespace Platform
+	{
+		static std::once_flag flag;
 
-namespace Platform
-{
-static std::once_flag flag;
-
-void OpenConsole()
-{
-    std::call_once(flag, Internal::Platform::RedirectIOToConsole);
-}
-std::ostream& Out()
-{
-    std::call_once(flag, Internal::Platform::RedirectIOToConsole);
-    return nowide::cout;
-}
-std::istream& In()
-{
-    std::call_once(flag, Internal::Platform::RedirectIOToConsole);
-    return nowide::cin;
-}
-}
+		void OpenConsole()
+		{
+			std::call_once(flag, Internal::Platform::RedirectIOToConsole);
+		}
+		std::ostream& Out()
+		{
+			std::call_once(flag, Internal::Platform::RedirectIOToConsole);
+			return nowide::cout;
+		}
+		std::istream& In()
+		{
+			std::call_once(flag, Internal::Platform::RedirectIOToConsole);
+			return nowide::cin;
+		}
+	}// ns Platform
+}//ns Marius

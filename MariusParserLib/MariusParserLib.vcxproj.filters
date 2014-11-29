@@ -150,6 +150,9 @@
     <ClInclude Include="..\libs\ustring\ustring.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Platform.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\MemoryManagment\src\Exceptions.cpp">

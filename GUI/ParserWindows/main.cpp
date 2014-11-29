@@ -4,6 +4,8 @@
 #include "nowide/iostream.hpp"
 #include "MariusParser.hpp"
 
+using namespace Marius;
+
 int WINAPI WinMain (HINSTANCE hThisInstance,
                      HINSTANCE hPrevInstance,
                      LPSTR lpszArgument,

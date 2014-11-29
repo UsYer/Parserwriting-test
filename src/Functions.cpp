@@ -56,7 +56,7 @@ namespace{
 
 void TypeFunc::Eval(EvaluationContext& EC)
 {
-	::Platform::Out() << "\n" << boost::apply_visitor(TypeVisitor{}, m_LocalScope[0]) << "\n";
+	Marius::Platform::Out() << "\n" << boost::apply_visitor(TypeVisitor{}, m_LocalScope[0]) << "\n";
 }
 
 void MaxFunc::Eval(EvaluationContext& EC)
@@ -122,9 +122,9 @@ void GetMCSizeFunc::Eval(EvaluationContext& EC)
 void PrintFunc::Eval(EvaluationContext& EC)
 {
 	for (unsigned i = 0; i < m_SuppliedArguments; i++) {
-		::Platform::Out() << Utilities::PrintValue(EC, Types::Object(IFunction::GetArg(i))) << " ";
+		Marius::Platform::Out() << Utilities::PrintValue(EC, Types::Object(IFunction::GetArg(i))) << " ";
 	}
-	::Platform::Out() << std::endl;
+	Marius::Platform::Out() << std::endl;
 }
 
 void GlobalExceptionHandleFunc::Eval(EvaluationContext& EC)
