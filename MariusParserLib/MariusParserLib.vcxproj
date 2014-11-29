@@ -178,7 +178,6 @@
     <ClInclude Include="..\include\String.hpp" />
     <ClInclude Include="..\include\TokenizeContext.hpp" />
     <ClInclude Include="..\libs\ustring\ustring.h" />
-    <ClInclude Include="..\MemoryManagment\include\Exceptions.hpp" />
     <ClInclude Include="..\MemoryManagment\include\MemoryController.hpp" />
     <ClInclude Include="..\MemoryManagment\include\Reference.hpp" />
     <ClInclude Include="targetver.h" />
@@ -186,7 +185,6 @@
   <ItemGroup>
     <ClCompile Include="..\libs\nowide_standalone\src\iostream.cpp" />
     <ClCompile Include="..\libs\ustring\ustring.cc" />
-    <ClCompile Include="..\MemoryManagment\src\Exceptions.cpp" />
     <ClCompile Include="..\MemoryManagment\src\MemoryController.cpp" />
     <ClCompile Include="..\MemoryManagment\src\Reference.cpp" />
     <ClCompile Include="..\src\EvaluationContext.cpp" />

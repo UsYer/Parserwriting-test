@@ -138,9 +138,6 @@
     <ClInclude Include="..\include\Internal\Utilities.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="..\MemoryManagment\include\Exceptions.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="..\MemoryManagment\include\MemoryController.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -155,9 +152,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\MemoryManagment\src\Exceptions.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\MemoryManagment\src\MemoryController.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
