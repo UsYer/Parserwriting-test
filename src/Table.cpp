@@ -15,7 +15,7 @@ struct Table::Implementation
     }
     ~Implementation()
     {}
-    Member& GetMemberViaIdentifer(const std::string& Identifier)
+    Member& GetMemberViaIdentifer(const KeyType& Identifier)
     {
         auto& view = get<key>(m_AssocData);
         auto it = view.find(Identifier);
@@ -32,7 +32,7 @@ struct Table::Implementation
             return it->second;
 //            return m_AssocData[Identifier];
     }
-    Member& GetMemberViaIndex(unsigned int Index)
+	Member& GetMemberViaIndex(IndexType Index)
     {
         auto it = m_IndexData.find(Index);
         if(it == m_IndexData.end())
@@ -47,7 +47,7 @@ struct Table::Implementation
     }
 //    std::unordered_map<std::string,Member> m_AssocData; // FIXME (Marius#9#): unordered_map doesn't keep them in the order the members were added. Leads to function args that are applied in the wrong order
     Table::AssocData m_AssocData;
-    std::map<unsigned,Member> m_IndexData;
+    std::map<IndexType,Member> m_IndexData;
 };
 
 Table::Table():
@@ -80,23 +80,23 @@ Table::~Table()
     delete Impl;
 }
 
-Member& Table::operator[](const std::string& Identifier)
+Member& Table::operator[](const KeyType& Identifier)
 {
     return Impl->GetMemberViaIdentifer(Identifier);
 }
-Member& Table::operator[](unsigned int Index)
+Member& Table::operator[](IndexType Index)
 {
     return Impl->GetMemberViaIndex(Index);
 }
-const Member& Table::operator[](const std::string& Identifier) const
+const Member& Table::operator[](const KeyType& Identifier) const
 {
     return Impl->GetMemberViaIdentifer(Identifier);
 }
-const Member& Table::operator[](unsigned int Index) const
+const Member& Table::operator[](IndexType Index) const
 {
     return Impl->GetMemberViaIndex(Index);
 }
-Member& Table::Add(const std::pair<std::string,Member>& KeyValue)
+Member& Table::Add(const std::pair<KeyType, Member>& KeyValue)
 {
 //    return Impl->m_AssocData[KeyValue.first] = KeyValue.second;
     return Add(KeyValue.first,KeyValue.second);
@@ -106,7 +106,7 @@ unsigned int Table::Add(const Member& Value)
     Impl->m_IndexData.insert(std::make_pair(Impl->m_IndexData.size(),Value));
     return Impl->m_IndexData.size()-1;
 }
-Member& Table::Add(const std::string& Key, const Member& Value)
+Member& Table::Add(const KeyType& Key, const Member& Value)
 {
 //    return Impl->m_AssocData[Key] = Value;
     auto& view = get<key>(Impl->m_AssocData);
@@ -164,22 +164,22 @@ unsigned Table::IndexSize() const
 {
     return Impl->m_IndexData.size();
 }
-bool Table::Contains(const std::string& Key) const
+bool Table::Contains(const KeyType& Key) const
 {
     auto& hashedView = get<key>(Impl->m_AssocData);
     return hashedView.find(Key) != hashedView.end();
 }
-bool Table::Contains(unsigned int Index) const
+bool Table::Contains(IndexType Index) const
 {
     auto it = Impl->m_IndexData.find(Index);
     return it != Impl->m_IndexData.end();
 }
-Table::KeyIterator Table::Find(const std::string& Key) const
+Table::KeyIterator Table::Find(const KeyType& Key) const
 {
     auto KeyIt = get<key>(Impl->m_AssocData).find(Key);
     return Impl->m_AssocData.project<key_seq>(KeyIt);
 }
-Table::IndexIterator Table::Find(unsigned int Index) const
+Table::IndexIterator Table::Find(IndexType Index) const
 {
     return Impl->m_IndexData.find(Index);
 }
@@ -191,7 +191,7 @@ void Table::ForEachKey(const std::function<void(Item&)>& ModifyFunc)
         sequencedView.modify(it,ModifyFunc);
     }
 }
-void Table::ForSomeKeys(unsigned HowMany, const std::function<void(Item&)>& ModifyFunc)
+void Table::ForSomeKeys(IndexType HowMany, const std::function<void(Item&)>& ModifyFunc)
 {
     auto& sequencedView = get<key_seq>(Impl->m_AssocData);
     auto it = sequencedView.begin(), endIt = sequencedView.end();
@@ -200,7 +200,7 @@ void Table::ForSomeKeys(unsigned HowMany, const std::function<void(Item&)>& Modi
         sequencedView.modify(it,ModifyFunc);
     }
 }
-bool Table::ModifyByKey(const std::string& Key, const std::function<void(Item&)>& ModifyFunc)
+bool Table::ModifyByKey(const KeyType& Key, const std::function<void(Item&)>& ModifyFunc)
 {
     return ModifyByKey(Find(Key), ModifyFunc);
 }
@@ -212,6 +212,15 @@ bool Table::ModifyByKey(ConstKeyIterator KeyIt, const std::function<void(Item&)>
     }
     return false;
 }
+
+Table::AssocData::size_type Table::EraseByKey(const KeyType& Key){
+	auto& hashedView = get<key>(Impl->m_AssocData);
+	return hashedView.erase(Key);
+}
+Table::IndexSizeType Table::EraseByIndex(IndexType Index){
+	return Impl->m_IndexData.erase(Index);
+}
+
 void Table::Clear()
 {
     Impl->m_AssocData.clear();
