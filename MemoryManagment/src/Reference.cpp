@@ -26,6 +26,14 @@ MemoryController::Value& Reference::operator*() const
     return m_MC->GetValue(*this);
 }
 
+MemoryController::Value* Reference::operator->() const
+{
+    if( !m_MC )
+        throw Exceptions::NullReferenceException("Dereferencing a null reference");
+
+    return &m_MC->GetValue(*this);
+}
+
 void Reference::Swap(Reference& Other)
 {
     std::swap(m_MC, Other.m_MC);

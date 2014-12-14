@@ -79,6 +79,7 @@ int main()
     Ref6 = MC.Save(Internal::Types::Table());
     MC.Print();
     std::cin.get();
+    assert(Ref6->KeySize() == 0);
     //*
     /*
     CountedReference Ref = MC.Save(12ll);

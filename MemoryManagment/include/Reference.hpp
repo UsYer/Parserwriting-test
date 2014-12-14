@@ -40,6 +40,7 @@ public:
     Reference& operator=( const CountedReference& ) = delete; //don't allow implicit creation of a WeakRef through an assignment.
                                                               //Use CountedReference::GetWeakReference() instead
     /*MemoryController::Value*/Types::Table& operator*() const;
+    Types::Table* operator->() const;
     bool IsNull()const
     {
         //No valid pointer pointer to the MemoryController means that this reference points to nothing
